@@ -665,7 +665,7 @@
                 <button type="button" class="btn-close" id="modal-close" aria-label="Fechar">&times;</button>
                 <h3 id="modal-title">Boletim Executivo Sentinela</h3>
                 <p>Cadastre seu e-mail para receber análises, tendências e novidades em cibersegurança.</p>
-                <form id="form-boletim" action="#" method="POST">
+                <form id="form-boletim" action="https://formspree.io/f/meeryjep" method="POST">
                     <input type="email" name="email" placeholder="Seu e-mail" required autocomplete="email">
                     <input type="text" name="nome" placeholder="Seu nome (opcional)" autocomplete="name">
                     <input type="hidden" name="_subject" value="Inscrição Boletim Executivo Sentinela">
@@ -700,15 +700,31 @@
                 if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
             });
 
-            if (form) form.addEventListener('submit', function(e) {
+            if (form) form.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                var msg = document.createElement('p');
-                msg.style.color = 'var(--accent)';
-                msg.style.marginTop = '1rem';
-                msg.textContent = 'Obrigado! Em breve você receberá o boletim.';
-                form.appendChild(msg);
-                form.querySelector('.btn-submit').disabled = true;
-                setTimeout(closeModal, 1500);
+                var btn = form.querySelector('.btn-submit');
+                btn.disabled = true;
+                btn.textContent = 'Enviando…';
+                try {
+                    var fd = new FormData(form);
+                    var res = await fetch(form.action, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
+                    if (res.ok) {
+                        var msg = document.createElement('p');
+                        msg.style.color = 'var(--accent)';
+                        msg.style.marginTop = '1rem';
+                        msg.textContent = 'Obrigado! Em breve você receberá o boletim.';
+                        form.appendChild(msg);
+                        setTimeout(closeModal, 1500);
+                    } else {
+                        btn.disabled = false;
+                        btn.textContent = 'Inscrever-se';
+                        alert('Ocorreu um erro. Tente novamente.');
+                    }
+                } catch (err) {
+                    btn.disabled = false;
+                    btn.textContent = 'Inscrever-se';
+                    alert('Ocorreu um erro. Tente novamente.');
+                }
             });
         })();
 
