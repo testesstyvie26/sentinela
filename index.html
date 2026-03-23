@@ -523,6 +523,51 @@
                 font-size: 2rem;
             }
         }
+
+        .cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 1.5rem;
+            background: rgba(17, 24, 39, 0.98);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            z-index: 999;
+            flex-wrap: wrap;
+        }
+        .cookie-consent.hidden { display: none; }
+        .cookie-consent p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+            flex: 1;
+            min-width: 200px;
+        }
+        .cookie-consent p a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .cookie-consent p a:hover { text-decoration: underline; }
+        .cookie-consent .btn-aceitar {
+            padding: 0.5rem 1.25rem;
+            background: var(--accent);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .cookie-consent .btn-aceitar:hover {
+            background: #00e676;
+        }
     </style>
 </head>
 <body>
@@ -656,7 +701,7 @@
             </section>
         </div>
 
-        <footer class="footer">
+        <footer class="footer" id="cookies">
             <p>Participe com responsabilidade. Respeite a privacidade e as boas práticas.</p>
         </footer>
     </main>
@@ -677,6 +722,24 @@
         </div>
     </div>
 
+    <div id="cookie-consent" class="cookie-consent">
+        <p>Utilizamos cookies para melhorar sua experiência. Ao continuar, você concorda com o uso de cookies. <a href="index.html#cookies">Saiba mais</a></p>
+        <button type="button" class="btn-aceitar" id="btn-aceitar-cookies">Aceitar</button>
+    </div>
+
+    <script>
+        (function() {
+            var banner = document.getElementById('cookie-consent');
+            var btn = document.getElementById('btn-aceitar-cookies');
+            if (localStorage.getItem('sentinela-cookies-aceitos') === '1') {
+                if (banner) banner.classList.add('hidden');
+            }
+            if (btn) btn.addEventListener('click', function() {
+                localStorage.setItem('sentinela-cookies-aceitos', '1');
+                if (banner) banner.classList.add('hidden');
+            });
+        })();
+    </script>
     <script>
         (function() {
             const btn = document.getElementById('btn-inscreva');
