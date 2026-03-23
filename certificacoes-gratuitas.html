@@ -101,6 +101,7 @@
         }
         .cert-category {
             margin-bottom: 1.75rem;
+            scroll-margin-top: 5rem;
         }
         .cert-category h3 {
             font-size: 0.8rem;
@@ -167,6 +168,19 @@
             visibility: visible;
             transform: translateX(-50%) translateY(-8px);
         }
+        .filter-nav {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;
+            margin-bottom: 2rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 10px; position: sticky; top: 4.5rem; z-index: 10;
+        }
+        .filter-nav a {
+            padding: 0.45rem 0.85rem; font-size: 0.8rem; font-weight: 600;
+            color: var(--text-muted); text-decoration: none; border-radius: 6px;
+            transition: all 0.2s; white-space: nowrap;
+        }
+        .filter-nav a:hover { color: var(--accent); background: var(--accent-dim); }
+        .links-oficiais-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; }
+        .links-oficiais-note strong { color: var(--accent); }
         .footer {
             margin-top: 3rem;
             text-align: center;
@@ -203,9 +217,18 @@
         <section class="cert-guide">
             <h2>Treinamentos, Certificações Grátis <span class="free-badge">100% FREE</span></h2>
             <p class="subtitle">Treinamentos com certificado e provas grátis para iniciar ou aprofundar na carreira</p>
+            <p class="subtitle links-oficiais-note"><strong>Filtre por nicho ou campo de conhecimento</strong> e acesse links oficiais das plataformas e certificadoras.</p>
+
+            <nav class="filter-nav" aria-label="Filtrar por nicho">
+                <a href="#empresas">Empresas e Plataformas</a>
+                <a href="#cloud">Cloud e Provedores</a>
+                <a href="#fundamentos">Introdução e Fundamentos</a>
+                <a href="#labs">Labs e Hands-on</a>
+                <a href="#outros">Outros Recursos</a>
+            </nav>
 
             <!-- EMPRESAS / PLATAFORMAS -->
-            <div class="cert-category">
+            <div class="cert-category" id="empresas">
                 <h3>Empresas e Plataformas</h3>
                 <ul class="cert-menu">
                     <li>
@@ -238,11 +261,31 @@
                             <span class="cert-badge">TI Exames</span> Eventos, Aulas e Materiais Grátis
                         </a>
                     </li>
+                    <li>
+                        <a href="https://www.professormesser.com/security-plus/sy0-601/sy0-601-video/sy0-601-complete-course/" target="_blank" rel="noopener noreferrer" data-tooltip="Curso completo grátis para CompTIA Security+. Vídeos em inglês, ótimo para preparação do exame.">
+                            <span class="cert-badge">Professor Messer</span> Security+ SY0-601 – Curso grátis
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://owasp.org/www-project-web-security-testing-guide/" target="_blank" rel="noopener noreferrer" data-tooltip="Guia gratuito de testes de segurança web. Metodologia OWASP para pentest em aplicações.">
+                            <span class="cert-badge">OWASP</span> Web Security Testing Guide
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://portswigger.net/web-security" target="_blank" rel="noopener noreferrer" data-tooltip="Academia gratuita do criador do Burp Suite. Módulos interativos de OWASP Top 10, autenticação, APIs.">
+                            <span class="cert-badge">PortSwigger</span> Web Security Academy – grátis
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.metasploit.com/unleashed/" target="_blank" rel="noopener noreferrer" data-tooltip="Curso gratuito de Metasploit. Framework, exploits, post-exploitation. Mantido pela Offensive Security.">
+                            <span class="cert-badge">Offensive Security</span> Metasploit Unleashed
+                        </a>
+                    </li>
                 </ul>
             </div>
 
             <!-- CLOUD PROVIDERS -->
-            <div class="cert-category">
+            <div class="cert-category" id="cloud">
                 <h3>Cloud e Provedores</h3>
                 <ul class="cert-menu">
                     <li>
@@ -260,11 +303,21 @@
                             <span class="cert-badge">Cisco</span> NetAcad – Cursos de Segurança
                         </a>
                     </li>
+                    <li>
+                        <a href="https://cloud.google.com/learn/certification" target="_blank" rel="noopener noreferrer" data-tooltip="Cursos e labs grátis Google Cloud. Segurança em GCP, preparação para certificações.">
+                            <span class="cert-badge">Google Cloud</span> Cursos e Labs – Segurança
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://learn.microsoft.com/pt-br/training/paths/az-500-identify-remediate-security-threats/" target="_blank" rel="noopener noreferrer" data-tooltip="Caminho de aprendizado gratuito para AZ-500. Identificação e mitigação de ameaças no Azure.">
+                            <span class="cert-badge">Microsoft</span> AZ-500 Security – Microsoft Learn
+                        </a>
+                    </li>
                 </ul>
             </div>
 
             <!-- COURSERA / IBM -->
-            <div class="cert-category">
+            <div class="cert-category" id="fundamentos">
                 <h3>Introdução e Fundamentos</h3>
                 <ul class="cert-menu">
                     <li>
@@ -277,11 +330,26 @@
                             <span class="cert-badge">Google</span> Cybersecurity Fundamentals – Coursera
                         </a>
                     </li>
+                    <li>
+                        <a href="https://www.coursera.org/learn/cyber-security-basics" target="_blank" rel="noopener noreferrer" data-tooltip="Fundamentos de cibersegurança. Introdução a ameaças, vulnerabilidades e controles.">
+                            <span class="cert-badge">Coursera</span> Cybersecurity Basics
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.coursera.org/learn/network-security" target="_blank" rel="noopener noreferrer" data-tooltip="Segurança de redes: firewalls, VPNs, IDS/IPS. Universidade Georgia Tech.">
+                            <span class="cert-badge">Georgia Tech</span> Network Security – Coursera
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.rangeforce.com/" target="_blank" rel="noopener noreferrer" data-tooltip="Labs hands-on de segurança. Plano gratuito com cenários de SOC, pentest e compliance.">
+                            <span class="cert-badge">Rangeforce</span> Labs e Cenários – Plano grátis
+                        </a>
+                    </li>
                 </ul>
             </div>
 
             <!-- HANDS-ON / LABS -->
-            <div class="cert-category">
+            <div class="cert-category" id="labs">
                 <h3>Labs e Prática Hands-on</h3>
                 <ul class="cert-menu">
                     <li>
@@ -299,11 +367,31 @@
                             <span class="cert-badge">Carnegie Mellon</span> PicoCTF
                         </a>
                     </li>
+                    <li>
+                        <a href="https://letsdefend.io/" target="_blank" rel="noopener noreferrer" data-tooltip="Plataforma SOC hands-on. Responda a incidentes simulados, analise malware. Plano grátis disponível.">
+                            <span class="cert-badge">LetsDefend</span> SOC e Incident Response – Labs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.blueteamlabs.com/" target="_blank" rel="noopener noreferrer" data-tooltip="Labs de blue team e DFIR. Desafios práticos de detecção e resposta.">
+                            <span class="cert-badge">Blue Team Labs</span> Labs de Blue Team
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.pentesterlab.com/exercises" target="_blank" rel="noopener noreferrer" data-tooltip="Exercícios de pentest web. Alguns módulos grátis para praticar OWASP.">
+                            <span class="cert-badge">PentesterLab</span> Exercícios de Pentest Web
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://overthewire.org/wargames/" target="_blank" rel="noopener noreferrer" data-tooltip="Wargames de Bandit, Natas, Leviathan. Prática de Linux e web security via SSH e desafios.">
+                            <span class="cert-badge">OverTheWire</span> Wargames – Bandit, Natas, Leviathan
+                        </a>
+                    </li>
                 </ul>
             </div>
 
             <!-- OUTROS RECURSOS -->
-            <div class="cert-category">
+            <div class="cert-category" id="outros">
                 <h3>Outros Recursos Grátis</h3>
                 <ul class="cert-menu">
                     <li>
@@ -319,6 +407,21 @@
                     <li>
                         <a href="https://www.sans.org/cyber-security-courses/free/" target="_blank" rel="noopener noreferrer" data-tooltip="Webinars e recursos grátis SANS. Introdução a temas avançados.">
                             <span class="cert-badge">SANS</span> Recursos e webinars grátis
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://learn.ine.com/ine-security" target="_blank" rel="noopener noreferrer" data-tooltip="Treinamentos INE em pentest, SOC, malware. Trial gratuito disponível. Preparação para eJPT, eCPPT.">
+                            <span class="cert-badge">INE</span> Free Security Training
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.freecodecamp.org/news/tag/cybersecurity/" target="_blank" rel="noopener noreferrer" data-tooltip="Artigos e tutoriais gratuitos de cibersegurança no freeCodeCamp.">
+                            <span class="cert-badge">freeCodeCamp</span> Artigos e Tutoriais Cybersecurity
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.khanacademy.org/computing/computer-science/internet-intro" target="_blank" rel="noopener noreferrer" data-tooltip="Fundamentos de internet e computação. Base para entender redes e segurança.">
+                            <span class="cert-badge">Khan Academy</span> Internet e Computação – Fundamentos
                         </a>
                     </li>
                 </ul>
