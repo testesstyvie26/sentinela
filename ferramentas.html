@@ -591,8 +591,11 @@
 
             <div class="cert-category">
                 <h3>Iniciativas da Comunidade Sentinela</h3>
-                <form id="form-projeto" class="form-inscrever-projeto" action="https://formsubmit.co/ajax/contact@vulcandefense.com.br" method="POST">
-                    <input type="hidden" name="_subject" value="Inscrição de Projeto - Comunidade Sentinela">
+                <!-- Obtenha a chave em https://web3forms.com (gratuito). Use contato@vulcandefense.com.br e substitua abaixo. -->
+                <form id="form-projeto" class="form-inscrever-projeto" method="POST">
+                    <input type="hidden" name="access_key" value="eafeedc7-870a-4653-800f-34b981c2f39d">
+                    <input type="hidden" name="subject" value="Inscrição de Projeto - Comunidade Sentinela">
+                    <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
                     <input type="text" name="nome" placeholder="Seu nome" required autocomplete="name">
                     <input type="email" name="email" placeholder="Seu e-mail" required autocomplete="email">
                     <input type="text" name="projeto" placeholder="Nome do projeto" required>
@@ -617,17 +620,23 @@
                 var btn = form.querySelector('.btn-inscrever-projeto');
                 var prev = form.querySelector('.form-success-msg');
                 if (prev) prev.remove();
+                var ak = form.querySelector('input[name="access_key"]').value;
+                if (!ak || ak === 'REPLACE_WITH_YOUR_ACCESS_KEY') {
+                    alert('Configure a chave de acesso: vá em web3forms.com, crie uma chave com contato@vulcandefense.com.br e substitua REPLACE_WITH_YOUR_ACCESS_KEY no código.');
+                    return;
+                }
                 btn.disabled = true;
                 btn.textContent = 'Enviando…';
                 try {
                     var fd = new FormData(form);
-                    var res = await fetch(form.action, {
+                    var obj = Object.fromEntries(fd.entries());
+                    var res = await fetch('https://api.web3forms.com/submit', {
                         method: 'POST',
-                        body: fd,
-                        headers: { 'Accept': 'application/json' }
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(obj)
                     });
-                    var data = res.ok ? await res.json() : null;
-                    if (res.ok && data) {
+                    var data = await res.json();
+                    if (data.success) {
                         var msg = document.createElement('p');
                         msg.className = 'form-success-msg';
                         msg.style.color = 'var(--accent)';
@@ -636,10 +645,10 @@
                         form.appendChild(msg);
                         form.reset();
                     } else {
-                        alert('Ocorreu um erro. Certifique-se de acessar a página por um servidor web (não abra o arquivo .html diretamente).');
+                        alert(data.message || 'Erro ao enviar. Tente novamente.');
                     }
                 } catch (err) {
-                    alert('Erro de conexão. Acesse o site via servidor web (ex: http://localhost) para o formulário funcionar.');
+                    alert('Erro de conexão. Tente novamente.');
                 }
                 btn.disabled = false;
                 btn.textContent = 'Inscrever meu projeto';
