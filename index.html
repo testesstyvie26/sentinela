@@ -186,6 +186,63 @@
             color: var(--accent);
         }
 
+        .posts-section {
+            width: 100%;
+            max-width: 560px;
+            margin-top: 3rem;
+        }
+
+        .posts-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .posts-section h2 a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .posts-section h2 a:hover {
+            color: var(--text);
+        }
+
+        .post-card {
+            display: block;
+            padding: 1rem 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+            transition: all 0.25s ease;
+        }
+
+        .post-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px -10px rgba(0, 255, 136, 0.15);
+        }
+
+        .post-card p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .post-card .post-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
         .footer {
             margin-top: 4rem;
             text-align: center;
@@ -240,6 +297,37 @@
                 <span class="arrow">→</span>
             </a>
         </div>
+
+        <section class="posts-section">
+            <a href="https://www.linkedin.com/posts/rodrigocarran_cybersecurity-defesaemprofundidade-seguran%C3%A7adainforma%C3%A7%C3%A3o-activity-7424761446305185792-K_CZ" target="_blank" rel="noopener noreferrer" class="post-card">
+                <p>🔐 9 Camadas de Defesa Cibernética que Toda Organização Precisa Ter — A maioria das empresas não sofre incidentes porque ignora segurança. Sofre…</p>
+                <span class="post-meta">LinkedIn · Compartilhado</span>
+            </a>
+            <a href="https://www.linkedin.com/posts/rodrigocarran_cybersecurity-gestaoderiscos-grc-activity-7424410086502064129-TKDS" target="_blank" rel="noopener noreferrer" class="post-card">
+                <p>🔐 Cibersegurança não começa no framework — começa no risco. Muita gente tenta resolver segurança começando por normas e controles. Na prática, a…</p>
+                <span class="post-meta">LinkedIn · Compartilhado</span>
+            </a>
+            <a href="https://www.linkedin.com/posts/rodrigocarran_compartilhe-algu%C3%A9m-precisa-disso-activity-7424480332034281472-Lens" target="_blank" rel="noopener noreferrer" class="post-card">
+                <p>🚨 COMPARTILHE — ALGUÉM PRECISA DISSO — Se você leva Segurança em IA, Risco e Governança a sério, essa é uma oportunidade rara…</p>
+                <span class="post-meta">LinkedIn · Compartilhado</span>
+            </a>
+            <a href="https://www.linkedin.com/posts/rodrigocarran_ual-muito-verdade-activity-7424072481143099393-Udrl" target="_blank" rel="noopener noreferrer" class="post-card">
+                <p>Ual!!! Muito verdade!</p>
+                <span class="post-meta">LinkedIn · Compartilhado</span>
+            </a>
+            <a href="https://www.linkedin.com/in/rodrigocarran/" target="_blank" rel="noopener noreferrer" class="post-card">
+                <p>⚠️ A Realidade da Nuvem Híbrida em 2025: Os 10 Desafios que Ninguém te Conta (Mas Deveria) — A migração acabou. A realidade agora é a…</p>
+                <span class="post-meta">LinkedIn</span>
+            </a>
+            <a href="https://www.linkedin.com/in/rodrigocarran/" target="_blank" rel="noopener noreferrer" class="post-card">
+                <p>Multicloud sem IA não é estratégia. É risco não calculado. ☁️🤖🔒 Vamos ser realistas: a era de gerenciar a segurança da nuvem baseada apenas em…</p>
+                <span class="post-meta">LinkedIn</span>
+            </a>
+            <a href="https://www.linkedin.com/in/rodrigocarran/" target="_blank" rel="noopener noreferrer" class="post-card">
+                <p>Ver todas as postagens e perfil completo →</p>
+                <span class="post-meta">Rodrigo Carran · DPO, Coordenador de Segurança da Informação</span>
+            </a>
+        </section>
 
         <footer class="footer">
             <p>Participe com responsabilidade. Respeite a privacidade e as boas práticas.</p>
