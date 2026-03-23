@@ -93,6 +93,25 @@
             color: var(--text-muted);
             margin-bottom: 1rem;
         }
+        .btn-dashboard {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-dashboard:hover {
+            border-color: var(--accent);
+            background: var(--accent-dim);
+        }
         .cert-guide h2 {
             font-size: 1.35rem;
             font-weight: 600;
@@ -325,6 +344,7 @@
         <header class="page-header">
             <div class="logo">SENTINELA</div>
             <p class="tagline">// ferramentas open source em cibersegurança</p>
+            <a href="dashboard-ferramentas.html" class="btn-dashboard">Ver gráficos e estatísticas de uso</a>
         </header>
 
         <div class="sections-grid">
