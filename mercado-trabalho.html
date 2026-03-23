@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercado De Trabalho | Sentinela</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --bg-card: #111827;
+            --accent: #00ff88;
+            --accent-dim: #00ff8833;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Space Grotesk', sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+        .grid-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px; pointer-events: none; z-index: 0;
+        }
+        .glow-orb { position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+        .glow-orb-1 { top: -200px; right: -200px; }
+        .glow-orb-2 { bottom: -200px; left: -200px; opacity: 0.5; }
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; justify-content: center; gap: 1.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(10, 14, 23, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav a { color: var(--text-muted); text-decoration: none; font-size: 0.95rem; transition: color 0.2s; }
+        .nav a:hover { color: var(--accent); }
+        main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 5rem 1.5rem 4rem; min-height: 100vh; }
+        .page-header { text-align: center; margin-bottom: 1.5rem; }
+        .page-header .logo { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; }
+        .page-header .tagline { font-size: 0.9rem; color: var(--text-muted); }
+        .intro { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; text-align: center; max-width: 580px; margin-left: auto; margin-right: auto; }
+        .nav-anchors {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;
+            margin-bottom: 2rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 10px; position: sticky; top: 4.5rem; z-index: 10;
+        }
+        .nav-anchors a {
+            padding: 0.45rem 0.85rem; font-size: 0.8rem; font-weight: 600;
+            color: var(--text-muted); text-decoration: none; border-radius: 6px;
+            transition: all 0.2s; white-space: nowrap;
+        }
+        .nav-anchors a:hover { color: var(--accent); background: var(--accent-dim); }
+        .sections-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;
+        }
+        .cert-guide h2 { font-size: 1.35rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .cert-guide .subtitle { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+        .cert-category {
+            margin-bottom: 1.75rem; scroll-margin-top: 6rem;
+        }
+        .cert-category h3 {
+            font-size: 0.8rem; font-weight: 600; color: var(--accent); text-transform: uppercase;
+            letter-spacing: 0.05em; margin-bottom: 0.75rem;
+            position: relative; padding-left: 0.75rem;
+        }
+        .cert-category h3::before {
+            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+            width: 3px; height: 0.9em; background: var(--accent); border-radius: 2px;
+        }
+        .cert-category-full { grid-column: 1 / -1; margin-top: 0.5rem; }
+        @media (max-width: 900px) { .sections-grid { grid-template-columns: 1fr; } .nav-anchors { top: 4rem; } .tendencia-grid { grid-template-columns: 1fr !important; } }
+        .cert-menu { list-style: none; }
+        .cert-menu li { margin-bottom: 0.5rem; }
+        .cert-menu a {
+            display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+            padding: 0.7rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .cert-menu a:hover { border-color: var(--accent); color: var(--accent); }
+        .cert-badge { font-size: 0.6rem; padding: 0.18rem 0.4rem; border-radius: 4px; background: var(--accent-dim); color: var(--accent); font-weight: 600; }
+        .empresa-logo { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; object-fit: contain; background: var(--bg-dark); }
+        .perfil-card {
+            display: flex; align-items: flex-start; gap: 1rem; flex-wrap: wrap;
+            padding: 1rem 1.25rem; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 10px; margin-bottom: 0.75rem; transition: all 0.2s;
+        }
+        .perfil-card:hover { border-color: var(--accent); }
+        .perfil-card a { flex: 1; min-width: 0; text-decoration: none; color: inherit; }
+        .perfil-card a:hover { color: var(--accent); }
+        .perfil-card .cargo { font-weight: 600; margin-bottom: 0.35rem; }
+        .perfil-card .meta { font-size: 0.8rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.35rem; }
+        .perfil-card .salario { color: var(--accent); font-weight: 500; }
+        .perfil-card .junior-tag { font-size: 0.7rem; padding: 0.15rem 0.5rem; background: rgba(0,255,136,0.15); color: var(--accent); border-radius: 4px; }
+        .perfis-tabela { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .perfis-tabela th, .perfis-tabela td { padding: 0.7rem 1rem; text-align: left; border: 1px solid var(--border); }
+        .perfis-tabela th { background: var(--bg-card); color: var(--accent); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.04em; }
+        .perfis-tabela tr:hover { background: rgba(0,255,136,0.04); }
+        .perfis-tabela .col-perfil { font-weight: 500; }
+        .perfis-tabela .col-perfil a { color: inherit; text-decoration: none; }
+        .perfis-tabela .col-perfil a:hover { color: var(--accent); }
+        .perfis-tabela .nivel { color: var(--accent); font-weight: 600; text-align: center; }
+        .perfis-tabela .nivel-vazio { color: var(--text-muted); opacity: 0.5; text-align: center; }
+        .perfis-tabela th:nth-child(n+2), .perfis-tabela td:nth-child(n+2) { text-align: center; width: 4rem; }
+        .perfil-card .horizon-tag { font-size: 0.65rem; padding: 0.12rem 0.4rem; border-radius: 4px; font-weight: 600; }
+        .perfil-card .horizon-5 { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+        .perfil-card .horizon-10 { background: rgba(236, 72, 153, 0.2); color: #ec4899; }
+        .tendencia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .chart-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; overflow: visible; }
+        .chart-card h3 { font-size: 0.9rem; font-weight: 600; color: var(--accent); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .chart-salarios { height: 320px; position: relative; overflow: visible; min-width: 0; padding-left: 10px; }
+        .chart-tendencia { height: 300px; position: relative; min-width: 0; }
+        [data-tooltip] { position: relative; }
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute; bottom: 100%; left: 50%;
+            transform: translateX(-50%) translateY(-6px);
+            padding: 0.5rem 0.75rem; font-size: 0.8rem; line-height: 1.35;
+            color: var(--text); background: var(--bg-card); border: 1px solid var(--accent);
+            border-radius: 6px; white-space: normal; max-width: 280px; width: max-content;
+            opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+            z-index: 1000; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        [data-tooltip]:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-8px); }
+        .footer { margin-top: 3rem; text-align: center; font-size: 0.875rem; color: var(--text-muted); }
+        .cookie-consent { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem 1.5rem; background: rgba(17, 24, 39, 0.98); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; z-index: 999; flex-wrap: wrap; }
+        .cookie-consent.hidden { display: none; }
+        .cookie-consent p { font-size: 0.9rem; color: var(--text-muted); margin: 0; flex: 1; min-width: 200px; }
+        .cookie-consent p a { color: var(--accent); text-decoration: none; }
+        .cookie-consent .btn-aceitar { padding: 0.5rem 1.25rem; background: var(--accent); color: var(--bg-dark); border: none; border-radius: 6px; font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        .cookie-consent .btn-aceitar:hover { background: #00e676; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="index.html">Início</a>
+        <a href="certificacoes.html">Guia de Certificações</a>
+        <a href="certificacoes-gratuitas.html">Treinamentos, Certificações Grátis</a>
+        <a href="ferramentas.html">Ferramentas Open Source</a>
+        <a href="mercado-trabalho.html">Mercado De Trabalho</a>
+    </nav>
+    <div class="grid-bg"></div>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+
+    <main>
+        <header class="page-header">
+            <div class="logo">SENTINELA</div>
+            <p class="tagline">// mercado de trabalho em TI, DevSecOps e cibersegurança</p>
+        </header>
+
+        <p class="intro">
+            O setor de TI, DevSecOps e cibersegurança segue em crescimento. Esta página centraliza links para portais de vagas, comunidades e recursos que ajudam a encontrar oportunidades e se preparar para o mercado.
+        </p>
+
+        <nav class="nav-anchors" aria-label="Navegação rápida">
+            <a href="#empresas">Empresas</a>
+            <a href="#portais">Portais</a>
+            <a href="#cybersec">Cibersegurança</a>
+            <a href="#comunidades">Comunidades</a>
+            <a href="#salarios">Salários</a>
+            <a href="#perfis">Perfis em alta</a>
+            <a href="#perfis-tendencia">Perfis tendência</a>
+        </nav>
+
+        <section class="cert-guide">
+            <h2>Mercado De Trabalho</h2>
+            <p class="subtitle">Portais, comunidades e perfis em alta demanda para vagas em tecnologia e segurança</p>
+
+            <div class="sections-grid">
+            <div>
+            <div class="cert-category" id="empresas">
+                <h3>Empresas com Vagas em TI</h3>
+                <ul class="cert-menu">
+                    <li>
+                        <a href="https://careers.google.com/jobs/" target="_blank" rel="noopener noreferrer" data-tooltip="Google Careers. Vagas em engenharia, cloud, segurança e infra no Brasil e remoto.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=google.com&sz=48" alt=""> <span class="cert-badge">Google</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://careers.microsoft.com/" target="_blank" rel="noopener noreferrer" data-tooltip="Microsoft Careers. Azure, segurança, desenvolvimento e mais. Inclui vagas no Brasil.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=microsoft.com&sz=48" alt=""> <span class="cert-badge">Microsoft</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.amazon.jobs/" target="_blank" rel="noopener noreferrer" data-tooltip="Amazon Jobs. AWS, infra, segurança e desenvolvimento. Vagas Brasil e global.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=amazon.com&sz=48" alt=""> <span class="cert-badge">Amazon</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://sou.nu/nucarreiras" target="_blank" rel="noopener noreferrer" data-tooltip="Nubank. Fintech brasileira com forte área de TI, engenharia e segurança.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=nubank.com.br&sz=48" alt=""> <span class="cert-badge">Nubank</span> Vagas
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://carreiras.stone.com.br/" target="_blank" rel="noopener noreferrer" data-tooltip="Stone. Empresa de pagamentos e tecnologia. Vagas em desenvolvimento, infra e segurança.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=stone.com.br&sz=48" alt=""> <span class="cert-badge">Stone</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.totvs.com/carreiras/" target="_blank" rel="noopener noreferrer" data-tooltip="TOTVS. Maior empresa de software do Brasil. Vagas em TI, desenvolvimento e ERP.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=totvs.com&sz=48" alt=""> <span class="cert-badge">TOTVS</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://jobs.lever.co/meli" target="_blank" rel="noopener noreferrer" data-tooltip="Mercado Livre. E-commerce e fintech. Vagas em engenharia, DevOps, segurança e cloud na América Latina.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=mercadolivre.com.br&sz=48" alt=""> <span class="cert-badge">Mercado Livre</span> Vagas
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.itau.com.br/carreiras" target="_blank" rel="noopener noreferrer" data-tooltip="Itaú. Banco com ampla área de tecnologia e segurança da informação.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=itau.com.br&sz=48" alt=""> <span class="cert-badge">Itaú</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://banco.bradesco/html/classic/carreira/" target="_blank" rel="noopener noreferrer" data-tooltip="Bradesco. Vagas em TI, desenvolvimento e infraestrutura.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=bradesco.com.br&sz=48" alt=""> <span class="cert-badge">Bradesco</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.accenture.com/br-pt/careers" target="_blank" rel="noopener noreferrer" data-tooltip="Accenture. Consultoria em TI e cibersegurança. Vagas em tecnologia e segurança.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=accenture.com&sz=48" alt=""> <span class="cert-badge">Accenture</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.deloitte.com/br/carreiras" target="_blank" rel="noopener noreferrer" data-tooltip="Deloitte. Consultoria com área de cybersecurity e risk. Vagas em TI e segurança.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=deloitte.com&sz=48" alt=""> <span class="cert-badge">Deloitte</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://jobs.paloaltonetworks.com/" target="_blank" rel="noopener noreferrer" data-tooltip="Palo Alto Networks. Empresa de cibersegurança. Vagas em vendas técnicas, engenharia e SOC.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=paloaltonetworks.com&sz=48" alt=""> <span class="cert-badge">Palo Alto</span> Vagas
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.crowdstrike.com/careers/" target="_blank" rel="noopener noreferrer" data-tooltip="CrowdStrike. EDR e detecção de ameaças. Vagas em engenharia de segurança e produto.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=crowdstrike.com&sz=48" alt=""> <span class="cert-badge">CrowdStrike</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://careers.ibm.com/" target="_blank" rel="noopener noreferrer" data-tooltip="IBM. Cloud, segurança, consultoria e software. Vagas globais incluindo Brasil.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=ibm.com&sz=48" alt=""> <span class="cert-badge">IBM</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://careers.salesforce.com/" target="_blank" rel="noopener noreferrer" data-tooltip="Salesforce. CRM, cloud e segurança. Vagas em desenvolvimento e engenharia.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=salesforce.com&sz=48" alt=""> <span class="cert-badge">Salesforce</span> Carreiras
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="cert-category" id="portais">
+                <h3>Portais de Vagas – TI e Segurança</h3>
+                <ul class="cert-menu">
+                    <li>
+                        <a href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener noreferrer" data-tooltip="Maior rede profissional. Filtre por 'cybersecurity', 'DevSecOps', 'segurança da informação'. Cadastre alertas de vagas.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=linkedin.com&sz=48" alt=""> <span class="cert-badge">LinkedIn</span> Vagas de Emprego
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://br.indeed.com/" target="_blank" rel="noopener noreferrer" data-tooltip="Indeed Brasil. Busque por analista de segurança, DevSecOps, pentester, SOC analyst e similares.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=indeed.com&sz=48" alt=""> <span class="cert-badge">Indeed</span> Vagas em TI
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.glassdoor.com.br/Vaga/" target="_blank" rel="noopener noreferrer" data-tooltip="Vagas e avaliações de empresas. Útil para pesquisar cultura e benefícios antes de candidatar.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=glassdoor.com&sz=48" alt=""> <span class="cert-badge">Glassdoor</span> Vagas e Avaliações
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.catho.com.br/" target="_blank" rel="noopener noreferrer" data-tooltip="Portal tradicional no Brasil. Foco em vagas nacionais em diversas áreas, incluindo tecnologia.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=catho.com.br&sz=48" alt=""> <span class="cert-badge">Catho</span> Vagas Brasil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.infojobs.com.br/" target="_blank" rel="noopener noreferrer" data-tooltip="InfoJobs Brasil. Vagas em tecnologia, desenvolvimento e infraestrutura.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=infojobs.com.br&sz=48" alt=""> <span class="cert-badge">InfoJobs</span> Vagas
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.programathor.com.br/jobs" target="_blank" rel="noopener noreferrer" data-tooltip="Focado em vagas de desenvolvimento e tech. Inclui DevSecOps, SRE e segurança aplicada.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=programathor.com.br&sz=48" alt=""> <span class="cert-badge">Programathor</span> Vagas Tech
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            </div>
+
+            <div>
+            <div class="cert-category" id="cybersec">
+                <h3>Cibersegurança e DevSecOps</h3>
+                <ul class="cert-menu">
+                    <li>
+                        <a href="https://cybersecjobs.com/" target="_blank" rel="noopener noreferrer" data-tooltip="Portal internacional focado em vagas de cibersegurança. Remote e presencial.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=cybersecjobs.com&sz=48" alt=""> <span class="cert-badge">Cybersecjobs</span> Vagas em Cibersegurança
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.infosec-jobs.com/" target="_blank" rel="noopener noreferrer" data-tooltip="InfoSec Jobs – vagas em segurança da informação, pentest, SOC, forense.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=infosec-jobs.com&sz=48" alt=""> <span class="cert-badge">InfoSec Jobs</span> Vagas InfoSec
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://cybersecurityventures.com/jobs/" target="_blank" rel="noopener noreferrer" data-tooltip="Cybersecurity Ventures – board de vagas e tendências de carreira em segurança.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=cybersecurityventures.com&sz=48" alt=""> <span class="cert-badge">Cybersec Ventures</span> Board de Vagas
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://jobs.lever.co/" target="_blank" rel="noopener noreferrer" data-tooltip="Lever – muitas startups de tech usam esta plataforma. Busque 'security', 'DevSecOps'.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=lever.co&sz=48" alt=""> <span class="cert-badge">Lever</span> Vagas em Startups
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cyberseek.org/heatmap.html" target="_blank" rel="noopener noreferrer" data-tooltip="CyberSeek – heatmap de demanda por profissionais. Útil para entender tendências (EUA).">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=cyberseek.org&sz=48" alt=""> <span class="cert-badge">CyberSeek</span> Demanda e Salários
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="cert-category" id="comunidades">
+                <h3>Comunidades e Grupos</h3>
+                <ul class="cert-menu">
+                    <li>
+                        <a href="https://t.me/vagasinfosec" target="_blank" rel="noopener noreferrer" data-tooltip="Grupo Telegram com vagas em InfoSec e cibersegurança compartilhadas pela comunidade.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=telegram.org&sz=48" alt=""> <span class="cert-badge">Telegram</span> Vagas InfoSec
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.linkedin.com/groups/" target="_blank" rel="noopener noreferrer" data-tooltip="Participe de grupos LinkedIn de cibersegurança e DevSecOps. Vagas são postadas frequentemente.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=linkedin.com&sz=48" alt=""> <span class="cert-badge">LinkedIn</span> Grupos de Segurança
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://discord.com/servers" target="_blank" rel="noopener noreferrer" data-tooltip="Busque por servidores Discord de cibersegurança, DevSecOps e pentest. Muitos têm canais de vagas.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=discord.com&sz=48" alt=""> <span class="cert-badge">Discord</span> Comunidades de Segurança
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/backend-br/vagas" target="_blank" rel="noopener noreferrer" data-tooltip="Comunidade Back-End BR. Vagas de backend, infra, DevOps e segurança no Brasil.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=github.com&sz=48" alt=""> <span class="cert-badge">GitHub</span> Vagas Tech Brasil (Backend/Infra)
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            </div>
+
+            <div class="cert-category cert-category-full" id="salarios">
+                <h3>Média Salarial por Cargo – Brasil</h3>
+                <p class="subtitle" style="margin-bottom: 1rem;">Faixa salarial mensal (R$) por perfil. Valores de referência 2024/2025. Fontes: Robert Half, IT Forum.</p>
+                <div class="chart-card">
+                    <div class="chart-salarios">
+                        <canvas id="chart-salarios"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cert-category cert-category-full" id="perfis">
+                <h3>Perfis em Alta Demanda</h3>
+                <p class="subtitle" style="margin-bottom: 1rem;">Demanda por nível de experiência. Consulte o gráfico acima para faixas salariais.</p>
+                <div style="overflow-x: auto;">
+                    <table class="perfis-tabela">
+                        <thead>
+                            <tr>
+                                <th>Perfil</th>
+                                <th>Jr</th>
+                                <th>PL</th>
+                                <th>Sr</th>
+                                <th>Executivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="col-perfil"><a href="ferramentas.html">DevSecOps – CI/CD, IaC, Containers</a></td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                            </tr>
+                            <tr>
+                                <td class="col-perfil"><a href="certificacoes.html">Analista SOC / Blue Team</a></td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                            </tr>
+                            <tr>
+                                <td class="col-perfil"><a href="certificacoes.html">Pentester / Red Team</a></td>
+                                <td class="nivel-vazio">–</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                            </tr>
+                            <tr>
+                                <td class="col-perfil"><a href="certificacoes-gratuitas.html">Engenheiro de Segurança Cloud</a></td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                            </tr>
+                            <tr>
+                                <td class="col-perfil"><a href="index.html">Analista de Vulnerabilidades</a></td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem;">● demanda alta &nbsp;|&nbsp; – demanda baixa/ausente</p>
+                <div class="chart-card" style="margin-top: 1.5rem;">
+                    <h3 style="margin-bottom: 0.5rem;">Tendência de Demanda por Cargo</h3>
+                    <p class="subtitle" style="font-size: 0.85rem; margin-bottom: 1rem;">Índice de tendência (base 100) – evolução projetada 2022–2027. Valores ilustrativos.</p>
+                    <div class="chart-tendencia">
+                        <canvas id="chart-tendencia"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cert-category cert-category-full" id="perfis-tendencia">
+                <h3>Perfis Tendência</h3>
+                <p class="subtitle" style="margin-bottom: 1rem;">Cargos novos e promissores para os próximos 5 e 10 anos em TI, cibersegurança e áreas emergentes.</p>
+                <div class="tendencia-grid">
+                    <div>
+                        <h4 style="font-size: 0.85rem; color: #818cf8; margin-bottom: 0.75rem; font-weight: 600;">→ Próximos 5 anos</h4>
+                        <div class="perfil-card">
+                            <img class="empresa-logo" src="favicon.png" alt="">
+                            <a href="certificacoes.html">
+                                <span class="cargo">Especialista em Segurança de IA/ML</span>
+                            </a>
+                            <span class="horizon-tag horizon-5">5 anos</span>
+                        </div>
+                        <div class="perfil-card">
+                            <img class="empresa-logo" src="favicon.png" alt="">
+                            <a href="certificacoes.html">
+                                <span class="cargo">Engenheiro Zero Trust / SASE</span>
+                            </a>
+                            <span class="horizon-tag horizon-5">5 anos</span>
+                        </div>
+                        <div class="perfil-card">
+                            <img class="empresa-logo" src="favicon.png" alt="">
+                            <a href="certificacoes.html">
+                                <span class="cargo">Privacy Engineer / LGPD</span>
+                            </a>
+                            <span class="horizon-tag horizon-5">5 anos</span>
+                        </div>
+                        <div class="perfil-card">
+                            <img class="empresa-logo" src="favicon.png" alt="">
+                            <a href="certificacoes.html">
+                                <span class="cargo">Analista de Threat Intelligence</span>
+                            </a>
+                            <span class="horizon-tag horizon-5">5 anos</span>
+                        </div>
+                        <div class="perfil-card">
+                            <img class="empresa-logo" src="favicon.png" alt="">
+                            <a href="certificacoes.html">
+                                <span class="cargo">Especialista em Segurança IoT/OT</span>
+                            </a>
+                            <span class="horizon-tag horizon-5">5 anos</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.85rem; color: #ec4899; margin-bottom: 0.75rem; font-weight: 600;">→ Próximos 10 anos</h4>
+                        <div class="perfil-card">
+                            <img class="empresa-logo" src="favicon.png" alt="">
+                            <a href="certificacoes.html">
+                                <span class="cargo">Especialista em Criptografia Pós-Quântica</span>
+                            </a>
+                            <span class="horizon-tag horizon-10">10 anos</span>
+                        </div>
+                        <div class="perfil-card">
+                            <img class="empresa-logo" src="favicon.png" alt="">
+                            <a href="certificacoes.html">
+                                <span class="cargo">Especialista em Segurança de IA Generativa</span>
+                            </a>
+                            <span class="horizon-tag horizon-10">10 anos</span>
+                        </div>
+                        <div class="perfil-card">
+                            <img class="empresa-logo" src="favicon.png" alt="">
+                            <a href="certificacoes.html">
+                                <span class="cargo">Engenheiro de Segurança em Sistemas Autônomos</span>
+                            </a>
+                            <span class="horizon-tag horizon-10">10 anos</span>
+                        </div>
+                        <div class="perfil-card">
+                            <img class="empresa-logo" src="favicon.png" alt="">
+                            <a href="certificacoes.html">
+                                <span class="cargo">Especialista em Segurança Espacial / Satélites</span>
+                            </a>
+                            <span class="horizon-tag horizon-10">10 anos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p><a href="index.html" style="color: var(--accent); text-decoration: none;">← Voltar ao início</a></p>
+        </footer>
+    </main>
+
+    <script>
+        (function() {
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.borderColor = '#1e293b';
+            Chart.defaults.font.family = "'Space Grotesk', sans-serif";
+            var ctx = document.getElementById('chart-salarios');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Analista de Vuln.', 'Analista SOC', 'Pentester', 'Eng. Seg. Cloud', 'DevSecOps'],
+                    datasets: [{
+                        label: 'Faixa salarial (R$/mês)',
+                        data: [[6100, 14100], [8500, 13000], [13350, 18300], [12000, 22000], [14650, 24500]],
+                        backgroundColor: 'rgba(0, 255, 136, 0.5)',
+                        borderColor: '#00ff88',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: { left: 130, right: 20 }
+                    },
+                    scales: {
+                        y: {
+                            grid: { display: false },
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 0,
+                                padding: 8,
+                                font: { size: 13 }
+                            }
+                        },
+                        x: {
+                            min: 0,
+                            max: 28000,
+                            grid: { color: '#1e293b' },
+                            ticks: {
+                                callback: function(v) { return 'R$ ' + (v/1000) + 'k'; }
+                            }
+                        },
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: function(items) {
+                                    var full = ['Analista de Vulnerabilidades', 'Analista SOC', 'Pentester', 'Engenheiro de Segurança Cloud', 'DevSecOps'];
+                                    return full[items[0].dataIndex] || items[0].label;
+                                },
+                                afterBody: function(items) {
+                                    var d = items[0].raw;
+                                    if (Array.isArray(d)) return ['Mín: R$ ' + d[0].toLocaleString('pt-BR') + ' | Máx: R$ ' + d[1].toLocaleString('pt-BR')];
+                                    return [];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })();
+        (function() {
+            var ctx = document.getElementById('chart-tendencia');
+            if (!ctx) return;
+            var years = ['2022', '2023', '2024', '2025', '2026', '2027'];
+            var colors = ['#00ff88', '#22d3ee', '#a78bfa', '#fbbf24', '#f472b6'];
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [
+                        { label: 'DevSecOps', data: [72, 82, 92, 98, 105, 112], borderColor: '#00ff88', backgroundColor: 'rgba(0,255,136,0.1)', tension: 0.3, fill: true },
+                        { label: 'Eng. Seg. Cloud', data: [65, 75, 88, 96, 104, 110], borderColor: '#22d3ee', backgroundColor: 'rgba(34,211,238,0.08)', tension: 0.3, fill: true },
+                        { label: 'Analista SOC', data: [78, 85, 90, 95, 100, 105], borderColor: '#a78bfa', backgroundColor: 'rgba(167,139,250,0.08)', tension: 0.3, fill: true },
+                        { label: 'Pentester', data: [70, 78, 86, 93, 98, 103], borderColor: '#fbbf24', backgroundColor: 'rgba(251,191,36,0.08)', tension: 0.3, fill: true },
+                        { label: 'Analista de Vuln.', data: [68, 80, 88, 96, 102, 108], borderColor: '#f472b6', backgroundColor: 'rgba(244,114,182,0.08)', tension: 0.3, fill: true }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { position: 'top', labels: { usePointStyle: true, padding: 16 } }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#1e293b' },
+                            ticks: { font: { size: 11 } }
+                        },
+                        y: {
+                            min: 60,
+                            max: 120,
+                            grid: { color: '#1e293b' },
+                            ticks: {
+                                callback: function(v) { return v; },
+                                font: { size: 11 }
+                            }
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+    <div id="cookie-consent" class="cookie-consent">
+        <p>Utilizamos cookies para melhorar sua experiência. Ao continuar, você concorda com o uso de cookies. <a href="index.html#cookies">Saiba mais</a></p>
+        <button type="button" class="btn-aceitar" id="btn-aceitar-cookies">Aceitar</button>
+    </div>
+    <script>
+        (function() {
+            var banner = document.getElementById('cookie-consent');
+            var btn = document.getElementById('btn-aceitar-cookies');
+            if (localStorage.getItem('sentinela-cookies-aceitos') === '1') { if (banner) banner.classList.add('hidden'); }
+            if (btn) btn.addEventListener('click', function() { localStorage.setItem('sentinela-cookies-aceitos', '1'); if (banner) banner.classList.add('hidden'); });
+        })();
+    </script>
+</body>
+</html>
