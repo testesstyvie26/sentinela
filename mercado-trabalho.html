@@ -119,7 +119,7 @@
         .tendencia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
         .chart-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; overflow: visible; }
         .chart-card h3 { font-size: 0.9rem; font-weight: 600; color: var(--accent); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .chart-salarios { height: 380px; position: relative; overflow: visible; min-width: 0; padding-left: 10px; }
+        .chart-salarios { height: 480px; position: relative; overflow: visible; min-width: 0; padding-left: 10px; }
         .chart-tendencia { height: 300px; position: relative; min-width: 0; }
         [data-tooltip] { position: relative; }
         [data-tooltip]::after {
@@ -133,6 +133,27 @@
             z-index: 1000; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
         [data-tooltip]:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-8px); }
+        .btn-vulcan-cta {
+            display: block; width: 100%; max-width: 560px; margin: 2rem auto; padding: 1.25rem 1.5rem;
+            background: linear-gradient(135deg, rgba(0,255,136,0.2) 0%, rgba(0,255,136,0.05) 100%);
+            border: 2px solid var(--accent); border-radius: 12px; color: var(--text);
+            font-family: inherit; font-size: 1rem; font-weight: 600; line-height: 1.4; text-align: center;
+            text-decoration: none; transition: all 0.3s ease; position: relative; overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,255,136,0.2); animation: btn-pulse 3s ease-in-out infinite;
+        }
+        .btn-vulcan-cta::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,255,136,0.15), transparent);
+            animation: btn-shine 2.5s infinite;
+        }
+        .btn-vulcan-cta:hover {
+            background: linear-gradient(135deg, rgba(0,255,136,0.3) 0%, rgba(0,255,136,0.1) 100%);
+            transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,255,136,0.35);
+        }
+        .btn-vulcan-cta .btn-vulcan-text { display: block; margin-bottom: 0.35rem; }
+        .btn-vulcan-cta .btn-vulcan-link { font-size: 0.9rem; color: var(--accent); }
+        @keyframes btn-shine { 0% { left: -100%; } 50%, 100% { left: 100%; } }
+        @keyframes btn-pulse { 0%, 100% { box-shadow: 0 0 20px rgba(0,255,136,0.2); } 50% { box-shadow: 0 0 30px rgba(0,255,136,0.4); } }
         .footer { margin-top: 3rem; text-align: center; font-size: 0.875rem; color: var(--text-muted); }
         .cookie-consent { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem 1.5rem; background: rgba(17, 24, 39, 0.98); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; z-index: 999; flex-wrap: wrap; }
         .cookie-consent.hidden { display: none; }
@@ -149,6 +170,7 @@
         <a href="certificacoes-gratuitas.html">Treinamentos, Certificações Grátis</a>
         <a href="ferramentas.html">Ferramentas Open Source</a>
         <a href="mercado-trabalho.html">Mercado De Trabalho</a>
+        <a href="perfis-profissionais.html">Perfis Profissionais</a>
     </nav>
     <div class="grid-bg"></div>
     <div class="glow-orb glow-orb-1"></div>
@@ -171,6 +193,7 @@
             <a href="#comunidades">Comunidades</a>
             <a href="#salarios">Salários</a>
             <a href="#perfis">Perfis em alta</a>
+            <a href="perfis-profissionais.html#cargos">Perfis Profissionais</a>
             <a href="#perfis-tendencia">Perfis tendência</a>
         </nav>
 
@@ -416,44 +439,86 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="col-perfil"><a href="ferramentas.html">DevSecOps – CI/CD, IaC, Containers</a></td>
+                                <td class="col-perfil"><a href="perfis-profissionais.html#devsecops">DevSecOps – CI/CD, IaC, Containers</a></td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                             </tr>
                             <tr>
-                                <td class="col-perfil"><a href="certificacoes.html">Analista SOC / Blue Team</a></td>
+                                <td class="col-perfil"><a href="perfis-profissionais.html#soc">Analista SOC / Blue Team</a></td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                             </tr>
                             <tr>
-                                <td class="col-perfil"><a href="certificacoes.html">Pentester / Red Team</a></td>
+                                <td class="col-perfil"><a href="perfis-profissionais.html#pentester">Pentester / Red Team</a></td>
                                 <td class="nivel-vazio">–</td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                             </tr>
                             <tr>
-                                <td class="col-perfil"><a href="certificacoes-gratuitas.html">Engenheiro de Segurança Cloud</a></td>
+                                <td class="col-perfil"><a href="perfis-profissionais.html#cloud">Engenheiro de Segurança Cloud</a></td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                             </tr>
                             <tr>
-                                <td class="col-perfil"><a href="index.html">Analista de Vulnerabilidades</a></td>
+                                <td class="col-perfil"><a href="perfis-profissionais.html#vuln">Analista de Vulnerabilidades</a></td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                             </tr>
                             <tr>
-                                <td class="col-perfil"><a href="certificacoes.html">Analista de Segurança da Informação</a></td>
+                                <td class="col-perfil"><a href="perfis-profissionais.html#seg-info">Analista de Segurança da Informação</a></td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                            </tr>
+                            <tr>
+                                <td class="col-perfil"><a href="perfis-profissionais.html#arquiteto">Arquiteto de Segurança</a></td>
+                                <td class="nivel-vazio">–</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                            </tr>
+                            <tr>
+                                <td class="col-perfil"><a href="perfis-profissionais.html#dfir">Analista DFIR / Forense</a></td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                            </tr>
+                            <tr>
+                                <td class="col-perfil"><a href="perfis-profissionais.html#dpo">DPO – Data Protection Officer</a></td>
+                                <td class="nivel-vazio">–</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                            </tr>
+                            <tr>
+                                <td class="col-perfil"><a href="perfis-profissionais.html#threat-intel">Analista de Threat Intelligence</a></td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                            </tr>
+                            <tr>
+                                <td class="col-perfil"><a href="perfis-profissionais.html#appsec">Eng. Segurança de Aplicações (AppSec)</a></td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                            </tr>
+                            <tr>
+                                <td class="col-perfil"><a href="perfis-profissionais.html#gerente">Coordenador / Gerente de Segurança</a></td>
+                                <td class="nivel-vazio">–</td>
+                                <td class="nivel-vazio">–</td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                             </tr>
@@ -546,6 +611,11 @@
                 </div>
             </div>
             </div>
+
+            <a href="https://vulcandefense.com.br" target="_blank" rel="noopener noreferrer" class="btn-vulcan-cta">
+                <span class="btn-vulcan-text">Crie o melhor time, crie as melhores formas de contratação baseado no seu negócio com a consultoria Vulcan</span>
+                <span class="btn-vulcan-link">vulcandefense.com.br →</span>
+            </a>
         </section>
 
         <footer class="footer">
@@ -563,13 +633,13 @@
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Analista de Vuln.', 'Analista SOC', 'Pentester', 'Eng. Seg. Cloud', 'DevSecOps', 'Analista Seg. da Info'],
+                    labels: ['Analista de Vuln.', 'Analista SOC', 'Pentester', 'Eng. Seg. Cloud', 'DevSecOps', 'Analista Seg. Info', 'Arquiteto Seg.', 'DFIR / Forense', 'DPO', 'Threat Intel', 'AppSec', 'Coord./Gerente'],
                     datasets: [
-                        { label: 'Junior', data: [8100, 8100, 13350, 10100, 15550, 8100], backgroundColor: 'rgba(0, 255, 136, 0.6)', borderColor: '#00ff88', borderWidth: 1, borderRadius: 4 },
-                        { label: 'Pleno', data: [11150, 11150, 15400, 14850, 20200, 11150], backgroundColor: 'rgba(34, 211, 238, 0.6)', borderColor: '#22d3ee', borderWidth: 1, borderRadius: 4 },
-                        { label: 'Senior', data: [14750, 14750, 18300, 19100, 26250, 14750], backgroundColor: 'rgba(167, 139, 250, 0.6)', borderColor: '#a78bfa', borderWidth: 1, borderRadius: 4 },
-                        { label: 'Especialista', data: [20800, 20800, 23000, 24800, 32000, 20800], backgroundColor: 'rgba(251, 191, 36, 0.6)', borderColor: '#fbbf24', borderWidth: 1, borderRadius: 4 },
-                        { label: 'Executivo', data: [28900, 28900, 31000, 37200, 42000, 28900], backgroundColor: 'rgba(244, 114, 182, 0.6)', borderColor: '#f472b6', borderWidth: 1, borderRadius: 4 }
+                        { label: 'Junior', data: [8100, 8100, 13350, 10100, 15550, 8100, null, 9000, null, 9000, 10000, null], backgroundColor: 'rgba(0, 255, 136, 0.6)', borderColor: '#00ff88', borderWidth: 1, borderRadius: 4 },
+                        { label: 'Pleno', data: [11150, 11150, 15400, 14850, 20200, 11150, 18000, 13000, 12000, 13000, 15000, null], backgroundColor: 'rgba(34, 211, 238, 0.6)', borderColor: '#22d3ee', borderWidth: 1, borderRadius: 4 },
+                        { label: 'Senior', data: [14750, 14750, 18300, 19100, 26250, 14750, 26000, 18000, 18000, 17000, 21000, 21000], backgroundColor: 'rgba(167, 139, 250, 0.6)', borderColor: '#a78bfa', borderWidth: 1, borderRadius: 4 },
+                        { label: 'Especialista', data: [20800, 20800, 23000, 24800, 32000, 20800, 32000, 24000, 24000, 22000, 28000, 29000], backgroundColor: 'rgba(251, 191, 36, 0.6)', borderColor: '#fbbf24', borderWidth: 1, borderRadius: 4 },
+                        { label: 'Executivo', data: [28900, 28900, 31000, 37200, 42000, 28900, 45000, 35000, 32000, 30000, 38000, 37000], backgroundColor: 'rgba(244, 114, 182, 0.6)', borderColor: '#f472b6', borderWidth: 1, borderRadius: 4 }
                     ]
                 },
                 options: {
@@ -604,10 +674,10 @@
                         tooltip: {
                             callbacks: {
                                 title: function(items) {
-                                    var full = ['Analista de Vulnerabilidades', 'Analista SOC', 'Pentester', 'Eng. Segurança Cloud', 'DevSecOps', 'Analista de Segurança da Informação'];
+                                    var full = ['Analista de Vulnerabilidades', 'Analista SOC', 'Pentester', 'Eng. Segurança Cloud', 'DevSecOps', 'Analista de Segurança da Informação', 'Arquiteto de Segurança', 'Analista DFIR / Forense', 'DPO', 'Analista de Threat Intelligence', 'Engenheiro de Segurança de Aplicações', 'Coordenador / Gerente de Segurança'];
                                     return full[items[0].dataIndex] || items[0].label;
                                 },
-                                label: function(ctx) { return ctx.dataset.label + ': R$ ' + ctx.raw.toLocaleString('pt-BR') + '/mês'; }
+                                label: function(ctx) { if (ctx.raw == null) return null; return ctx.dataset.label + ': R$ ' + ctx.raw.toLocaleString('pt-BR') + '/mês'; }
                             }
                         }
                     }
@@ -629,7 +699,9 @@
                         { label: 'Analista SOC', data: [78, 85, 90, 95, 100, 105], borderColor: '#a78bfa', backgroundColor: 'rgba(167,139,250,0.08)', tension: 0.3, fill: true },
                         { label: 'Pentester', data: [70, 78, 86, 93, 98, 103], borderColor: '#fbbf24', backgroundColor: 'rgba(251,191,36,0.08)', tension: 0.3, fill: true },
                         { label: 'Analista de Vuln.', data: [68, 80, 88, 96, 102, 108], borderColor: '#f472b6', backgroundColor: 'rgba(244,114,182,0.08)', tension: 0.3, fill: true },
-                        { label: 'Analista Seg. da Info', data: [75, 82, 88, 94, 100, 106], borderColor: '#34d399', backgroundColor: 'rgba(52,211,153,0.08)', tension: 0.3, fill: true }
+                        { label: 'Analista Seg. da Info', data: [75, 82, 88, 94, 100, 106], borderColor: '#34d399', backgroundColor: 'rgba(52,211,153,0.08)', tension: 0.3, fill: true },
+                        { label: 'Arquiteto Seg.', data: [68, 74, 82, 90, 98, 106], borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.08)', tension: 0.3, fill: true },
+                        { label: 'DFIR / AppSec', data: [72, 80, 88, 95, 102, 109], borderColor: '#06b6d4', backgroundColor: 'rgba(6,182,212,0.08)', tension: 0.3, fill: true }
                     ]
                 },
                 options: {
