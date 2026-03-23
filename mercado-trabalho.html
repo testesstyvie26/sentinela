@@ -119,7 +119,7 @@
         .tendencia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
         .chart-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; overflow: visible; }
         .chart-card h3 { font-size: 0.9rem; font-weight: 600; color: var(--accent); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .chart-salarios { height: 320px; position: relative; overflow: visible; min-width: 0; padding-left: 10px; }
+        .chart-salarios { height: 380px; position: relative; overflow: visible; min-width: 0; padding-left: 10px; }
         .chart-tendencia { height: 300px; position: relative; min-width: 0; }
         [data-tooltip] { position: relative; }
         [data-tooltip]::after {
@@ -359,12 +359,45 @@
 
             <div class="cert-category cert-category-full" id="salarios">
                 <h3>Média Salarial por Cargo – Brasil</h3>
-                <p class="subtitle" style="margin-bottom: 1rem;">Faixa salarial mensal (R$) por perfil. Valores de referência 2024/2025. Fontes: Robert Half, IT Forum.</p>
+                <p class="subtitle" style="margin-bottom: 1rem;">Salário médio mensal (R$) por perfil e nível: Junior, Pleno, Senior, Especialista, Executivo. Valores de referência 2024/2025. Fontes: Robert Half, IT Forum.</p>
                 <div class="chart-card">
                     <div class="chart-salarios">
                         <canvas id="chart-salarios"></canvas>
                     </div>
                 </div>
+                <p class="subtitle" style="margin-top: 1rem; margin-bottom: 0.5rem; font-size: 0.85rem;">Referências e notícias sobre salários e mercado de trabalho em TI</p>
+                <ul class="cert-menu" style="margin-top: 0;">
+                    <li>
+                        <a href="https://www.roberthalf.com/br/pt/insights/salary-guide/technology" target="_blank" rel="noopener noreferrer" data-tooltip="Guia Salarial Robert Half – tendências e faixas salariais por cargo em tecnologia.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=roberthalf.com&sz=48" alt=""> <span class="cert-badge">Robert Half</span> Guia Salarial TI
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.roberthalf.com/br/pt/sobre-robert-half/imprensa/guia-salarial-robert-half-2025-profissoes-em-alta-em-tecnologia" target="_blank" rel="noopener noreferrer" data-tooltip="Profissões em alta demanda em tecnologia – cibersegurança, IA, engenharia de dados.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=roberthalf.com&sz=48" alt=""> <span class="cert-badge">Robert Half</span> Profissões em Alta
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.glassdoor.com.br/Salários/index.htm" target="_blank" rel="noopener noreferrer" data-tooltip="Pesquisa salarial e avaliações de empresas. Busque por cargo e empresa.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=glassdoor.com&sz=48" alt=""> <span class="cert-badge">Glassdoor</span> Pesquisa Salarial
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.infomoney.com.br/carreira/salarios-e-beneficios/" target="_blank" rel="noopener noreferrer" data-tooltip="Notícias e análises sobre salários, benefícios e mercado de trabalho.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=infomoney.com.br&sz=48" alt=""> <span class="cert-badge">InfoMoney</span> Salários e Carreira
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://valor.globo.com/carreira/" target="_blank" rel="noopener noreferrer" data-tooltip="Notícias de carreira, empregabilidade e tendências do mercado.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=valor.globo.com&sz=48" alt=""> <span class="cert-badge">Valor</span> Carreira
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.catho.com.br/educacao/mercado-de-trabalho/" target="_blank" rel="noopener noreferrer" data-tooltip="Artigos sobre mercado de trabalho, vagas e tendências em TI.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=catho.com.br&sz=48" alt=""> <span class="cert-badge">Catho</span> Mercado de Trabalho
+                        </a>
+                    </li>
+                </ul>
             </div>
 
             <div class="cert-category cert-category-full" id="perfis">
@@ -412,6 +445,13 @@
                             </tr>
                             <tr>
                                 <td class="col-perfil"><a href="index.html">Analista de Vulnerabilidades</a></td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                                <td class="nivel">●</td>
+                            </tr>
+                            <tr>
+                                <td class="col-perfil"><a href="certificacoes.html">Analista de Segurança da Informação</a></td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
                                 <td class="nivel">●</td>
@@ -523,23 +563,21 @@
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Analista de Vuln.', 'Analista SOC', 'Pentester', 'Eng. Seg. Cloud', 'DevSecOps'],
-                    datasets: [{
-                        label: 'Faixa salarial (R$/mês)',
-                        data: [[6100, 14100], [8500, 13000], [13350, 18300], [12000, 22000], [14650, 24500]],
-                        backgroundColor: 'rgba(0, 255, 136, 0.5)',
-                        borderColor: '#00ff88',
-                        borderWidth: 1,
-                        borderRadius: 4,
-                        borderSkipped: false
-                    }]
+                    labels: ['Analista de Vuln.', 'Analista SOC', 'Pentester', 'Eng. Seg. Cloud', 'DevSecOps', 'Analista Seg. da Info'],
+                    datasets: [
+                        { label: 'Junior', data: [8100, 8100, 13350, 10100, 15550, 8100], backgroundColor: 'rgba(0, 255, 136, 0.6)', borderColor: '#00ff88', borderWidth: 1, borderRadius: 4 },
+                        { label: 'Pleno', data: [11150, 11150, 15400, 14850, 20200, 11150], backgroundColor: 'rgba(34, 211, 238, 0.6)', borderColor: '#22d3ee', borderWidth: 1, borderRadius: 4 },
+                        { label: 'Senior', data: [14750, 14750, 18300, 19100, 26250, 14750], backgroundColor: 'rgba(167, 139, 250, 0.6)', borderColor: '#a78bfa', borderWidth: 1, borderRadius: 4 },
+                        { label: 'Especialista', data: [20800, 20800, 23000, 24800, 32000, 20800], backgroundColor: 'rgba(251, 191, 36, 0.6)', borderColor: '#fbbf24', borderWidth: 1, borderRadius: 4 },
+                        { label: 'Executivo', data: [28900, 28900, 31000, 37200, 42000, 28900], backgroundColor: 'rgba(244, 114, 182, 0.6)', borderColor: '#f472b6', borderWidth: 1, borderRadius: 4 }
+                    ]
                 },
                 options: {
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
                     layout: {
-                        padding: { left: 130, right: 20 }
+                        padding: { left: 140, right: 20 }
                     },
                     scales: {
                         y: {
@@ -547,32 +585,29 @@
                             ticks: {
                                 autoSkip: false,
                                 maxRotation: 0,
-                                padding: 8,
-                                font: { size: 13 }
+                                padding: 6,
+                                font: { size: 12 }
                             }
                         },
                         x: {
                             min: 0,
-                            max: 28000,
+                            max: 45000,
                             grid: { color: '#1e293b' },
                             ticks: {
-                                callback: function(v) { return 'R$ ' + (v/1000) + 'k'; }
+                                callback: function(v) { return 'R$ ' + (v/1000) + 'k'; },
+                                maxTicksLimit: 10
                             }
                         },
                     },
                     plugins: {
-                        legend: { display: false },
+                        legend: { position: 'top', labels: { usePointStyle: true, padding: 12, boxWidth: 12 } },
                         tooltip: {
                             callbacks: {
                                 title: function(items) {
-                                    var full = ['Analista de Vulnerabilidades', 'Analista SOC', 'Pentester', 'Engenheiro de Segurança Cloud', 'DevSecOps'];
+                                    var full = ['Analista de Vulnerabilidades', 'Analista SOC', 'Pentester', 'Eng. Segurança Cloud', 'DevSecOps', 'Analista de Segurança da Informação'];
                                     return full[items[0].dataIndex] || items[0].label;
                                 },
-                                afterBody: function(items) {
-                                    var d = items[0].raw;
-                                    if (Array.isArray(d)) return ['Mín: R$ ' + d[0].toLocaleString('pt-BR') + ' | Máx: R$ ' + d[1].toLocaleString('pt-BR')];
-                                    return [];
-                                }
+                                label: function(ctx) { return ctx.dataset.label + ': R$ ' + ctx.raw.toLocaleString('pt-BR') + '/mês'; }
                             }
                         }
                     }
@@ -593,7 +628,8 @@
                         { label: 'Eng. Seg. Cloud', data: [65, 75, 88, 96, 104, 110], borderColor: '#22d3ee', backgroundColor: 'rgba(34,211,238,0.08)', tension: 0.3, fill: true },
                         { label: 'Analista SOC', data: [78, 85, 90, 95, 100, 105], borderColor: '#a78bfa', backgroundColor: 'rgba(167,139,250,0.08)', tension: 0.3, fill: true },
                         { label: 'Pentester', data: [70, 78, 86, 93, 98, 103], borderColor: '#fbbf24', backgroundColor: 'rgba(251,191,36,0.08)', tension: 0.3, fill: true },
-                        { label: 'Analista de Vuln.', data: [68, 80, 88, 96, 102, 108], borderColor: '#f472b6', backgroundColor: 'rgba(244,114,182,0.08)', tension: 0.3, fill: true }
+                        { label: 'Analista de Vuln.', data: [68, 80, 88, 96, 102, 108], borderColor: '#f472b6', backgroundColor: 'rgba(244,114,182,0.08)', tension: 0.3, fill: true },
+                        { label: 'Analista Seg. da Info', data: [75, 82, 88, 94, 100, 106], borderColor: '#34d399', backgroundColor: 'rgba(52,211,153,0.08)', tension: 0.3, fill: true }
                     ]
                 },
                 options: {
