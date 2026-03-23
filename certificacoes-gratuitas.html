@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificações Gratuitas | Sentinela</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --bg-card: #111827;
+            --accent: #00ff88;
+            --accent-dim: #00ff8833;
+            --accent-free: #22c55e;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .grid-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none; z-index: 0;
+        }
+        .glow-orb {
+            position: fixed; width: 600px; height: 600px; border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+        .glow-orb-1 { top: -200px; right: -200px; }
+        .glow-orb-2 { bottom: -200px; left: -200px; opacity: 0.5; }
+        main {
+            position: relative; z-index: 1;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 5rem 1.5rem 4rem;
+            min-height: 100vh;
+        }
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; justify-content: center; gap: 1.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(10, 14, 23, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        .nav a:hover { color: var(--accent); }
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .page-header .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+        .page-header .tagline {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .free-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--accent-free);
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        .cert-guide h2 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .cert-guide .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+        .cert-category {
+            margin-bottom: 1.75rem;
+        }
+        .cert-category h3 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+        .cert-menu { list-style: none; }
+        .cert-menu li { margin-bottom: 0.5rem; }
+        .cert-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            padding: 0.7rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .cert-menu a:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .cert-badge {
+            font-size: 0.6rem;
+            padding: 0.18rem 0.4rem;
+            border-radius: 4px;
+            background: var(--accent-dim);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        [data-tooltip] { position: relative; }
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-6px);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            line-height: 1.35;
+            color: var(--text);
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            white-space: normal;
+            max-width: 280px;
+            width: max-content;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+            z-index: 1000;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        [data-tooltip]:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-8px);
+        }
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="index.html">Início</a>
+        <a href="certificacoes.html">Guia de Certificações</a>
+        <a href="certificacoes-gratuitas.html">Certificações Gratuitas</a>
+    </nav>
+    <div class="grid-bg"></div>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+
+    <main>
+        <header class="page-header">
+            <div class="logo">SENTINELA</div>
+            <p class="tagline">// certificações gratuitas em cibersegurança</p>
+        </header>
+
+        <section class="cert-guide">
+            <h2>Certificações e Cursos Gratuitos <span class="free-badge">100% FREE</span></h2>
+            <p class="subtitle">Cursos com certificado e provas gratuitas para iniciar ou aprofundar na carreira</p>
+
+            <!-- EMPRESAS / PLATAFORMAS -->
+            <div class="cert-category">
+                <h3>Empresas e Plataformas</h3>
+                <ul class="cert-menu">
+                    <li>
+                        <a href="https://grow.google/intl/pt/google-career-certificates/cybersecurity/" target="_blank" rel="noopener noreferrer" data-tooltip="Programa completo da Google: 9 cursos, ~6 meses. Python, Linux, SQL, SIEM, análise de riscos. Sem experiência prévia.">
+                            <span class="cert-badge">Google</span> Certificado Profissional em Cibersegurança
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.isc2.org/certifications/cc" target="_blank" rel="noopener noreferrer" data-tooltip="Programa One Million: prova gratuita + treinamento online. Certificação reconhecida (ISC)². Requisitos: 16+ anos, nunca ter usado o benefício.">
+                            <span class="cert-badge">(ISC)²</span> Certified in Cybersecurity (CC) – prova gratuita
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.coursera.org/professional-certificates/ibm-isc2-cybersecurity-specialist" target="_blank" rel="noopener noreferrer" data-tooltip="12 cursos IBM + preparação para o CC (ISC)². Linux, redes, Python, resposta a incidentes. ~3 meses, 10h/semana.">
+                            <span class="cert-badge">IBM + (ISC)²</span> Cybersecurity Specialist – Coursera
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.fortinet.com/training-certification" target="_blank" rel="noopener noreferrer" data-tooltip="NSE 1 (Awareness) e NSE 2 (Firewall) gratuitos. Cadastro na plataforma Fortinet e cursos online.">
+                            <span class="cert-badge">Fortinet</span> NSE 1 &amp; NSE 2 – gratuitos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://grow.google/intl/pt/courses-and-tools/" target="_blank" rel="noopener noreferrer" data-tooltip="Cursos gratuitos Google: segurança online, cloud, marketing digital e competências digitais. Com certificados.">
+                            <span class="cert-badge">Google</span> Grow with Google – Cursos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://tiexames.com.br/gratuitos.php" target="_blank" rel="noopener noreferrer" data-tooltip="Aulas ao vivo e imersões gratuitas semanais com certificado. CIS Controls, NIST, Compliance, LGPD e mais. Replays disponíveis.">
+                            <span class="cert-badge">TI Exames</span> Eventos, Aulas e Materiais Gratuitos
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- CLOUD PROVIDERS -->
+            <div class="cert-category">
+                <h3>Cloud e Provedores</h3>
+                <ul class="cert-menu">
+                    <li>
+                        <a href="https://explore.skillbuilder.aws/learn/course/126/aws-security-fundamentals" target="_blank" rel="noopener noreferrer" data-tooltip="Conceitos de segurança AWS: IAM, criptografia, detecção de ameaças. Curso curto e gratuito.">
+                            <span class="cert-badge">AWS</span> Security Fundamentals – SkillBuilder
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://learn.microsoft.com/pt-br/training/paths/az-900-describe-cloud-concepts/" target="_blank" rel="noopener noreferrer" data-tooltip="Azure e fundamentos de nuvem. Preparação para AZ-900. Cursos gratuitos no Microsoft Learn.">
+                            <span class="cert-badge">Microsoft</span> Azure Fundamentals – Microsoft Learn
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.netacad.com/courses/security" target="_blank" rel="noopener noreferrer" data-tooltip="Cursos Cisco gratuitos: Cybersecurity Essentials, Introduction to Cybersecurity.">
+                            <span class="cert-badge">Cisco</span> NetAcad – Cursos de Segurança
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- COURSERA / IBM -->
+            <div class="cert-category">
+                <h3>Introdução e Fundamentos</h3>
+                <ul class="cert-menu">
+                    <li>
+                        <a href="https://www.coursera.org/learn/introduction-to-cybersecurity-essentials" target="_blank" rel="noopener noreferrer" data-tooltip="4 módulos IBM: fundamentos, autenticação, criptografia e malware. Certificado compartilhável.">
+                            <span class="cert-badge">IBM</span> Introduction to Cybersecurity Essentials – Coursera
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.coursera.org/learn/cybersecurity-roles-processes-operating-system-security" target="_blank" rel="noopener noreferrer" data-tooltip="Papéis em segurança, processos e hardening de SO. Parte do programa Google Cybersecurity.">
+                            <span class="cert-badge">Google</span> Cybersecurity Fundamentals – Coursera
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- HANDS-ON / LABS -->
+            <div class="cert-category">
+                <h3>Labs e Prática Hands-on</h3>
+                <ul class="cert-menu">
+                    <li>
+                        <a href="https://tryhackme.com/" target="_blank" rel="noopener noreferrer" data-tooltip="Labs de pentest, forense e blue team. Plano gratuito com certificados de conclusão por caminhos e módulos.">
+                            <span class="cert-badge">TryHackMe</span> Certificados de conclusão
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.hackthebox.com/" target="_blank" rel="noopener noreferrer" data-tooltip="CTFs e labs de hacking. Tier gratuito com máquinas e certificados de desafios completados.">
+                            <span class="cert-badge">HackTheBox</span> Certificados de desafios
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://picoctf.org/" target="_blank" rel="noopener noreferrer" data-tooltip="CTF educativo da Carnegie Mellon. Desafios de segurança e forense. Evento anual, materiais disponíveis.">
+                            <span class="cert-badge">Carnegie Mellon</span> PicoCTF
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- OUTROS RECURSOS -->
+            <div class="cert-category">
+                <h3>Outros Recursos Gratuitos</h3>
+                <ul class="cert-menu">
+                    <li>
+                        <a href="https://www.cybrary.it/catalog" target="_blank" rel="noopener noreferrer" data-tooltip="Cursos gratuitos em pentest, SOC, forense. Certificados de conclusão no plano free.">
+                            <span class="cert-badge">Cybrary</span> Cursos e certificados gratuitos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.edx.org/learn/cybersecurity" target="_blank" rel="noopener noreferrer" data-tooltip="Cursos de universidades e empresas. Versão audit gratuita; certificado pago (opcional).">
+                            <span class="cert-badge">edX</span> Cybersecurity – cursos gratuitos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.sans.org/cyber-security-courses/free/" target="_blank" rel="noopener noreferrer" data-tooltip="Webinars e recursos gratuitos SANS. Introdução a temas avançados.">
+                            <span class="cert-badge">SANS</span> Recursos e webinars gratuitos
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p><a href="index.html" style="color: var(--accent); text-decoration: none;">← Voltar ao início</a> · <a href="certificacoes.html" style="color: var(--accent); text-decoration: none;">Ver certificações pagas</a></p>
+        </footer>
+    </main>
+</body>
+</html>

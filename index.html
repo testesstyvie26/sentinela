@@ -63,9 +63,9 @@
         main {
             position: relative;
             z-index: 1;
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 4rem 1.5rem;
+            padding: 5rem 1.5rem 4rem;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -186,10 +186,17 @@
             color: var(--accent);
         }
 
-        .posts-section {
+        .posts-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
             width: 100%;
-            max-width: 560px;
+            max-width: 960px;
             margin-top: 3rem;
+        }
+
+        .posts-section {
+            min-width: 0;
         }
 
         .posts-section h2 {
@@ -209,6 +216,62 @@
 
         .posts-section h2 a:hover {
             color: var(--text);
+        }
+
+        .posts-section-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .newsletter-card {
+            display: block;
+            padding: 1rem 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+            transition: all 0.25s ease;
+        }
+
+        .newsletter-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 30px -10px rgba(0, 255, 136, 0.15);
+        }
+
+        .newsletter-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .newsletter-card p {
+            font-size: 0.85rem;
+            line-height: 1.45;
+            color: var(--text-muted);
+            margin: 0 0 0.5rem;
+        }
+
+        .newsletter-card .newsletter-post {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .newsletter-card .newsletter-post a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .newsletter-card .newsletter-post a:hover {
+            text-decoration: underline;
+        }
+
+        .newsletter-card .newsletter-post span {
+            font-size: 0.7rem;
+            color: var(--text-muted);
         }
 
         .post-card {
@@ -243,11 +306,78 @@
             margin-top: 0.5rem;
         }
 
+        .posts-live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.7rem;
+            color: var(--accent);
+            margin-left: 0.5rem;
+        }
+
+        .posts-live-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .posts-update-info {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .posts-loading {
+            padding: 1.5rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(10, 14, 23, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: var(--accent);
+        }
+
         .footer {
             margin-top: 4rem;
             text-align: center;
             font-size: 0.875rem;
             color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .posts-columns {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -261,11 +391,16 @@
     </style>
 </head>
 <body>
+    <nav class="nav">
+        <a href="#inicio">Início</a>
+        <a href="certificacoes.html">Guia de Certificações</a>
+        <a href="certificacoes-gratuitas.html">Certificações Gratuitas</a>
+    </nav>
     <div class="grid-bg"></div>
     <div class="glow-orb glow-orb-1"></div>
     <div class="glow-orb glow-orb-2"></div>
 
-    <main>
+    <main id="inicio">
         <div class="logo">SENTINELA</div>
         <p class="tagline">// comunidade de cibersegurança</p>
 
@@ -298,40 +433,158 @@
             </a>
         </div>
 
-        <section class="posts-section">
-            <a href="https://www.linkedin.com/posts/rodrigocarran_cybersecurity-defesaemprofundidade-seguran%C3%A7adainforma%C3%A7%C3%A3o-activity-7424761446305185792-K_CZ" target="_blank" rel="noopener noreferrer" class="post-card">
-                <p>🔐 9 Camadas de Defesa Cibernética que Toda Organização Precisa Ter — A maioria das empresas não sofre incidentes porque ignora segurança. Sofre…</p>
-                <span class="post-meta">LinkedIn · Compartilhado</span>
-            </a>
-            <a href="https://www.linkedin.com/posts/rodrigocarran_cybersecurity-gestaoderiscos-grc-activity-7424410086502064129-TKDS" target="_blank" rel="noopener noreferrer" class="post-card">
-                <p>🔐 Cibersegurança não começa no framework — começa no risco. Muita gente tenta resolver segurança começando por normas e controles. Na prática, a…</p>
-                <span class="post-meta">LinkedIn · Compartilhado</span>
-            </a>
-            <a href="https://www.linkedin.com/posts/rodrigocarran_compartilhe-algu%C3%A9m-precisa-disso-activity-7424480332034281472-Lens" target="_blank" rel="noopener noreferrer" class="post-card">
-                <p>🚨 COMPARTILHE — ALGUÉM PRECISA DISSO — Se você leva Segurança em IA, Risco e Governança a sério, essa é uma oportunidade rara…</p>
-                <span class="post-meta">LinkedIn · Compartilhado</span>
-            </a>
-            <a href="https://www.linkedin.com/posts/rodrigocarran_ual-muito-verdade-activity-7424072481143099393-Udrl" target="_blank" rel="noopener noreferrer" class="post-card">
-                <p>Ual!!! Muito verdade!</p>
-                <span class="post-meta">LinkedIn · Compartilhado</span>
-            </a>
-            <a href="https://www.linkedin.com/in/rodrigocarran/" target="_blank" rel="noopener noreferrer" class="post-card">
-                <p>⚠️ A Realidade da Nuvem Híbrida em 2025: Os 10 Desafios que Ninguém te Conta (Mas Deveria) — A migração acabou. A realidade agora é a…</p>
-                <span class="post-meta">LinkedIn</span>
-            </a>
-            <a href="https://www.linkedin.com/in/rodrigocarran/" target="_blank" rel="noopener noreferrer" class="post-card">
-                <p>Multicloud sem IA não é estratégia. É risco não calculado. ☁️🤖🔒 Vamos ser realistas: a era de gerenciar a segurança da nuvem baseada apenas em…</p>
-                <span class="post-meta">LinkedIn</span>
-            </a>
-            <a href="https://www.linkedin.com/in/rodrigocarran/" target="_blank" rel="noopener noreferrer" class="post-card">
-                <p>Ver todas as postagens e perfil completo →</p>
-                <span class="post-meta">Rodrigo Carran · DPO, Coordenador de Segurança da Informação</span>
-            </a>
-        </section>
+        <div class="posts-columns">
+            <section class="posts-section">
+                <h2>
+                    <a href="https://www.linkedin.com/in/rodrigocarran/" target="_blank" rel="noopener noreferrer">Postagens</a>
+                    <span class="posts-live-badge">atualizando em tempo real</span>
+                </h2>
+                <div id="linkedin-posts-container">
+                    <div class="posts-loading">Carregando publicações…</div>
+                </div>
+                <p class="posts-update-info" id="linkedin-posts-update"></p>
+            </section>
+
+            <section class="posts-section">
+                <h2>Newsletters de Cibersegurança - Mundo </h2>
+                <p class="posts-section-subtitle">Boletins selecionados para profissionais da área</p>
+
+                <div class="newsletter-card">
+                    <h3>1. Resumo de Cibersegurança do Grupo IB</h3>
+                    <p>Boletim semanal escrito por especialistas do Group-IB. Ameaças atuais, agentes de ameaças ativos, táticas de incidentes reais, análises técnicas e conteúdo sobre estratégia de segurança.</p>
+                    <div class="newsletter-post">
+                        <a href="https://www.group-ib.com/blog/cyber-predictions-for-2025/" target="_blank" rel="noopener noreferrer">Cyber Predictions For 2025 (and Beyond): Group-IB's Expert Take On What's Coming</a>
+                        <span> · Research Hub</span>
+                    </div>
+                </div>
+
+                <div class="newsletter-card">
+                    <h3>2. The Hacker News</h3>
+                    <p>Fonte independente líder em notícias sobre cibersegurança: violações, ameaças, vulnerabilidades e desenvolvimentos do setor.</p>
+                    <div class="newsletter-post">
+                        <a href="https://thehackernews.com/expert-insights/2026/03/telegrams-crackdown-changed-how-threat.html" target="_blank" rel="noopener noreferrer">Telegram's Crackdown Changed How Threat Actors Act, But Not Where They Act</a>
+                        <span> · 23 mar. 2026</span>
+                    </div>
+                </div>
+
+                <div class="newsletter-card">
+                    <h3>3. Krebs sobre Segurança</h3>
+                    <p>Publicação independente e investigativa por Brian Krebs. Reportagens sobre violações, infraestrutura de cibercriminosos e fraudes.</p>
+                    <div class="newsletter-post">
+                        <a href="https://krebsonsecurity.com/2026/03/canisterworm-springs-wiper-attack-targeting-iran/" target="_blank" rel="noopener noreferrer">CanisterWorm Springs Wiper Attack Targeting Iran</a>
+                        <span> · 23 mar. 2026</span>
+                    </div>
+                </div>
+
+                <div class="newsletter-card">
+                    <h3>4. Esta semana em 4n6</h3>
+                    <p>Resumo semanal de Forense Digital e Resposta a Incidentes (DFIR). Posts, podcasts, ferramentas e artigos acadêmicos.</p>
+                    <div class="newsletter-post">
+                        <a href="https://thisweekin4n6.com/2026/03/08/week-10-2026/" target="_blank" rel="noopener noreferrer">Week 10 – 2026 – Mobile Forensics Cheatsheet e destaques DFIR</a>
+                        <span> · 8 mar. 2026</span>
+                    </div>
+                </div>
+
+                <div class="newsletter-card">
+                    <h3>5. Boletim informativo SRMBOK</h3>
+                    <p>Briefing semanal de 10 minutos para Gestão de Riscos de Segurança (SRM). Conecta risco cibernético à governança.</p>
+                    <div class="newsletter-post">
+                        <a href="https://www.srmbok.com/product-page/srmbok-guide-to-chatgpt-prompt-engineering" target="_blank" rel="noopener noreferrer">SRMBOK Guide to ChatGPT Prompt Engineering</a>
+                        <span> · Recurso recente</span>
+                    </div>
+                </div>
+
+                <div class="newsletter-card">
+                    <h3>6. CyberSecStats</h3>
+                    <p>Estatísticas de cibersegurança atualizadas para equipes de produtos e marketing. ~100 estatísticas mensais de fontes primárias.</p>
+                    <div class="newsletter-post">
+                        <a href="https://www.cybersecstats.com/cybersecstats-50-wireless-risks-mid-market-vibe-checks-bowser-attacks-and-hybrid-blind-spots/" target="_blank" rel="noopener noreferrer">CyberSecStats #50 – Wireless risks, Mid-Market Vibe Checks, Bowser attacks</a>
+                        <span> · 16 mar. 2026</span>
+                    </div>
+                </div>
+
+                <div class="newsletter-card">
+                    <h3>7. Retorno sobre o Investimento</h3>
+                    <p>Resumo semanal de 5 minutos sobre o lado comercial da cibersegurança: financiamento, M&amp;A, IA e estratégia. Por Mike Privette.</p>
+                    <div class="newsletter-post">
+                        <a href="https://www.returnonsecurity.com/" target="_blank" rel="noopener noreferrer">💰 Security, Funded #235 – Left of Boom</a>
+                        <span> · 16 mar. 2026</span>
+                    </div>
+                </div>
+            </section>
+        </div>
 
         <footer class="footer">
             <p>Participe com responsabilidade. Respeite a privacidade e as boas práticas.</p>
         </footer>
     </main>
+
+    <script>
+        (function() {
+            const POSTS_URL = new URL('posts.json', window.location.href).href;
+            const POLL_MS = 2 * 60 * 1000; // 2 min – atualização em tempo quasi-real
+
+            const FALLBACK = {
+                lastUpdated: new Date().toISOString(),
+                posts: [
+                    { url: "https://www.linkedin.com/posts/rodrigocarran_cybersecurity-defesaemprofundidade-seguran%C3%A7adainforma%C3%A7%C3%A3o-activity-7424761446305185792-K_CZ", text: "🔐 9 Camadas de Defesa Cibernética que Toda Organização Precisa Ter — A maioria das empresas não sofre incidentes porque ignora segurança. Sofre…", meta: "LinkedIn · Compartilhado", date: "2025-03-23T14:00:00.000Z" },
+                    { url: "https://www.linkedin.com/posts/rodrigocarran_compartilhe-algu%C3%A9m-precisa-disso-activity-7424480332034281472-Lens", text: "🚨 COMPARTILHE — ALGUÉM PRECISA DISSO — Se você leva Segurança em IA, Risco e Governança a sério, essa é uma oportunidade rara…", meta: "LinkedIn · Compartilhado", date: "2025-03-22T12:00:00.000Z" },
+                    { url: "https://www.linkedin.com/posts/rodrigocarran_cybersecurity-gestaoderiscos-grc-activity-7424410086502064129-TKDS", text: "🔐 Cibersegurança não começa no framework — começa no risco. Muita gente tenta resolver segurança começando por normas e controles. Na prática, a…", meta: "LinkedIn · Compartilhado", date: "2025-03-21T10:00:00.000Z" },
+                    { url: "https://www.linkedin.com/posts/sergio-munizf_cloudcomputing-nuvemhibrida-ti-activity-7421932352580255744-kdil", text: "⚠️ A Realidade da Nuvem Híbrida em 2025: Os 10 Desafios que Ninguém te Conta (Mas Deveria) — A migração acabou. A realidade agora é a…", meta: "LinkedIn · No feed", date: "2025-03-20T16:00:00.000Z" },
+                    { url: "https://www.linkedin.com/posts/sergio-munizf_cloudsecurity-multicloud-artificialintelligence-activity-7424093028270854144-TL6q", text: "Multicloud sem IA não é estratégia. É risco não calculado. ☁️🤖🔒 Vamos ser realistas: a era de gerenciar a segurança da nuvem baseada apenas em…", meta: "LinkedIn · No feed", date: "2025-03-19T14:00:00.000Z" },
+                    { url: "https://www.linkedin.com/posts/rodrigocarran_ual-muito-verdade-activity-7424072481143099393-Udrl", text: "Ual!!! Muito verdade!", meta: "LinkedIn · Compartilhado", date: "2025-03-18T08:00:00.000Z" },
+                    { url: "https://www.linkedin.com/in/rodrigocarran/", text: "Ver todas as postagens e perfil completo →", meta: "Rodrigo Carran · DPO, Coordenador de Segurança", date: "2020-01-01T00:00:00.000Z" }
+                ]
+            };
+
+            function esc(t) {
+                const d = document.createElement('div');
+                d.textContent = t;
+                return d.innerHTML;
+            }
+
+            function fmtTime(iso) {
+                if (!iso) return '';
+                const d = new Date(iso);
+                const diff = (Date.now() - d) / 60000;
+                if (diff < 1) return 'agora';
+                if (diff < 60) return 'há ' + Math.floor(diff) + ' min';
+                return d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+            }
+
+            function render(data) {
+                const c = document.getElementById('linkedin-posts-container');
+                const i = document.getElementById('linkedin-posts-update');
+                if (!data?.posts?.length) {
+                    c.innerHTML = '<div class="posts-loading">Nenhuma publicação.</div>';
+                    i.textContent = '';
+                    return;
+                }
+                const sorted = [...data.posts].sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
+                c.innerHTML = sorted.map(p => `
+                    <a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer" class="post-card">
+                        <p>${esc(p.text)}</p>
+                        <span class="post-meta">${esc(p.meta)}</span>
+                    </a>
+                `).join('');
+                i.textContent = 'Atualizado ' + fmtTime(data.lastUpdated) + ' · próxima verificação em 2 min';
+            }
+
+            async function load() {
+                try {
+                    const r = await fetch(POSTS_URL);
+                    if (r.ok) {
+                        const d = await r.json();
+                        render(d);
+                        return;
+                    }
+                } catch (_) {}
+                render(FALLBACK);
+            }
+
+            load();
+            setInterval(load, POLL_MS);
+        })();
+    </script>
 </body>
 </html>
