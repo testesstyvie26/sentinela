@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ferramentas Open Source | Sentinela</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --bg-card: #111827;
+            --accent: #00ff88;
+            --accent-dim: #00ff8833;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .grid-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none; z-index: 0;
+        }
+        .glow-orb {
+            position: fixed; width: 600px; height: 600px; border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+        .glow-orb-1 { top: -200px; right: -200px; }
+        .glow-orb-2 { bottom: -200px; left: -200px; opacity: 0.5; }
+        main {
+            position: relative; z-index: 1;
+            max-width: min(1400px, 100%);
+            margin: 0 auto;
+            padding: 5rem 1.5rem 4rem;
+            min-height: 100vh;
+        }
+        .sections-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(10, 14, 23, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        .nav a:hover {
+            color: var(--accent);
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .page-header .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+        .page-header .tagline {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+        .cert-guide h2 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .cert-guide .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+        .sections-grid .cert-guide {
+            min-width: 0;
+        }
+        .cert-category {
+            margin-bottom: 1.75rem;
+        }
+        .cert-category h3 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+        .cert-menu { list-style: none; }
+        .cert-menu li { margin-bottom: 0.75rem; }
+        .tool-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .tool-row .tool-card { flex: 1; }
+        .btn-materiais {
+            flex-shrink: 0;
+            padding: 0.5rem 0.85rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-dark);
+            color: var(--text-muted);
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .btn-materiais:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .form-inscrever-projeto {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .form-inscrever-projeto input,
+        .form-inscrever-projeto textarea {
+            padding: 0.6rem 0.9rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .form-inscrever-projeto input::placeholder,
+        .form-inscrever-projeto textarea::placeholder {
+            color: var(--text-muted);
+        }
+        .form-inscrever-projeto input:focus,
+        .form-inscrever-projeto textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .form-inscrever-projeto textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        .btn-inscrever-projeto {
+            margin-top: 0.25rem;
+            padding: 0.85rem 1.25rem;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            background: var(--accent);
+            color: var(--bg-dark);
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .btn-inscrever-projeto:hover {
+            background: transparent;
+            color: var(--accent);
+        }
+        @media (max-width: 900px) {
+            .sections-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 600px) {
+            .tool-row { flex-wrap: wrap; }
+            .btn-materiais { width: 100%; text-align: center; }
+        }
+        .tool-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+        .tool-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.12);
+        }
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            border-radius: 10px;
+            background: var(--bg-dark);
+            object-fit: contain;
+        }
+        .tool-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .tool-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .tool-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .cert-badge {
+            font-size: 0.6rem;
+            padding: 0.18rem 0.4rem;
+            border-radius: 4px;
+            background: var(--accent-dim);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .usage-bar-wrap {
+            flex-shrink: 0;
+            width: 90px;
+            text-align: right;
+        }
+        .usage-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 0.25rem;
+        }
+        .usage-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .usage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent) 0%, #00e676 100%);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        .usage-fill.medium { background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%); }
+        .usage-fill.low { background: linear-gradient(90deg, #f87171 0%, #ef4444 100%); }
+        @media (max-width: 600px) {
+            .tool-card { flex-wrap: wrap; }
+            .usage-bar-wrap { width: 100%; order: 3; text-align: left; margin-top: 0.5rem; padding-left: 64px; }
+        }
+        [data-tooltip] { position: relative; }
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-6px);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            line-height: 1.35;
+            color: var(--text);
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            white-space: normal;
+            max-width: 280px;
+            width: max-content;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+            z-index: 1000;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        [data-tooltip]:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-8px);
+        }
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="index.html">Início</a>
+        <a href="certificacoes.html">Guia de Certificações</a>
+        <a href="certificacoes-gratuitas.html">Treinamentos, Certificações Grátis</a>
+        <a href="ferramentas.html">Ferramentas Open Source</a>
+    </nav>
+    <div class="grid-bg"></div>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+
+    <main>
+        <header class="page-header">
+            <div class="logo">SENTINELA</div>
+            <p class="tagline">// ferramentas open source em cibersegurança</p>
+        </header>
+
+        <div class="sections-grid">
+        <section class="cert-guide">
+            <h2>Ferramentas Open Source</h2>
+            <p class="subtitle">Projetos gratuitos e de código aberto para pentest, forense, SIEM e muito mais</p>
+            <p class="subtitle" style="font-size:0.8rem; margin-top:-1.5rem; margin-bottom:1.5rem;">A barra indica uso/confiabilidade com base em adoção na comunidade, documentação e maturidade do projeto</p>
+
+            <div class="cert-category">
+                <h3>SIEM / XDR / Monitoramento</h3>
+                <ul class="cert-menu">
+                    <li><div class="tool-row">
+                        <a href="https://wazuh.com/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Plataforma XDR e SIEM unificada. Detecção de ameaças, análise de logs, monitoramento de integridade e resposta a incidentes.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=wazuh.com&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Wazuh</div><div class="tool-meta"><span class="cert-badge">SIEM</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:95%"></div></div><span class="usage-label">95%</span></div>
+                        </a>
+                        <a href="https://documentation.wazuh.com/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://securityonionsolutions.com/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Distribuição NSM com Suricata, Zeek, Wazuh e análise de rede. Tudo-em-um para SOC e caça a ameaças.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=securityonionsolutions.com&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Security Onion</div><div class="tool-meta"><span class="cert-badge">NSM</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:85%"></div></div><span class="usage-label">85%</span></div>
+                        </a>
+                        <a href="https://docs.securityonionsolutions.com/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://github.com/Cyb3rWard0g/HELK" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="The Hunting ELK – Stack baseado em Elasticsearch para threat hunting com SQL, gráficos e machine learning.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">HELK</div><div class="tool-meta"><span class="cert-badge">Hunting</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:75%"></div></div><span class="usage-label">75%</span></div>
+                        </a>
+                        <a href="https://github.com/Cyb3rWard0g/HELK#-documentation" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://www.graylog.org/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Gerenciamento e análise de logs. Ingestão, busca, alertas e dashboards em tempo real.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=graylog.org&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Graylog</div><div class="tool-meta"><span class="cert-badge">Logs</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:90%"></div></div><span class="usage-label">90%</span></div>
+                        </a>
+                        <a href="https://docs.graylog.org/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://www.ossec.net/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="HIDS (Host-based IDS). Detecção de intrusão, monitoramento de integridade e conformidade em endpoints.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=wazuh.com&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">OSSEC / Wazuh</div><div class="tool-meta"><span class="cert-badge">HIDS</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:80%"></div></div><span class="usage-label">80%</span></div>
+                        </a>
+                        <a href="https://documentation.wazuh.com/current/index.html" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                </ul>
+            </div>
+
+            <div class="cert-category">
+                <h3>IDS / IPS / Rede</h3>
+                <ul class="cert-menu">
+                    <li><div class="tool-row">
+                        <a href="https://suricata.io/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="IDS/IPS de alta performance. Inspeção profunda de pacotes, detecção de ameaças e captura de tráfego.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=suricata.io&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Suricata</div><div class="tool-meta"><span class="cert-badge">IPS</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:92%"></div></div><span class="usage-label">92%</span></div>
+                        </a>
+                        <a href="https://suricata.readthedocs.io/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://www.snort.org/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="IDS/IPS clássico. Regras de assinatura, inspeção de pacotes e detecção de ataques conhecidos.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=snort.org&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Snort</div><div class="tool-meta"><span class="cert-badge">IDS</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:90%"></div></div><span class="usage-label">90%</span></div>
+                        </a>
+                        <a href="https://www.snort.org/documents" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://zeek.org/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Análise de tráfego em rede. Extrai protocolos, logs de conexão e permite scripts customizados.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=zeek.org&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Zeek</div><div class="tool-meta"><span class="cert-badge">NSM</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:88%"></div></div><span class="usage-label">88%</span></div>
+                        </a>
+                        <a href="https://docs.zeek.org/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://www.wireshark.org/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Sniffer e analisador de pacotes. Captura e inspeciona tráfego em tempo real ou offline.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=wireshark.org&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Wireshark</div><div class="tool-meta"><span class="cert-badge">Sniffer</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:98%"></div></div><span class="usage-label">98%</span></div>
+                        </a>
+                        <a href="https://www.wireshark.org/docs/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                </ul>
+            </div>
+
+            <div class="cert-category">
+                <h3>Pentest / Red Team</h3>
+                <ul class="cert-menu">
+                    <li><div class="tool-row">
+                        <a href="https://nmap.org/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Scanner de rede e descoberta de hosts. Port scanning, detecção de serviços e scripts NSE.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=nmap.org&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Nmap</div><div class="tool-meta"><span class="cert-badge">Scan</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:98%"></div></div><span class="usage-label">98%</span></div>
+                        </a>
+                        <a href="https://nmap.org/book/man.html" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://www.metasploit.com/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Framework de exploração. Exploits, payloads, pós-exploração e auxiliares para pentest.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=metasploit.com&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Metasploit</div><div class="tool-meta"><span class="cert-badge">Exploit</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:97%"></div></div><span class="usage-label">97%</span></div>
+                        </a>
+                        <a href="https://docs.metasploit.com/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://www.zaproxy.org/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="OWASP ZAP – Scanner de segurança em aplicações web. Testes automatizados de vulnerabilidades.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=zaproxy.org&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">OWASP ZAP</div><div class="tool-meta"><span class="cert-badge">Web</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:95%"></div></div><span class="usage-label">95%</span></div>
+                        </a>
+                        <a href="https://www.zaproxy.org/docs/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://github.com/BishopFox/sliver" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="C2 (Command & Control) open source. Implantes, beaconing e operações Red Team.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Sliver</div><div class="tool-meta"><span class="cert-badge">C2</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:80%"></div></div><span class="usage-label">80%</span></div>
+                        </a>
+                        <a href="https://github.com/BishopFox/sliver/wiki" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://github.com/cobbr/Covenant" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Framework C2 em .NET. Infraestrutura de Red Team com implantação e pós-exploração.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Covenant</div><div class="tool-meta"><span class="cert-badge">C2</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill medium" style="width:65%"></div></div><span class="usage-label">65%</span></div>
+                        </a>
+                        <a href="https://github.com/cobbr/Covenant/wiki" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                </ul>
+            </div>
+
+            <div class="cert-category">
+                <h3>Forense / DFIR</h3>
+                <ul class="cert-menu">
+                    <li><div class="tool-row">
+                        <a href="https://velociraptor.velocidex.com/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Coleta forense e resposta a incidentes. Aquisição de artefatos, triagem e análise em larga escala.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=velocidex.com&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Velociraptor</div><div class="tool-meta"><span class="cert-badge">DFIR</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:88%"></div></div><span class="usage-label">88%</span></div>
+                        </a>
+                        <a href="https://docs.velociraptor.app/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://www.sleuthkit.org/autopsy/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Análise forense de disco. Interface gráfica para The Sleuth Kit, recuperação e timeline.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=sleuthkit.org&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Autopsy</div><div class="tool-meta"><span class="cert-badge">Forensics</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:85%"></div></div><span class="usage-label">85%</span></div>
+                        </a>
+                        <a href="https://sleuthkit.org/autopsy/docs/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://www.volatilityfoundation.org/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Análise forense de memória RAM. Extração de processos, DLLs, conexões e artefatos de malware.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=volatilityfoundation.org&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Volatility</div><div class="tool-meta"><span class="cert-badge">Memory</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:92%"></div></div><span class="usage-label">92%</span></div>
+                        </a>
+                        <a href="https://volatility3.readthedocs.io/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://thehive-project.org/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Plataforma de resposta a incidentes. Casos, tarefas, integração com Cortex e MISP.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=thehive-project.org&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">The Hive</div><div class="tool-meta"><span class="cert-badge">IR</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:82%"></div></div><span class="usage-label">82%</span></div>
+                        </a>
+                        <a href="https://docs.thehive.guides/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                </ul>
+            </div>
+
+            <div class="cert-category">
+                <h3>Threat Intelligence</h3>
+                <ul class="cert-menu">
+                    <li><div class="tool-row">
+                        <a href="https://www.misp-project.org/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Plataforma de compartilhamento de indicadores de ameaças (IoCs). Correlação e feed de threat intel.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=misp-project.org&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">MISP</div><div class="tool-meta"><span class="cert-badge">Intel</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:90%"></div></div><span class="usage-label">90%</span></div>
+                        </a>
+                        <a href="https://www.misp-project.org/documentation.html" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://www.opencti.io/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Plataforma de gerenciamento de cyber threat intelligence. Modelo de conhecimento e grafos.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=opencti.io&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">OpenCTI</div><div class="tool-meta"><span class="cert-badge">CTI</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:75%"></div></div><span class="usage-label">75%</span></div>
+                        </a>
+                        <a href="https://docs.opencti.io/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                </ul>
+            </div>
+
+            <div class="cert-category">
+                <h3>Scanner de Vulnerabilidades</h3>
+                <ul class="cert-menu">
+                    <li><div class="tool-row">
+                        <a href="https://www.openvas.org/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Scanner de vulnerabilidades em rede. Baseado no antigo Nessus, varredura de hosts e serviços.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=openvas.org&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">OpenVAS</div><div class="tool-meta"><span class="cert-badge">Vuln</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:85%"></div></div><span class="usage-label">85%</span></div>
+                        </a>
+                        <a href="https://greenbone.github.io/docs/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://trivy.dev/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Scanner de vulnerabilidades em containers, imagens Docker, IaC e dependências.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=trivy.dev&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Trivy</div><div class="tool-meta"><span class="cert-badge">Container</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:90%"></div></div><span class="usage-label">90%</span></div>
+                        </a>
+                        <a href="https://aquasecurity.github.io/trivy/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://lynis.dev/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Auditoria de segurança em sistemas Linux/Unix. Hardening e conformidade.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=lynis.dev&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Lynis</div><div class="tool-meta"><span class="cert-badge">Audit</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:88%"></div></div><span class="usage-label">88%</span></div>
+                        </a>
+                        <a href="https://lynis.readthedocs.io/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                </ul>
+            </div>
+
+            <div class="cert-category">
+                <h3>Malware / Senhas</h3>
+                <ul class="cert-menu">
+                    <li><div class="tool-row">
+                        <a href="https://hashcat.net/hashcat/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Quebrador de hashes com aceleração por GPU. Suporte a centenas de formatos e modos de ataque.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=hashcat.net&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Hashcat</div><div class="tool-meta"><span class="cert-badge">Crack</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:95%"></div></div><span class="usage-label">95%</span></div>
+                        </a>
+                        <a href="https://hashcat.net/wiki/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://www.openwall.com/john/" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="John the Ripper – Cracking de senhas em múltiplos formatos. Wordlists e regras.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=openwall.com&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">John the Ripper</div><div class="tool-meta"><span class="cert-badge">Crack</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:90%"></div></div><span class="usage-label">90%</span></div>
+                        </a>
+                        <a href="https://www.openwall.com/john/doc/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                    <li><div class="tool-row">
+                        <a href="https://github.com/NationalSecurityAgency/ghidra" target="_blank" rel="noopener noreferrer" class="tool-card" data-tooltip="Framework de engenharia reversa da NSA. Decompilador, disassembler e análise de binários.">
+                            <img class="tool-icon" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="">
+                            <div class="tool-body"><div class="tool-name">Ghidra</div><div class="tool-meta"><span class="cert-badge">Reverse</span></div></div>
+                            <div class="usage-bar-wrap"><div class="usage-bar"><div class="usage-fill" style="width:95%"></div></div><span class="usage-label">95%</span></div>
+                        </a>
+                        <a href="https://ghidra.re/courses/" target="_blank" rel="noopener noreferrer" class="btn-materiais">Documentação</a>
+                    </div></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="cert-guide">
+            <h2>Projetos da Comunidade Sentinela</h2>
+            <p class="subtitle">Projetos gratuitos e de código aberto criados pela comunidade para pentest, forense, SIEM e muito mais</p>
+            <p class="subtitle" style="font-size:0.8rem; margin-top:-1.5rem; margin-bottom:1.5rem;">A barra indica uso/confiabilidade com base em adoção na comunidade, documentação e maturidade do projeto</p>
+
+            <div class="cert-category">
+                <h3>Iniciativas da Comunidade Sentinela</h3>
+                <form id="form-projeto" class="form-inscrever-projeto" action="https://formsubmit.co/ajax/contact@vulcandefense.com.br" method="POST">
+                    <input type="hidden" name="_subject" value="Inscrição de Projeto - Comunidade Sentinela">
+                    <input type="text" name="nome" placeholder="Seu nome" required autocomplete="name">
+                    <input type="email" name="email" placeholder="Seu e-mail" required autocomplete="email">
+                    <input type="text" name="projeto" placeholder="Nome do projeto" required>
+                    <input type="text" name="site" placeholder="Site: insira URL (opcional)" autocomplete="url" inputmode="url">
+                    <textarea name="descricao" placeholder="Descrição breve do projeto (opcional)" rows="2"></textarea>
+                    <button type="submit" class="btn-inscrever-projeto">Inscrever meu projeto</button>
+                </form>
+            </div>
+        </section>
+        </div>
+
+        <footer class="footer">
+            <p><a href="index.html" style="color: var(--accent); text-decoration: none;">← Voltar ao início</a></p>
+        </footer>
+    </main>
+    <script>
+        (function() {
+            var form = document.getElementById('form-projeto');
+            if (!form) return;
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                var btn = form.querySelector('.btn-inscrever-projeto');
+                var prev = form.querySelector('.form-success-msg');
+                if (prev) prev.remove();
+                btn.disabled = true;
+                btn.textContent = 'Enviando…';
+                try {
+                    var fd = new FormData(form);
+                    var res = await fetch(form.action, {
+                        method: 'POST',
+                        body: fd,
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    var data = res.ok ? await res.json() : null;
+                    if (res.ok && data) {
+                        var msg = document.createElement('p');
+                        msg.className = 'form-success-msg';
+                        msg.style.color = 'var(--accent)';
+                        msg.style.marginTop = '0.5rem';
+                        msg.textContent = 'Projeto inscrito! Em breve entraremos em contato.';
+                        form.appendChild(msg);
+                        form.reset();
+                    } else {
+                        alert('Ocorreu um erro. Certifique-se de acessar a página por um servidor web (não abra o arquivo .html diretamente).');
+                    }
+                } catch (err) {
+                    alert('Erro de conexão. Acesse o site via servidor web (ex: http://localhost) para o formulário funcionar.');
+                }
+                btn.disabled = false;
+                btn.textContent = 'Inscrever meu projeto';
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "sentinela",
+  "version": "1.0.0",
+  "description": "Comunidade de Cibersegurança",
+  "scripts": {
+    "serve": "npx serve . -p 3000",
+    "start": "npx serve . -p 3000"
+  }
+}
