@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sentinela | Comunidade de Cibersegurança</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -185,6 +185,139 @@
         .community-link:hover .arrow {
             transform: translateX(4px);
             color: var(--accent);
+        }
+
+        .boletim-cta {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .btn-inscreva {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.5rem;
+            background: var(--accent);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-inscreva:hover {
+            background: #00e676;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(0, 255, 136, 0.4);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-boletim {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 420px;
+            width: 90%;
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.open .modal-boletim {
+            transform: scale(1);
+        }
+
+        .modal-boletim h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .modal-boletim p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-boletim input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-boletim input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .modal-boletim input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .modal-boletim .btn-submit {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .modal-boletim .btn-submit:hover {
+            background: #00e676;
+        }
+
+        .modal-boletim .btn-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0.25rem;
+        }
+
+        .modal-boletim .btn-close:hover {
+            color: var(--text);
+        }
+
+        .modal-content {
+            position: relative;
         }
 
         .posts-columns {
@@ -408,6 +541,12 @@
         <section class="hero">
             <h1>Conecte-se à comunidade</h1>
             <p>Troque conhecimento, fique por dentro das novidades e proteja-se junto com especialistas e entusiastas.</p>
+            <div class="boletim-cta">
+                <button type="button" class="btn-inscreva" id="btn-inscreva" aria-label="Inscrever-se no Boletim Executivo">
+                    Inscreva-se
+                </button>
+                <span style="display:block;margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted)">Receba o Boletim Executivo Sentinela</span>
+            </div>
         </section>
 
         <div class="communities">
@@ -520,7 +659,59 @@
         </footer>
     </main>
 
+    <div class="modal-overlay" id="modal-boletim" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+        <div class="modal-boletim">
+            <div class="modal-content">
+                <button type="button" class="btn-close" id="modal-close" aria-label="Fechar">&times;</button>
+                <h3 id="modal-title">Boletim Executivo Sentinela</h3>
+                <p>Cadastre seu e-mail para receber análises, tendências e novidades em cibersegurança.</p>
+                <form id="form-boletim" action="#" method="POST">
+                    <input type="email" name="email" placeholder="Seu e-mail" required autocomplete="email">
+                    <input type="text" name="nome" placeholder="Seu nome (opcional)" autocomplete="name">
+                    <input type="hidden" name="_subject" value="Inscrição Boletim Executivo Sentinela">
+                    <button type="submit" class="btn-submit">Inscrever-se</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
+        (function() {
+            const btn = document.getElementById('btn-inscreva');
+            const modal = document.getElementById('modal-boletim');
+            const closeBtn = document.getElementById('modal-close');
+            const form = document.getElementById('form-boletim');
+
+            function openModal() {
+                modal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeModal() {
+                modal.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            if (btn) btn.addEventListener('click', openModal);
+            if (closeBtn) closeBtn.addEventListener('click', closeModal);
+            if (modal) modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+            });
+
+            if (form) form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var msg = document.createElement('p');
+                msg.style.color = 'var(--accent)';
+                msg.style.marginTop = '1rem';
+                msg.textContent = 'Obrigado! Em breve você receberá o boletim.';
+                form.appendChild(msg);
+                form.querySelector('.btn-submit').disabled = true;
+                setTimeout(closeModal, 1500);
+            });
+        })();
+
         (function() {
             const POSTS_URL = new URL('posts.json', window.location.href).href;
             const POLL_MS = 2 * 60 * 1000; // 2 min – atualização em tempo quasi-real
