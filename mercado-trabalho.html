@@ -32,37 +32,118 @@
         .glow-orb-2 { bottom: -200px; left: -200px; opacity: 0.5; }
         .nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            display: flex; justify-content: center; gap: 1.5rem;
-            padding: 1rem 1.5rem;
-            background: rgba(10, 14, 23, 0.9);
-            backdrop-filter: blur(8px);
+            padding: 0.65rem 1rem;
+            background: rgba(10, 14, 23, 0.92);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
         }
-        .nav a { color: var(--text-muted); text-decoration: none; font-size: 0.95rem; transition: color 0.2s; }
-        .nav a:hover { color: var(--accent); }
-        main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 5rem 1.5rem 4rem; min-height: 100vh; }
-        .page-header { text-align: center; margin-bottom: 1.5rem; }
-        .page-header .logo { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; }
+        .nav-inner {
+            max-width: 1100px; margin: 0 auto;
+            display: flex; flex-wrap: nowrap; align-items: center;
+            gap: 0.5rem 1.1rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 255, 136, 0.25) transparent;
+            padding-bottom: 2px;
+        }
+        .nav-inner::-webkit-scrollbar { height: 4px; }
+        .nav-inner::-webkit-scrollbar-thumb { background: rgba(0, 255, 136, 0.25); border-radius: 4px; }
+        .nav a {
+            color: var(--text-muted); text-decoration: none; font-size: 0.88rem; font-weight: 500;
+            transition: color 0.2s, background 0.2s;
+            white-space: nowrap; flex-shrink: 0;
+            padding: 0.4rem 0.55rem; border-radius: 6px;
+        }
+        .nav a:hover { color: var(--accent); background: rgba(0, 255, 136, 0.06); }
+        .nav a[aria-current="page"] { color: var(--accent); background: rgba(0, 255, 136, 0.1); }
+        .nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 4.75rem 1.25rem 4rem; min-height: 100vh; }
+        .page-hero {
+            margin-bottom: 2rem; padding-bottom: 1.75rem;
+            border-bottom: 1px solid rgba(30, 41, 59, 0.85);
+        }
+        .page-header { text-align: center; margin-bottom: 1.25rem; }
+        .page-header .logo { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; letter-spacing: -0.02em; }
         .page-header .tagline { font-size: 0.9rem; color: var(--text-muted); }
-        .intro { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; text-align: center; max-width: 580px; margin-left: auto; margin-right: auto; }
+        .intro { font-size: 0.95rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 0; text-align: center; max-width: 620px; margin-left: auto; margin-right: auto; }
+        .toc-wrap { margin-top: 1.5rem; }
+        .toc-label {
+            display: block; font-size: 0.65rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.14em; color: var(--text-muted); margin-bottom: 0.65rem; text-align: center;
+        }
         .nav-anchors {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;
-            margin-bottom: 2rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 10px; position: sticky; top: 4.5rem; z-index: 10;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+            gap: 0.45rem;
+            margin: 0; padding: 0.85rem 1rem;
+            background: linear-gradient(145deg, rgba(17, 24, 39, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            position: sticky;
+            top: calc(3.25rem + env(safe-area-inset-top, 0px));
+            z-index: 50;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
         }
         .nav-anchors a {
-            padding: 0.45rem 0.85rem; font-size: 0.8rem; font-weight: 600;
-            color: var(--text-muted); text-decoration: none; border-radius: 6px;
-            transition: all 0.2s; white-space: nowrap;
+            padding: 0.5rem 0.65rem; font-size: 0.78rem; font-weight: 600;
+            color: var(--text-muted); text-decoration: none; border-radius: 8px;
+            transition: color 0.2s, background 0.2s, box-shadow 0.2s;
+            text-align: center; line-height: 1.25;
+            border: 1px solid transparent;
         }
-        .nav-anchors a:hover { color: var(--accent); background: var(--accent-dim); }
-        .sections-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;
+        .nav-anchors a:hover { color: var(--accent); background: var(--accent-dim); border-color: rgba(0, 255, 136, 0.12); }
+        .nav-anchors a.active {
+            color: var(--accent); background: rgba(0, 255, 136, 0.12);
+            border-color: rgba(0, 255, 136, 0.25);
+            box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.08);
         }
-        .cert-guide h2 { font-size: 1.35rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .nav-anchors a.nav-anchor-external { font-size: 0.74rem; opacity: 0.95; }
+        .nav-anchors a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .cert-guide h2 { font-size: 1.35rem; font-weight: 600; margin-bottom: 0.5rem; margin-top: 0.15rem; }
         .cert-guide .subtitle { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+        .layout-kicker {
+            font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em;
+            color: var(--accent); margin-bottom: 0.35rem;
+        }
+        .layout-panel {
+            border-radius: 16px; border: 1px solid var(--border);
+            background: linear-gradient(165deg, rgba(17, 24, 39, 0.65) 0%, rgba(10, 14, 23, 0.5) 100%);
+            padding: 1.35rem 1.25rem 1.75rem; margin-bottom: 2rem;
+        }
+        .layout-panel-head { margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(30, 41, 59, 0.8); }
+        .layout-panel-head h3.panel-title { font-size: 1.05rem; font-weight: 600; color: var(--text); margin: 0 0 0.35rem; text-transform: none; letter-spacing: 0; padding: 0; }
+        .layout-panel-head h3.panel-title::before { display: none; }
+        .layout-panel-head .panel-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0; }
+        .discovery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem 1.75rem;
+            align-items: start;
+        }
+        .discovery-split {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        .discovery-grid .cert-category-full.gupy-vagas-section {
+            grid-column: 1 / -1;
+            margin-top: 0.25rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(30, 41, 59, 0.65);
+        }
+        .insights-stack { margin-top: 0; }
+        .insights-stack .cert-category-full { border-top: none; margin-top: 0; padding-top: 0; }
+        .insights-stack .cert-category-full + .cert-category-full {
+            margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(30, 41, 59, 0.65);
+        }
+        .insights-stack .layout-panel-head + .cert-category-full { margin-top: 0.25rem; }
         .cert-category {
-            margin-bottom: 1.75rem; scroll-margin-top: 6rem;
+            margin-bottom: 1.75rem;
+            scroll-margin-top: calc(8.5rem + env(safe-area-inset-top, 0px));
         }
         .cert-category h3 {
             font-size: 0.8rem; font-weight: 600; color: var(--accent); text-transform: uppercase;
@@ -73,8 +154,27 @@
             content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
             width: 3px; height: 0.9em; background: var(--accent); border-radius: 2px;
         }
-        .cert-category-full { grid-column: 1 / -1; margin-top: 0.5rem; }
-        @media (max-width: 900px) { .sections-grid { grid-template-columns: 1fr; } .nav-anchors { top: 4rem; } .tendencia-grid { grid-template-columns: 1fr !important; } }
+        .cert-category-full { grid-column: 1 / -1; }
+        .back-to-top {
+            position: fixed; bottom: 5.25rem; right: 1rem; z-index: 97;
+            width: 44px; height: 44px; padding: 0; border: 1px solid var(--border);
+            border-radius: 10px; background: rgba(17, 24, 39, 0.95); color: var(--accent);
+            font-size: 1.15rem; line-height: 1; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+            opacity: 0; visibility: hidden; transform: translateY(8px);
+            transition: opacity 0.25s, visibility 0.25s, transform 0.25s, border-color 0.2s, background 0.2s;
+        }
+        .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .back-to-top:hover { border-color: var(--accent); background: rgba(0, 255, 136, 0.08); }
+        .back-to-top:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        @media (max-width: 900px) {
+            .discovery-grid { grid-template-columns: 1fr; }
+            .discovery-split { grid-template-columns: 1fr; }
+            .nav-anchors { grid-template-columns: repeat(2, 1fr); top: calc(2.85rem + env(safe-area-inset-top, 0px)); }
+            .tendencia-grid { grid-template-columns: 1fr !important; }
+            main { padding-left: 1rem; padding-right: 1rem; }
+            .layout-panel { padding: 1.15rem 1rem 1.5rem; }
+        }
         .cert-menu { list-style: none; }
         .cert-menu li { margin-bottom: 0.5rem; }
         .cert-menu a {
@@ -154,6 +254,27 @@
         .btn-vulcan-cta .btn-vulcan-link { font-size: 0.9rem; color: var(--accent); }
         @keyframes btn-shine { 0% { left: -100%; } 50%, 100% { left: 100%; } }
         @keyframes btn-pulse { 0%, 100% { box-shadow: 0 0 20px rgba(0,255,136,0.2); } 50% { box-shadow: 0 0 30px rgba(0,255,136,0.4); } }
+        .gupy-vagas-section { margin-bottom: 2rem; }
+        .gupy-vagas-section h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+        .gupy-meta { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
+        .gupy-disclaimer { font-size: 0.78rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 1rem; max-width: 720px; }
+        .gupy-disclaimer a { color: var(--accent); }
+        .gupy-status { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
+        .gupy-status.error { color: #f87171; }
+        .gupy-tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; align-items: start; }
+        .gupy-tier { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 0.9rem; }
+        .gupy-tier h4 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid rgba(0,255,136,0.15); }
+        .gupy-tier.tier-junior h4 { color: #6ee7b7; }
+        .gupy-tier.tier-pleno h4 { color: #34d399; }
+        .gupy-tier.tier-senior h4 { color: #00ff88; }
+        .gupy-tier.tier-especialista h4 { color: #22d3ee; }
+        .gupy-tier.tier-lideranca h4 { color: #a78bfa; }
+        .gupy-tier.tier-outros h4 { color: var(--text-muted); }
+        .gupy-vaga { font-size: 0.8rem; line-height: 1.35; margin-bottom: 0.65rem; padding-bottom: 0.65rem; border-bottom: 1px solid rgba(30,41,59,0.8); }
+        .gupy-vaga:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .gupy-vaga a { color: var(--text); text-decoration: none; font-weight: 600; }
+        .gupy-vaga a:hover { color: var(--accent); }
+        .gupy-vaga .emp { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; margin-top: 0.2rem; }
         .footer { margin-top: 3rem; text-align: center; font-size: 0.875rem; color: var(--text-muted); }
         .cookie-consent { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem 1.5rem; background: rgba(17, 24, 39, 0.98); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; z-index: 999; flex-wrap: wrap; }
         .cookie-consent.hidden { display: none; }
@@ -164,45 +285,58 @@
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <a href="index.html">Início</a>
-        <a href="certificacoes.html">Guia de Certificações</a>
-        <a href="certificacoes-gratuitas.html">Treinamentos, Certificações Grátis</a>
-        <a href="ferramentas.html">Ferramentas Open Source</a>
-        <a href="mercado-trabalho.html">Mercado De Trabalho</a>
-        <a href="perfis-profissionais.html">Perfis Profissionais</a>
+    <nav class="nav" aria-label="Navegação principal do site">
+        <div class="nav-inner">
+            <a href="index.html">Início</a>
+            <a href="certificacoes.html">Certificações</a>
+            <a href="certificacoes-gratuitas.html">Treinamentos grátis</a>
+            <a href="ferramentas.html">Ferramentas</a>
+            <a href="mercado-trabalho.html" aria-current="page">Mercado de trabalho</a>
+            <a href="perfis-profissionais.html">Perfis profissionais</a>
+        </div>
     </nav>
     <div class="grid-bg"></div>
     <div class="glow-orb glow-orb-1"></div>
     <div class="glow-orb glow-orb-2"></div>
 
-    <main>
-        <header class="page-header">
-            <div class="logo">SENTINELA</div>
-            <p class="tagline">// mercado de trabalho em TI, DevSecOps e cibersegurança</p>
-        </header>
+    <main id="topo">
+        <div class="page-hero">
+            <header class="page-header">
+                <div class="logo">SENTINELA</div>
+                <p class="tagline">// mercado de trabalho em TI, DevSecOps e cibersegurança</p>
+            </header>
 
-        <p class="intro">
-            O setor de TI, DevSecOps e cibersegurança segue em crescimento. Esta página centraliza links para portais de vagas, comunidades e recursos que ajudam a encontrar oportunidades e se preparar para o mercado.
-        </p>
+            <p class="intro">
+                O setor de TI, DevSecOps e cibersegurança segue em crescimento. Esta página centraliza links para portais de vagas, comunidades e recursos que ajudam a encontrar oportunidades e se preparar para o mercado.
+            </p>
 
-        <nav class="nav-anchors" aria-label="Navegação rápida">
-            <a href="#empresas">Empresas</a>
-            <a href="#portais">Portais</a>
-            <a href="#cybersec">Cibersegurança</a>
-            <a href="#comunidades">Comunidades</a>
-            <a href="#salarios">Salários</a>
-            <a href="#perfis">Perfis em alta</a>
-            <a href="perfis-profissionais.html#cargos">Perfis Profissionais</a>
-            <a href="#perfis-tendencia">Perfis tendência</a>
-        </nav>
+            <div class="toc-wrap">
+                <span class="toc-label" id="toc-heading">Nesta página</span>
+                <nav class="nav-anchors" aria-labelledby="toc-heading">
+                    <a href="#empresas">Empresas</a>
+                    <a href="#portais">Portais de vagas</a>
+                    <a href="#cybersec">Cibersegurança</a>
+                    <a href="#gupy-si-vagas">Vagas Gupy (SI)</a>
+                    <a href="#comunidades">Comunidades</a>
+                    <a href="#salarios">Salários</a>
+                    <a href="#perfis">Perfis em alta</a>
+                    <a href="#perfis-tendencia">Perfis tendência</a>
+                    <a href="perfis-profissionais.html#cargos" class="nav-anchor-external">Perfis profissionais →</a>
+                </nav>
+            </div>
+        </div>
 
         <section class="cert-guide">
-            <h2>Mercado De Trabalho</h2>
+            <h2>Mercado de trabalho</h2>
             <p class="subtitle">Portais, comunidades e perfis em alta demanda para vagas em tecnologia e segurança</p>
 
-            <div class="sections-grid">
-            <div>
+            <div class="layout-panel">
+                <div class="layout-panel-head">
+                    <p class="layout-kicker">Onde buscar</p>
+                    <h3 class="panel-title">Links e portais</h3>
+                    <p class="panel-desc">Empresas, agregadores de vagas, canais focados em segurança e comunidades para networking.</p>
+                </div>
+                <div class="discovery-grid">
             <div class="cert-category" id="empresas">
                 <h3>Empresas com Vagas em TI</h3>
                 <ul class="cert-menu">
@@ -227,27 +361,27 @@
                         </a>
                     </li>
                     <li>
-                        <a href="https://carreiras.stone.com.br/" target="_blank" rel="noopener noreferrer" data-tooltip="Stone. Empresa de pagamentos e tecnologia. Vagas em desenvolvimento, infra e segurança.">
+                        <a href="https://www.stone.com.br/carreiras" target="_blank" rel="noopener noreferrer" data-tooltip="Stone. Empresa de pagamentos e tecnologia. Vagas em desenvolvimento, infra e segurança.">
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=stone.com.br&sz=48" alt=""> <span class="cert-badge">Stone</span> Carreiras
                         </a>
                     </li>
                     <li>
-                        <a href="https://www.totvs.com/carreiras/" target="_blank" rel="noopener noreferrer" data-tooltip="TOTVS. Maior empresa de software do Brasil. Vagas em TI, desenvolvimento e ERP.">
+                        <a href="https://totvs.gupy.io/candidates" target="_blank" rel="noopener noreferrer" data-tooltip="TOTVS. Maior empresa de software do Brasil. Vagas em TI, desenvolvimento e ERP (portal Gupy).">
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=totvs.com&sz=48" alt=""> <span class="cert-badge">TOTVS</span> Carreiras
                         </a>
                     </li>
                     <li>
-                        <a href="https://jobs.lever.co/meli" target="_blank" rel="noopener noreferrer" data-tooltip="Mercado Livre. E-commerce e fintech. Vagas em engenharia, DevOps, segurança e cloud na América Latina.">
+                        <a href="https://jobs.mercadolibre.com/" target="_blank" rel="noopener noreferrer" data-tooltip="Mercado Livre. E-commerce e fintech. Vagas em engenharia, DevOps, segurança e cloud na América Latina.">
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=mercadolivre.com.br&sz=48" alt=""> <span class="cert-badge">Mercado Livre</span> Vagas
                         </a>
                     </li>
                     <li>
-                        <a href="https://www.itau.com.br/carreiras" target="_blank" rel="noopener noreferrer" data-tooltip="Itaú. Banco com ampla área de tecnologia e segurança da informação.">
+                        <a href="https://itau.gupy.io/candidates" target="_blank" rel="noopener noreferrer" data-tooltip="Itaú. Banco com ampla área de tecnologia e segurança da informação (portal Gupy).">
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=itau.com.br&sz=48" alt=""> <span class="cert-badge">Itaú</span> Carreiras
                         </a>
                     </li>
                     <li>
-                        <a href="https://banco.bradesco/html/classic/carreira/" target="_blank" rel="noopener noreferrer" data-tooltip="Bradesco. Vagas em TI, desenvolvimento e infraestrutura.">
+                        <a href="https://bradesco.gupy.io/candidates" target="_blank" rel="noopener noreferrer" data-tooltip="Bradesco. Vagas em TI, desenvolvimento e infraestrutura (portal Gupy).">
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=bradesco.com.br&sz=48" alt=""> <span class="cert-badge">Bradesco</span> Carreiras
                         </a>
                     </li>
@@ -257,7 +391,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="https://www.deloitte.com/br/carreiras" target="_blank" rel="noopener noreferrer" data-tooltip="Deloitte. Consultoria com área de cybersecurity e risk. Vagas em TI e segurança.">
+                        <a href="https://www.deloitte.com/br/pt/careers" target="_blank" rel="noopener noreferrer" data-tooltip="Deloitte. Consultoria com área de cybersecurity e risk. Vagas em TI e segurança.">
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=deloitte.com&sz=48" alt=""> <span class="cert-badge">Deloitte</span> Carreiras
                         </a>
                     </li>
@@ -281,6 +415,91 @@
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=salesforce.com&sz=48" alt=""> <span class="cert-badge">Salesforce</span> Carreiras
                         </a>
                     </li>
+                    <li>
+                        <a href="https://careers.oracle.com/" target="_blank" rel="noopener noreferrer" data-tooltip="Oracle. Cloud, banco de dados, segurança e aplicações. Vagas globais e no Brasil.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=oracle.com&sz=48" alt=""> <span class="cert-badge">Oracle</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://jobs.sap.com/" target="_blank" rel="noopener noreferrer" data-tooltip="SAP. ERP, cloud e segurança empresarial. Vagas em consultoria e engenharia.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=sap.com&sz=48" alt=""> <span class="cert-badge">SAP</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://jobs.cisco.com/" target="_blank" rel="noopener noreferrer" data-tooltip="Cisco. Redes, segurança de rede, SD-WAN e colaboração. Forte demanda em infra e segurança.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=cisco.com&sz=48" alt=""> <span class="cert-badge">Cisco</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.fortinet.com/corporate/about-us/careers" target="_blank" rel="noopener noreferrer" data-tooltip="Fortinet. Firewalls, SASE e segurança de rede. Vagas em engenharia e vendas técnicas.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=fortinet.com&sz=48" alt=""> <span class="cert-badge">Fortinet</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cloudflare.com/careers/" target="_blank" rel="noopener noreferrer" data-tooltip="Cloudflare. CDN, WAF, Zero Trust e segurança de aplicações. Vagas remotas e globais.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=cloudflare.com&sz=48" alt=""> <span class="cert-badge">Cloudflare</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.okta.com/company/careers/" target="_blank" rel="noopener noreferrer" data-tooltip="Okta. IAM, SSO e identidade. Forte em segurança de acesso e zero trust.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=okta.com&sz=48" alt=""> <span class="cert-badge">Okta</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.tenable.com/careers" target="_blank" rel="noopener noreferrer" data-tooltip="Tenable. Vulnerability management e exposição de superfície de ataque.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=tenable.com&sz=48" alt=""> <span class="cert-badge">Tenable</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.splunk.com/en_us/careers.html" target="_blank" rel="noopener noreferrer" data-tooltip="Splunk. SIEM, observabilidade e segurança de dados. Comum em SOC e operações.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=splunk.com&sz=48" alt=""> <span class="cert-badge">Splunk</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.redhat.com/jobs" target="_blank" rel="noopener noreferrer" data-tooltip="Red Hat. Linux, OpenShift, Kubernetes e segurança em nuvem híbrida.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=redhat.com&sz=48" alt=""> <span class="cert-badge">Red Hat</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://inter.gupy.io/candidates" target="_blank" rel="noopener noreferrer" data-tooltip="Inter. Banco digital com forte área de tecnologia, segurança e produto (portal Gupy).">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=bancointer.com.br&sz=48" alt=""> <span class="cert-badge">Inter</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://carreira.ifood.com.br/" target="_blank" rel="noopener noreferrer" data-tooltip="iFood. Logística e tecnologia. Vagas em engenharia, dados e segurança.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=ifood.com.br&sz=48" alt=""> <span class="cert-badge">iFood</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://picpay.gupy.io/candidates" target="_blank" rel="noopener noreferrer" data-tooltip="PicPay. Fintech com vagas em desenvolvimento, segurança e infraestrutura (portal Gupy).">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=picpay.com&sz=48" alt=""> <span class="cert-badge">PicPay</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://creditas.gupy.io/candidates" target="_blank" rel="noopener noreferrer" data-tooltip="Creditas. Crédito e tecnologia. Vagas em engenharia e segurança (portal Gupy).">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=creditas.com.br&sz=48" alt=""> <span class="cert-badge">Creditas</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://bb.gupy.io/candidates" target="_blank" rel="noopener noreferrer" data-tooltip="Banco do Brasil. Ampla área de TI, segurança da informação e infraestrutura (portal Gupy).">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=bb.com.br&sz=48" alt=""> <span class="cert-badge">Banco do Brasil</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://santander.gupy.io/candidates" target="_blank" rel="noopener noreferrer" data-tooltip="Santander. Banco com vagas em tecnologia, risco e segurança cibernética (portal Gupy).">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=santander.com.br&sz=48" alt=""> <span class="cert-badge">Santander</span> Carreiras
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://petrobras.gupy.io/candidates" target="_blank" rel="noopener noreferrer" data-tooltip="Petrobras. TI, OT/ICS e segurança industrial em grande escala (portal Gupy).">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=petrobras.com.br&sz=48" alt=""> <span class="cert-badge">Petrobras</span> Trabalhe conosco
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://vivo.gupy.io/candidates" target="_blank" rel="noopener noreferrer" data-tooltip="Vivo (Telefônica). Telecom, cibersegurança e serviços digitais (portal Gupy).">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=vivo.com.br&sz=48" alt=""> <span class="cert-badge">Vivo</span> Carreiras
+                        </a>
+                    </li>
                 </ul>
             </div>
 
@@ -290,6 +509,21 @@
                     <li>
                         <a href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener noreferrer" data-tooltip="Maior rede profissional. Filtre por 'cybersecurity', 'DevSecOps', 'segurança da informação'. Cadastre alertas de vagas.">
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=linkedin.com&sz=48" alt=""> <span class="cert-badge">LinkedIn</span> Vagas de Emprego
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.linkedin.com/jobs/search/?keywords=cybersecurity&amp;location=Brasil" target="_blank" rel="noopener noreferrer" data-tooltip="Busca pública no LinkedIn: vagas com termo cybersecurity no Brasil. Ajuste filtros de remoto e experiência.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=linkedin.com&sz=48" alt=""> <span class="cert-badge">LinkedIn</span> Busca — Cybersecurity (Brasil)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.linkedin.com/jobs/search/?keywords=segurança%20da%20informação&amp;location=Brasil" target="_blank" rel="noopener noreferrer" data-tooltip="Busca em português: analista de SI, GRC, SOC e funções correlatas no Brasil.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=linkedin.com&sz=48" alt=""> <span class="cert-badge">LinkedIn</span> Busca — Segurança da informação (Brasil)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.linkedin.com/jobs/collections/recommended/" target="_blank" rel="noopener noreferrer" data-tooltip="Coleções de vagas recomendadas pelo LinkedIn com base no seu perfil. Faça login para ver sugestões personalizadas.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=linkedin.com&sz=48" alt=""> <span class="cert-badge">LinkedIn</span> Vagas recomendadas (coleções)
                         </a>
                     </li>
                     <li>
@@ -317,14 +551,28 @@
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=programathor.com.br&sz=48" alt=""> <span class="cert-badge">Programathor</span> Vagas Tech
                         </a>
                     </li>
+                    <li>
+                        <a href="https://www.gupy.io/" target="_blank" rel="noopener noreferrer" data-tooltip="Gupy. Plataforma usada por centenas de empresas no Brasil. Busque por segurança, TI, DevOps.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=gupy.io&sz=48" alt=""> <span class="cert-badge">Gupy</span> Vagas (multiempresa)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.vagas.com.br/" target="_blank" rel="noopener noreferrer" data-tooltip="Vagas.com. Portal nacional com filtros por área e cargo em tecnologia.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=vagas.com.br&sz=48" alt=""> <span class="cert-badge">Vagas.com</span> Portal de empregos
+                        </a>
+                    </li>
                 </ul>
             </div>
-            </div>
 
-            <div>
+            <div class="discovery-split">
             <div class="cert-category" id="cybersec">
                 <h3>Cibersegurança e DevSecOps</h3>
                 <ul class="cert-menu">
+                    <li>
+                        <a href="https://portal.gupy.io/job-search/term=seguran%C3%A7a%20da%20informa%C3%A7%C3%A3o" target="_blank" rel="noopener noreferrer" data-tooltip="Portal Gupy: busca pelo termo «segurança da informação». Empresas que usam Gupy publicam aqui; quantidade de vagas varia conforme o período.">
+                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=gupy.io&sz=48" alt=""> <span class="cert-badge">Gupy</span> Busca — segurança da informação (Brasil)
+                        </a>
+                    </li>
                     <li>
                         <a href="https://cybersecjobs.com/" target="_blank" rel="noopener noreferrer" data-tooltip="Portal internacional focado em vagas de cibersegurança. Remote e presencial.">
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=cybersecjobs.com&sz=48" alt=""> <span class="cert-badge">Cybersecjobs</span> Vagas em Cibersegurança
@@ -333,11 +581,6 @@
                     <li>
                         <a href="https://www.infosec-jobs.com/" target="_blank" rel="noopener noreferrer" data-tooltip="InfoSec Jobs – vagas em segurança da informação, pentest, SOC, forense.">
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=infosec-jobs.com&sz=48" alt=""> <span class="cert-badge">InfoSec Jobs</span> Vagas InfoSec
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://cybersecurityventures.com/jobs/" target="_blank" rel="noopener noreferrer" data-tooltip="Cybersecurity Ventures – board de vagas e tendências de carreira em segurança.">
-                            <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=cybersecurityventures.com&sz=48" alt=""> <span class="cert-badge">Cybersec Ventures</span> Board de Vagas
                         </a>
                     </li>
                     <li>
@@ -379,6 +622,25 @@
                 </ul>
             </div>
             </div>
+
+            <div class="cert-category cert-category-full gupy-vagas-section" id="gupy-si-vagas">
+                <h3>Vagas no Portal Gupy — segurança da informação <span id="gupy-si-count" class="gupy-meta"></span></h3>
+                <p class="gupy-disclaimer">
+                    Lista obtida em tempo real a partir da busca oficial do <a href="https://portal.gupy.io/job-search/term=seguran%C3%A7a%20da%20informa%C3%A7%C3%A3o" target="_blank" rel="noopener noreferrer">Portal Gupy</a>.
+                    A classificação por senioridade é automática (palavras no título: Júnior, Pleno, Sênior, Especialista, Gerente, etc.). Em caso de dúvida, confira o edital no link da vaga.
+                </p>
+                <div id="gupy-si-status" class="gupy-status">Carregando vagas…</div>
+                <div id="gupy-si-tiers" class="gupy-tiers" aria-live="polite"></div>
+            </div>
+                </div>
+            </div>
+
+            <div class="layout-panel insights-stack">
+                <div class="layout-panel-head">
+                    <p class="layout-kicker">Referência</p>
+                    <h3 class="panel-title">Salários, demanda e tendências</h3>
+                    <p class="panel-desc">Gráficos ilustrativos e perfis para planejar carreira; combine com a busca ativa nas seções acima.</p>
+                </div>
 
             <div class="cert-category cert-category-full" id="salarios">
                 <h3>Média Salarial por Cargo – Brasil</h3>
@@ -621,6 +883,8 @@
         <footer class="footer">
             <p><a href="index.html" style="color: var(--accent); text-decoration: none;">← Voltar ao início</a></p>
         </footer>
+
+        <button type="button" class="back-to-top" id="btn-topo" aria-label="Voltar ao topo da página">↑</button>
     </main>
 
     <script>
@@ -730,6 +994,188 @@
             });
         })();
     </script>
+    <script>
+        (function() {
+            var GUPY_SEARCH_BASE = 'https://portal.gupy.io/job-search/term=seguran%C3%A7a%20da%20informa%C3%A7%C3%A3o';
+            var statusEl = document.getElementById('gupy-si-status');
+            var tiersEl = document.getElementById('gupy-si-tiers');
+            var countEl = document.getElementById('gupy-si-count');
+            if (!statusEl || !tiersEl) return;
+
+            function stripOneImage(s) {
+                if (!s.startsWith('![')) return s;
+                var m = s.match(/^!\[[^\]]*\]\([^)]*\)/);
+                if (!m) return s;
+                return s.slice(m[0].length).trim();
+            }
+
+            function stripLeadingNoise(s) {
+                s = s.replace(/^\*\s+/, '').trim();
+                var prev;
+                do {
+                    prev = s;
+                    if (s.startsWith('[![')) s = s.slice(1).trim();
+                    s = stripOneImage(s);
+                } while (s !== prev);
+                return s;
+            }
+
+            function companyFromJobUrl(url) {
+                try {
+                    var h = new URL(url).hostname.split('.')[0];
+                    if (!h || h === 'www') return null;
+                    return h.charAt(0).toUpperCase() + h.slice(1);
+                } catch (e) { return null; }
+            }
+
+            function parseJobLine(line) {
+                var urlMatch = line.match(/\]\((https:\/\/[a-z0-9.-]+\.gupy\.io\/job\/[^)]+)\)\s*$/);
+                if (!urlMatch) return null;
+                var url = urlMatch[1];
+                var closeIdx = line.lastIndexOf('](' + url + ')');
+                if (closeIdx < 0) return null;
+                var before = line.slice(0, closeIdx);
+                var inner = stripLeadingNoise(before);
+                var parts = inner.split(' ### ');
+                if (parts.length < 2) return null;
+                var company = parts[0].replace(/\s+/g, ' ').trim();
+                if (/^quem\s+somos$/i.test(company)) {
+                    var sub = companyFromJobUrl(url);
+                    if (sub) company = sub;
+                }
+                var rest = parts.slice(1).join(' ### ');
+                var title = rest.split(' Published on:')[0].split(' * * *')[0].replace(/\s+/g, ' ').trim();
+                return { company: company || '—', title: title || 'Vaga', url: url };
+            }
+
+            function classifySeniority(title) {
+                var t = (title || '').toLowerCase();
+                t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                if (/\b(gerente|coordenador|coordenadora|diretor|diretora|superintendente|vice-?presidente|\bvp\b|head\b|chief\b|ciso\b|lideranca|lider\b|lead\b)\b/.test(t)) return 'lideranca';
+                if (/\b(especialista|arquiteto|arquiteta)\b/.test(t)) return 'especialista';
+                if (/\b(senior|pleno\/senior|sr\.|\bsr\b|\biii\b|nivel\s+iii)\b/.test(t)) return 'senior';
+                if (/\b(pleno|nivel\s+ii|\bii\b|mid\b)\b/.test(t)) return 'pleno';
+                if (/\b(junior|estagio|estagiario|trainee|aprendiz|jnr\b|nivel\s+i\b|\bi\b)\b/.test(t)) return 'junior';
+                return 'outros';
+            }
+
+            var tierOrder = [
+                { id: 'lideranca', label: 'Liderança', className: 'tier-lideranca' },
+                { id: 'especialista', label: 'Especialista / Arquiteto', className: 'tier-especialista' },
+                { id: 'senior', label: 'Sênior / Sr.', className: 'tier-senior' },
+                { id: 'pleno', label: 'Pleno', className: 'tier-pleno' },
+                { id: 'junior', label: 'Júnior / Estágio', className: 'tier-junior' },
+                { id: 'outros', label: 'Não classificado', className: 'tier-outros' }
+            ];
+
+            function render(jobs) {
+                var byTier = {};
+                tierOrder.forEach(function(t) { byTier[t.id] = []; });
+                jobs.forEach(function(j) {
+                    var k = classifySeniority(j.title);
+                    if (!byTier[k]) k = 'outros';
+                    byTier[k].push(j);
+                });
+                if (countEl) countEl.textContent = jobs.length ? '· ' + jobs.length + ' vagas' : '';
+                var html = '';
+                tierOrder.forEach(function(t) {
+                    var list = byTier[t.id];
+                    if (!list.length) return;
+                    html += '<div class="gupy-tier ' + t.className + '"><h4>' + t.label + ' (' + list.length + ')</h4>';
+                    list.forEach(function(j) {
+                        html += '<div class="gupy-vaga"><a href="' + j.url.replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(j.title) + '</a>';
+                        html += '<div class="emp">' + escapeHtml(j.company) + '</div></div>';
+                    });
+                    html += '</div>';
+                });
+                tiersEl.innerHTML = html || '<p class="gupy-status">Nenhuma vaga encontrada no formato esperado.</p>';
+            }
+
+            function escapeHtml(s) {
+                var d = document.createElement('div');
+                d.textContent = s;
+                return d.innerHTML;
+            }
+
+            function parseTextToJobs(text) {
+                var lines = text.split(/\r?\n/);
+                var out = [];
+                var seen = {};
+                lines.forEach(function(line) {
+                    var j = parseJobLine(line);
+                    if (j && !seen[j.url]) { seen[j.url] = true; out.push(j); }
+                });
+                return out;
+            }
+
+            function jinaUrlForPage(page) {
+                return 'https://r.jina.ai/' + encodeURIComponent(GUPY_SEARCH_BASE + '?page=' + page);
+            }
+
+            function fetchText(url) {
+                return fetch(url, { method: 'GET', mode: 'cors', credentials: 'omit' }).then(function(res) {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.text();
+                });
+            }
+
+            function fetchViaCodetabs(url) {
+                return fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url), {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'omit'
+                }).then(function(res) {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.text();
+                });
+            }
+
+            function fetchJinaMarkdown(url) {
+                return fetchText(url).catch(function() {
+                    return fetchViaCodetabs(url);
+                });
+            }
+
+            function delay(ms) {
+                return new Promise(function(resolve) { setTimeout(resolve, ms); });
+            }
+
+            statusEl.textContent = 'Carregando vagas no Portal Gupy…';
+            (async function() {
+                var seen = {};
+                var jobs = [];
+                var page = 1;
+                var maxPages = 250;
+                try {
+                    while (page <= maxPages) {
+                        statusEl.textContent = 'Carregando vagas (página ' + page + ')…';
+                        var text = await fetchJinaMarkdown(jinaUrlForPage(page));
+                        var pageJobs = parseTextToJobs(text);
+                        if (pageJobs.length === 0) break;
+                        pageJobs.forEach(function(j) {
+                            if (!seen[j.url]) { seen[j.url] = true; jobs.push(j); }
+                        });
+                        page += 1;
+                        await delay(350);
+                    }
+                    statusEl.textContent = '';
+                    statusEl.classList.remove('error');
+                    if (!jobs.length) {
+                        statusEl.textContent = 'Não foi possível extrair a lista (formato do portal alterado ou bloqueio de rede). Use o link do Portal Gupy acima.';
+                        statusEl.classList.add('error');
+                    }
+                    render(jobs);
+                } catch (_err) {
+                    statusEl.innerHTML = 'Não foi possível carregar as vagas (rede ou bloqueio). ' +
+                        'Se estiver abrindo o HTML pelo disco (<code>file://</code>), sirva a pasta com um servidor local (ex.: <code>npx serve</code>) ou use a página publicada. ' +
+                        'Sempre é possível abrir a <a href="https://portal.gupy.io/job-search/term=seguran%C3%A7a%20da%20informa%C3%A7%C3%A3o" target="_blank" rel="noopener noreferrer">busca no Portal Gupy</a>.';
+                    statusEl.classList.add('error');
+                    if (countEl) countEl.textContent = '';
+                    tiersEl.innerHTML = '';
+                }
+            })();
+        })();
+    </script>
     <div id="cookie-consent" class="cookie-consent">
         <p>Utilizamos cookies para melhorar sua experiência. Ao continuar, você concorda com o uso de cookies. <a href="index.html#cookies">Saiba mais</a></p>
         <button type="button" class="btn-aceitar" id="btn-aceitar-cookies">Aceitar</button>
@@ -740,6 +1186,56 @@
             var btn = document.getElementById('btn-aceitar-cookies');
             if (localStorage.getItem('sentinela-cookies-aceitos') === '1') { if (banner) banner.classList.add('hidden'); }
             if (btn) btn.addEventListener('click', function() { localStorage.setItem('sentinela-cookies-aceitos', '1'); if (banner) banner.classList.add('hidden'); });
+        })();
+    </script>
+    <script>
+        (function() {
+            var navAnchors = document.querySelector('.nav-anchors');
+            var btnTop = document.getElementById('btn-topo');
+            if (!navAnchors) return;
+            var links = navAnchors.querySelectorAll('a[href^="#"]');
+            var sections = [];
+            for (var i = 0; i < links.length; i++) {
+                var href = links[i].getAttribute('href');
+                if (!href || href.charAt(0) !== '#') continue;
+                var el = document.getElementById(href.slice(1));
+                if (el) sections.push({ id: href.slice(1), el: el });
+            }
+            var threshold = 130;
+            function onScroll() {
+                var y = window.scrollY || document.documentElement.scrollTop;
+                if (btnTop) {
+                    if (y > 400) btnTop.classList.add('visible');
+                    else btnTop.classList.remove('visible');
+                }
+                var active = null;
+                for (var j = sections.length - 1; j >= 0; j--) {
+                    if (sections[j].el.getBoundingClientRect().top <= threshold) {
+                        active = sections[j].id;
+                        break;
+                    }
+                }
+                if (!active && sections.length) active = sections[0].id;
+                for (var k = 0; k < links.length; k++) {
+                    var a = links[k];
+                    var h = a.getAttribute('href');
+                    if (!h || h.indexOf('#') !== 0) continue;
+                    if (h === '#' + active) {
+                        a.classList.add('active');
+                        a.setAttribute('aria-current', 'location');
+                    } else {
+                        a.classList.remove('active');
+                        a.removeAttribute('aria-current');
+                    }
+                }
+            }
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+            if (btnTop) {
+                btnTop.addEventListener('click', function() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
         })();
     </script>
 </body>
