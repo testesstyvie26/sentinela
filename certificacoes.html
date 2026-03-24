@@ -114,6 +114,38 @@
             border-color: var(--accent);
             color: var(--accent);
         }
+        .org-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .org-tabs-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-right: 0.25rem;
+        }
+        .org-tab {
+            padding: 0.35rem 0.7rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-card);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .org-tab:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .org-tab.active {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
         .cert-category {
             margin-bottom: 1.75rem;
         }
@@ -215,9 +247,416 @@
             font-size: 0.875rem;
             color: var(--text-muted);
         }
+        /* Diagrama interativo - estilo blueprint/circuit */
+        .cert-diagram-section {
+            margin-bottom: 2.5rem;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .cert-diagram-section h3 {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 1.25rem;
+            text-align: center;
+        }
+        .cert-diagram-wrap {
+            position: relative;
+            background: 
+                linear-gradient(180deg, transparent 0%, rgba(0, 255, 136, 0.02) 50%, transparent 100%),
+                radial-gradient(ellipse 80% 50% at 50% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 70%),
+                #080c12;
+            border: 1px solid rgba(0, 255, 136, 0.12);
+            border-radius: 8px;
+            padding: clamp(1rem, 4vw, 2rem);
+            overflow: hidden;
+            animation: diagram-fade-in 0.5s ease-out;
+            box-shadow: 
+                inset 0 0 60px rgba(0, 255, 136, 0.03),
+                0 0 30px rgba(0, 0, 0, 0.5);
+        }
+        .cert-diagram-wrap::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.02) 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes diagram-fade-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .diagram-zoom-container {
+            position: relative;
+            overflow: hidden;
+            max-height: min(90vh, 560px);
+            cursor: grab;
+            border-radius: 6px;
+            background: rgba(4, 8, 14, 0.6);
+            border: 1px solid rgba(0, 255, 136, 0.06);
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+        .diagram-zoom-inner {
+            transform-origin: center center;
+            transition: transform 0.15s ease-out;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            min-width: min-content;
+        }
+        .diagram-zoom-container.panning { cursor: grab; }
+        .diagram-zoom-container.panning:active { cursor: grabbing; }
+        .cert-diagram-wrap svg {
+            width: 100%;
+            height: auto;
+            min-height: 360px;
+            max-height: 500px;
+            aspect-ratio: 1040 / 680;
+            display: block;
+            margin: 0 auto;
+        }
+        .diagram-zoom-controls {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            display: flex;
+            gap: 0.25rem;
+            z-index: 20;
+        }
+        .diagram-zoom-controls .pan-hint {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            align-self: center;
+            margin-right: 0.5rem;
+        }
+        .diagram-zoom-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 6px;
+            background: rgba(4, 8, 14, 0.8);
+            color: rgba(0, 255, 136, 0.7);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .diagram-zoom-btn:hover:not(:disabled) {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: rgba(0, 255, 136, 0.5);
+            color: var(--accent);
+        }
+        .diagram-zoom-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        #diagram-fullscreen-container:fullscreen,
+        #diagram-fullscreen-container:-webkit-full-screen,
+        #diagram-fullscreen-container:-moz-full-screen,
+        #diagram-fullscreen-container:-ms-fullscreen {
+            background: #04080e;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #diagram-fullscreen-container:fullscreen .diagram-zoom-container,
+        #diagram-fullscreen-container:-webkit-full-screen .diagram-zoom-container,
+        #diagram-fullscreen-container:-moz-full-screen .diagram-zoom-container,
+        #diagram-fullscreen-container:-ms-fullscreen .diagram-zoom-container {
+            max-height: none;
+            flex: 1;
+            width: 100%;
+        }
+        #diagram-fullscreen-container:fullscreen svg,
+        #diagram-fullscreen-container:-webkit-full-screen svg,
+        #diagram-fullscreen-container:-moz-full-screen svg {
+            min-height: 400px;
+            max-height: calc(100vh - 120px);
+        }
+        .diagram-fullscreen-btn.is-fullscreen { font-size: 0.9rem; }
+        #diagram-tooltip {
+            position: fixed;
+            z-index: 10000;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: var(--text);
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            max-width: 280px;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.15s, visibility 0.15s, transform 0.15s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        #diagram-tooltip.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .diagram-node {
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+        .diagram-node.area { font-weight: 600; font-size: 10px; letter-spacing: 0.02em; }
+        .diagram-node.cert { font-size: 8.5px; font-weight: 500; letter-spacing: 0.01em; }
+        .diagram-node .node-icon {
+            color: rgba(0, 255, 136, 0.5);
+            opacity: 1;
+            transition: color 0.2s ease, filter 0.2s ease;
+        }
+        .diagram-node:hover .node-icon,
+        .diagram-node.highlight .node-icon {
+            color: var(--accent);
+            filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.5));
+        }
+        .diagram-link {
+            fill: none;
+            stroke: rgba(0, 255, 136, 0.18);
+            stroke-width: 0.8;
+            stroke-linecap: round;
+            transition: stroke 0.25s ease, stroke-width 0.25s ease;
+        }
+        .diagram-wrap:hover .diagram-link { stroke: rgba(0, 255, 136, 0.35); stroke-width: 1; }
+        .diagram-node ellipse,
+        .diagram-node rect,
+        .diagram-node polygon {
+            fill: rgba(8, 14, 22, 0.9);
+            stroke: rgba(0, 255, 136, 0.25);
+            stroke-width: 1;
+            transition: all 0.25s ease;
+        }
+        .diagram-node:hover ellipse,
+        .diagram-node:hover rect,
+        .diagram-node:hover polygon,
+        .diagram-node.highlight ellipse,
+        .diagram-node.highlight rect,
+        .diagram-node.highlight polygon {
+            stroke: rgba(0, 255, 136, 0.7);
+            fill: rgba(0, 255, 136, 0.08);
+            filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.2));
+        }
+        .diagram-node.center ellipse,
+        .diagram-node.center polygon {
+            fill: rgba(0, 255, 136, 0.06);
+            stroke: rgba(0, 255, 136, 0.4);
+            stroke-width: 1.5;
+        }
+        .diagram-node.center:hover ellipse,
+        .diagram-node.center:hover polygon { 
+            fill: rgba(0, 255, 136, 0.12); 
+            stroke: rgba(0, 255, 136, 0.8);
+            filter: drop-shadow(0 0 12px rgba(0, 255, 136, 0.3));
+        }
+        .diagram-node text {
+            fill: rgba(226, 232, 240, 0.85);
+            transition: fill 0.2s ease;
+        }
+        .diagram-node:hover text,
+        .diagram-node.highlight text { fill: #00ff88; }
+        .diagram-node.dim { opacity: 0.25; pointer-events: none; }
+        .diagram-areas .diagram-node { animation: node-entrance 0.4s ease-out backwards; }
+        .diagram-areas .diagram-node:nth-child(1) { animation-delay: 0.02s; }
+        .diagram-areas .diagram-node:nth-child(2) { animation-delay: 0.05s; }
+        .diagram-areas .diagram-node:nth-child(3) { animation-delay: 0.08s; }
+        .diagram-areas .diagram-node:nth-child(4) { animation-delay: 0.11s; }
+        .diagram-areas .diagram-node:nth-child(5) { animation-delay: 0.14s; }
+        .diagram-areas .diagram-node:nth-child(6) { animation-delay: 0.17s; }
+        .diagram-areas .diagram-node:nth-child(7) { animation-delay: 0.2s; }
+        .diagram-areas .diagram-node:nth-child(8) { animation-delay: 0.23s; }
+        .diagram-areas .diagram-node:nth-child(9) { animation-delay: 0.26s; }
+        .diagram-certs .diagram-node { animation: node-entrance 0.3s ease-out 0.12s backwards; }
+        @keyframes node-entrance {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .diagram-legend {
+            display: flex;
+            justify-content: center;
+            gap: clamp(1rem, 3vw, 2rem);
+            margin-top: 1.25rem;
+            flex-wrap: wrap;
+            font-size: clamp(0.65rem, 2vw, 0.7rem);
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+        .diagram-legend span { display: flex; align-items: center; gap: 0.4rem; }
+        .diagram-legend .dot-area {
+            width: 8px; height: 8px; border-radius: 2px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+        }
+        .diagram-legend .dot-cert {
+            width: 6px; height: 6px; border-radius: 2px;
+            background: rgba(0, 255, 136, 0.08);
+            border: 1px solid rgba(0, 255, 136, 0.25);
+        }
+
+        /* Diagrama Foundation */
+        .foundation-diagram-section { margin-top: 2.5rem; }
+        .foundation-intro {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 1rem;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .foundation-diagram-wrap {
+            min-height: auto;
+            padding: clamp(1rem, 3vw, 1.5rem);
+        }
+        .foundation-diagram-wrap::before { background-size: 20px 20px; }
+        .foundation-diagram-wrap svg {
+            width: 100%;
+            height: auto;
+            min-height: 160px;
+            max-height: 240px;
+            aspect-ratio: 540 / 240;
+            display: block;
+            margin: 0 auto;
+        }
+        .foundation-diagram-wrap .diagram-link {
+            stroke: rgba(0, 255, 136, 0.18);
+        }
+        .foundation-node-link { text-decoration: none; }
+        .foundation-cert rect { cursor: pointer; }
+        .foundation-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+        .foundation-card {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding: 1rem;
+            background: rgba(8, 12, 18, 0.8);
+            border: 1px solid rgba(0, 255, 136, 0.12);
+            border-radius: 6px;
+            line-height: 1.45;
+        }
+        .foundation-card strong { color: var(--accent); }
+
+        /* Trilhas Recomendadas */
+        .trilhas-section {
+            margin-top: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        .trilhas-section h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+        .trilhas-section > p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+            line-height: 1.45;
+        }
+        .trilhas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .trilha-card {
+            background: rgba(8, 12, 18, 0.9);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            border-radius: 8px;
+            padding: 1rem 1.1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .trilha-card:hover {
+            border-color: rgba(0, 255, 136, 0.35);
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.08);
+        }
+        .trilha-card h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .trilha-card .trilha-steps {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.35rem 0.2rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+        .trilha-card .trilha-step {
+            background: rgba(0, 255, 136, 0.08);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 4px;
+            padding: 0.2rem 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+        .trilha-card .trilha-arrow {
+            color: rgba(0, 255, 136, 0.4);
+            font-size: 0.65rem;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .trilhas-section { margin-top: 2rem; }
+            .trilhas-grid { grid-template-columns: 1fr; gap: 0.875rem; }
+            .trilha-card .trilha-steps { font-size: 0.75rem; }
+            .cert-diagram-section { margin-bottom: 2rem; }
+            .cert-diagram-section h3 { font-size: 0.75rem; margin-bottom: 1rem; }
+            .cert-diagram-wrap svg { min-height: 320px; max-height: 420px; }
+            .diagram-zoom-container { max-height: min(85vh, 480px); }
+            .diagram-zoom-controls { top: 0.5rem; right: 0.5rem; }
+            .diagram-zoom-btn { width: 32px; height: 32px; font-size: 0.9rem; }
+            .diagram-node.area { font-size: 9px; }
+            .diagram-node.cert { font-size: 8px; }
+            .diagram-legend { gap: 1rem; margin-top: 1rem; }
+            .diagram-legend span:nth-child(3) { width: 100%; text-align: center; }
+        }
+
         @media (max-width: 640px) {
+            .org-tabs { gap: 0.35rem; margin-bottom: 1.25rem; }
+            .org-tabs-label { font-size: 0.7rem; }
+            .org-tab { padding: 0.3rem 0.5rem; font-size: 0.65rem; }
             .niche-tabs { gap: 0.35rem; }
             .niche-tab { padding: 0.4rem 0.65rem; font-size: 0.75rem; }
+            .cert-diagram-wrap { padding: 0.875rem; }
+            .cert-diagram-wrap svg { min-height: 300px; max-height: 400px; }
+            .diagram-zoom-container { max-height: min(80vh, 420px); border-radius: 12px; }
+            .diagram-zoom-inner { padding: 0.6rem; }
+            .diagram-zoom-controls { top: 0.4rem; right: 0.4rem; gap: 0.2rem; }
+            .diagram-zoom-btn { width: 30px; height: 30px; font-size: 0.85rem; }
+            .diagram-node.area { font-size: 8px; }
+            .diagram-node.cert { font-size: 7px; }
+            .diagram-legend { font-size: 0.65rem; gap: 0.75rem; }
+            .foundation-diagram-section { margin-top: 2rem; }
+            .foundation-diagram-wrap { padding: 0.875rem; }
+            .foundation-diagram-wrap svg { min-height: 140px; max-height: 200px; }
+            .foundation-details { grid-template-columns: 1fr; gap: 0.75rem; margin-top: 1rem; }
+            .foundation-card { padding: 0.875rem; font-size: 0.78rem; }
+        }
+
+        @media (max-width: 380px) {
+            .cert-diagram-wrap svg { min-height: 200px; max-height: 300px; }
+            .foundation-diagram-wrap svg { min-height: 120px; max-height: 170px; }
         }
         .cookie-consent { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem 1.5rem; background: rgba(17, 24, 39, 0.98); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; z-index: 999; flex-wrap: wrap; }
         .cookie-consent.hidden { display: none; }
@@ -250,6 +689,269 @@
             <h2>Certificações em Cibersegurança</h2>
             <p class="subtitle">Filtre por nicho ou campo de conhecimento e acesse links oficiais</p>
 
+            <div class="cert-diagram-section">
+                <h3>Áreas de Conhecimento × Certificações</h3>
+                <div class="cert-diagram-wrap diagram-wrap" id="diagram-fullscreen-container">
+                    <div class="diagram-zoom-controls">
+                        <span class="pan-hint" title="Arraste o diagrama para mover">⤢ Arraste para mover</span>
+                        <button type="button" class="diagram-zoom-btn" id="diagram-zoom-out" aria-label="Reduzir zoom">−</button>
+                        <button type="button" class="diagram-zoom-btn" id="diagram-zoom-reset" aria-label="Zoom e posição 100%">⟲</button>
+                        <button type="button" class="diagram-zoom-btn" id="diagram-zoom-in" aria-label="Aumentar zoom">+</button>
+                        <button type="button" class="diagram-zoom-btn diagram-fullscreen-btn" id="diagram-fullscreen" aria-label="Tela cheia" title="Tela cheia">⛶</button>
+                    </div>
+                    <div class="diagram-zoom-container">
+                        <div class="diagram-zoom-inner" id="diagram-zoom-inner">
+                    <svg viewBox="-80 -80 1040 680" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="cert-diagram-svg">
+                        <defs>
+                            <linearGradient id="linkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="rgba(0,255,136,0.15)"/>
+                                <stop offset="100%" stop-color="rgba(0,255,136,0.4)"/>
+                            </linearGradient>
+                            <filter id="node-glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="1" result="blur"/>
+                                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                            <symbol id="icon-shield" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2L4 5v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V5l-8-3z"/></symbol>
+                            <symbol id="icon-target" viewBox="0 0 24 24"><circle fill="currentColor" cx="12" cy="12" r="10" opacity="0.3"/><circle fill="currentColor" cx="12" cy="12" r="6" opacity="0.5"/><circle fill="currentColor" cx="12" cy="12" r="2"/></symbol>
+                            <symbol id="icon-shield-check" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2L4 5v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V5l-8-3z"/><path fill="none" stroke="currentColor" stroke-width="2" d="M9 12l2 2 4-4"/></symbol>
+                            <symbol id="icon-briefcase" viewBox="0 0 24 24"><path fill="currentColor" d="M20 7h-4V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2H4a2 2 0 00-2 2v11a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zm-6 0h-4V5h4v2z"/></symbol>
+                            <symbol id="icon-clipboard" viewBox="0 0 24 24"><path fill="currentColor" d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect fill="currentColor" x="8" y="2" width="8" height="4" rx="1"/><rect fill="currentColor" x="9" y="13" width="6" height="1.5" rx="0.5"/><rect fill="currentColor" x="9" y="17" width="6" height="1.5" rx="0.5"/></symbol>
+                            <symbol id="icon-database" viewBox="0 0 24 24"><ellipse fill="currentColor" cx="12" cy="5" rx="9" ry="3"/><path fill="currentColor" opacity="0.7" d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path fill="currentColor" opacity="0.5" d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></symbol>
+                            <symbol id="icon-cloud" viewBox="0 0 24 24"><path fill="currentColor" d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></symbol>
+                            <symbol id="icon-search" viewBox="0 0 24 24"><circle fill="none" stroke="currentColor" stroke-width="2" cx="11" cy="11" r="8"/><path fill="currentColor" d="M21 21l-4.35-4.35"/></symbol>
+                            <symbol id="icon-network" viewBox="0 0 24 24"><circle fill="currentColor" cx="12" cy="5" r="3"/><circle fill="currentColor" cx="5" cy="19" r="2"/><circle fill="currentColor" cx="19" cy="19" r="2"/><path fill="none" stroke="currentColor" stroke-width="1.5" d="M12 8v3M9.5 16.5L12 14l2.5 2.5M12 8L8.5 12.5M12 8l3.5 4.5"/></symbol>
+                        </defs>
+                        <!-- Ligações centro → áreas -->
+                        <g class="diagram-links-center">
+                            <path class="diagram-link" d="M480,340 L618,305"/>
+                            <path class="diagram-link flow-reverse" d="M480,340 L588,415"/>
+                            <path class="diagram-link" d="M480,340 L498,478"/>
+                            <path class="diagram-link flow-reverse" d="M480,340 L378,478"/>
+                            <path class="diagram-link" d="M480,340 L295,418"/>
+                            <path class="diagram-link flow-reverse" d="M480,340 L278,318"/>
+                            <path class="diagram-link" d="M480,340 L318,118"/>
+                            <path class="diagram-link flow-reverse" d="M480,340 L448,118"/>
+                            <path class="diagram-link" d="M480,340 L588,165"/>
+                        </g>
+                        <!-- Links: cada área → certificações -->
+                        <g class="diagram-links">
+                            <path class="diagram-link" d="M618,305 L558,262"/><path class="diagram-link flow-reverse" d="M618,305 L558,292"/><path class="diagram-link" d="M618,305 L558,322"/>
+                            <path class="diagram-link" d="M588,415 L595,388"/><path class="diagram-link flow-reverse" d="M588,415 L585,443"/>
+                            <path class="diagram-link" d="M498,478 L455,428"/><path class="diagram-link flow-reverse" d="M498,478 L510,505"/><path class="diagram-link" d="M498,478 L428,495"/>
+                            <path class="diagram-link" d="M378,478 L405,438"/><path class="diagram-link flow-reverse" d="M378,478 L398,510"/><path class="diagram-link" d="M378,478 L318,468"/>
+                            <path class="diagram-link" d="M295,418 L252,395"/><path class="diagram-link flow-reverse" d="M295,418 L268,432"/>
+                            <path class="diagram-link" d="M278,318 L228,295"/><path class="diagram-link flow-reverse" d="M278,318 L228,338"/>
+                            <path class="diagram-link" d="M318,118 L268,155"/><path class="diagram-link flow-reverse" d="M318,118 L348,72"/><path class="diagram-link" d="M318,118 L378,95"/>
+                            <path class="diagram-link" d="M448,118 L478,72"/><path class="diagram-link flow-reverse" d="M448,118 L520,158"/>
+                            <path class="diagram-link" d="M588,165 L618,138"/><path class="diagram-link flow-reverse" d="M588,165 L605,208"/>
+                        </g>
+                        <!-- Nó central -->
+                        <g class="diagram-node area center" data-niche="todos" data-tooltip="Áreas de conhecimento em cibersegurança. Clique para filtrar por nicho." transform="translate(480,340)">
+                            <polygon points="0,-20 -50,-10 -50,10 0,20 50,10 50,-10"/>
+                            <use href="#icon-shield" class="node-icon" x="-50" y="-8" width="14" height="14"/>
+                            <text x="0" y="6" text-anchor="middle">Cibersegurança</text>
+                        </g>
+                        <!-- Áreas em círculo (9 nós) -->
+                        <g class="diagram-areas">
+                            <g class="diagram-node area" data-niche="fundamentos" data-tooltip="Certificações introdutórias para iniciar na carreira em cibersegurança." transform="translate(618,305)"><polygon points="-48,0 -24,15 24,15 48,0 24,-15 -24,-15"/><use href="#icon-shield" class="node-icon" x="-6" y="-18" width="12" height="12"/><text x="0" y="5" text-anchor="middle">Fundamentos</text></g>
+                            <g class="diagram-node area" data-niche="red-team" data-tooltip="Testes de invasão, pentest e operações ofensivas." transform="translate(588,415)"><polygon points="-40,0 -20,14 20,14 40,0 20,-14 -20,-14"/><use href="#icon-target" class="node-icon" x="-6" y="-18" width="12" height="12"/><text x="0" y="5" text-anchor="middle">Red Team</text></g>
+                            <g class="diagram-node area" data-niche="blue-team" data-tooltip="SOC, resposta a incidentes e operações defensivas." transform="translate(498,478)"><polygon points="-40,0 -20,14 20,14 40,0 20,-14 -20,-14"/><use href="#icon-shield-check" class="node-icon" x="-6" y="-18" width="12" height="12"/><text x="0" y="5" text-anchor="middle">Blue Team</text></g>
+                            <g class="diagram-node area" data-niche="governanca" data-tooltip="Gestão de segurança, riscos e liderança." transform="translate(378,478)"><polygon points="-44,0 -22,14 22,14 44,0 22,-14 -22,-14"/><use href="#icon-briefcase" class="node-icon" x="-6" y="-18" width="12" height="12"/><text x="0" y="5" text-anchor="middle">Governança</text></g>
+                            <g class="diagram-node area" data-niche="auditoria" data-tooltip="Auditoria de controles, compliance e conformidade." transform="translate(295,418)"><polygon points="-38,0 -19,14 19,14 38,0 19,-14 -19,-14"/><use href="#icon-clipboard" class="node-icon" x="-6" y="-18" width="12" height="12"/><text x="0" y="5" text-anchor="middle">Auditoria</text></g>
+                            <g class="diagram-node area" data-niche="dados" data-tooltip="LGPD, GDPR e proteção de dados pessoais." transform="translate(278,318)"><polygon points="-34,0 -17,14 17,14 34,0 17,-14 -17,-14"/><use href="#icon-database" class="node-icon" x="-6" y="-18" width="12" height="12"/><text x="0" y="5" text-anchor="middle">Dados</text></g>
+                            <g class="diagram-node area" data-niche="cloud" data-tooltip="Segurança em ambientes AWS, Azure e multi-cloud." transform="translate(318,118)"><polygon points="-32,0 -16,12 16,12 32,0 16,-12 -16,-12"/><use href="#icon-cloud" class="node-icon" x="-6" y="-18" width="12" height="12"/><text x="0" y="5" text-anchor="middle">Cloud</text></g>
+                            <g class="diagram-node area" data-niche="forense" data-tooltip="Investigação digital e análise forense." transform="translate(448,118)"><polygon points="-34,0 -17,12 17,12 34,0 17,-12 -17,-12"/><use href="#icon-search" class="node-icon" x="-6" y="-18" width="12" height="12"/><text x="0" y="5" text-anchor="middle">Forense</text></g>
+                            <g class="diagram-node area" data-niche="rede" data-tooltip="Firewalls, redes e infraestrutura de segurança." transform="translate(588,165)"><polygon points="-32,0 -16,12 16,12 32,0 16,-12 -16,-12"/><use href="#icon-network" class="node-icon" x="-6" y="-18" width="12" height="12"/><text x="0" y="5" text-anchor="middle">Rede</text></g>
+                        </g>
+                        <!-- Certificações (clusters externos, bem espaçados) -->
+                        <g class="diagram-certs">
+                            <g class="diagram-node cert" data-niche="fundamentos" data-tooltip="Security+: fundamentos de segurança, ideal para começar. A+: base para TI e suporte. ISFS: base ISO 27001." transform="translate(558,262)"><rect x="-42" y="-10" width="84" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">Sec+ · A+ · ISFS</text></g>
+                            <g class="diagram-node cert" data-niche="fundamentos" data-tooltip="SSCP: proteção de ativos, criptografia, resposta. CySA+: análise de vulnerabilidades e detecção. CC: introdutório (ISC)²." transform="translate(558,292)"><rect x="-38" y="-10" width="76" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">SSCP · CySA+ · CC</text></g>
+                            <g class="diagram-node cert" data-niche="fundamentos" data-tooltip="Network+: redes, troubleshooting e infraestrutura. SC-900: fundamentos Microsoft Security, Compliance e Identity." transform="translate(558,322)"><rect x="-34" y="-10" width="68" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">Net+ · SC-900</text></g>
+                            <g class="diagram-node cert" data-niche="red-team" data-tooltip="OSCP: pentest hands-on em lab real, prova de 24h. CEH: ethical hacking, padrão internacional." transform="translate(595,388)"><rect x="-36" y="-10" width="72" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">OSCP · CEH</text></g>
+                            <g class="diagram-node cert" data-niche="red-team" data-tooltip="PenTest+: pentest completo CompTIA. PNPT: pentest acessível e hands-on." transform="translate(585,443)"><rect x="-38" y="-10" width="76" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">PenTest+ · PNPT</text></g>
+                            <g class="diagram-node cert" data-niche="blue-team" data-tooltip="GSEC: essenciais de defesa. GCIH: incident handling. CND: defesa e proteção de redes." transform="translate(455,428)"><rect x="-36" y="-10" width="72" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">GSEC · GCIH · CND</text></g>
+                            <g class="diagram-node cert" data-niche="blue-team" data-tooltip="BTL1: SOC analyst, detecção e threat hunting. GCLD: essenciais de cloud security." transform="translate(510,505)"><rect x="-32" y="-10" width="64" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">BTL1 · GCLD</text></g>
+                            <g class="diagram-node cert" data-niche="blue-team" data-tooltip="SC-200: Security Operations Analyst Microsoft. SecOps: Security Operations Engineer GCP." transform="translate(428,495)"><rect x="-34" y="-10" width="68" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">SC-200 · SecOps</text></g>
+                            <g class="diagram-node cert" data-niche="governanca" data-tooltip="CISSP: padrão ouro para gestão de segurança. CISM: gestão de segurança da informação." transform="translate(405,438)"><rect x="-38" y="-10" width="76" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">CISSP · CISM</text></g>
+                            <g class="diagram-node cert" data-niche="governanca" data-tooltip="CC: introdutório (ISC)². CRISC: gestão de riscos de TI. CCISO: certificação executiva para CISOs." transform="translate(398,510)"><rect x="-36" y="-10" width="72" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">CC · CRISC · CCISO</text></g>
+                            <g class="diagram-node cert" data-niche="governanca" data-tooltip="CGEIT: governança de TI. CSSLP: segurança em todo o ciclo de desenvolvimento de software." transform="translate(318,468)"><rect x="-32" y="-10" width="64" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">CGEIT · CSSLP</text></g>
+                            <g class="diagram-node cert" data-niche="auditoria" data-tooltip="CISA: auditoria de sistemas e controles. CIA: auditoria interna e conformidade." transform="translate(252,395)"><rect x="-36" y="-10" width="72" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">CISA · CIA</text></g>
+                            <g class="diagram-node cert" data-niche="auditoria" data-tooltip="ISO 27001 Lead Auditor: auditorias de ISMS. CDPSE: proteção e privacidade de dados (GDPR/LGPD)." transform="translate(268,432)"><rect x="-42" y="-10" width="84" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">ISO 27001 · CDPSE</text></g>
+                            <g class="diagram-node cert" data-niche="dados" data-tooltip="DPO: função encarregado de dados LGPD/GDPR. CIPM: gestão de programa de privacidade." transform="translate(228,295)"><rect x="-36" y="-10" width="72" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">DPO · CIPM</text></g>
+                            <g class="diagram-node cert" data-niche="dados" data-tooltip="CIPP/E: privacidade Europa e GDPR. CDPSE: proteção e privacidade de dados (ISACA)." transform="translate(228,338)"><rect x="-38" y="-10" width="76" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">CIPP/E · CDPSE</text></g>
+                            <g class="diagram-node cert" data-niche="cloud" data-tooltip="CCSP: segurança de arquiteturas cloud. CCSK: Cloud Security Alliance." transform="translate(268,155)"><rect x="-38" y="-10" width="76" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">CCSP · CCSK</text></g>
+                            <g class="diagram-node cert" data-niche="cloud" data-tooltip="AZ-500: Azure Security Engineer. SC-100: Cybersecurity Architect Microsoft (Zero Trust)." transform="translate(348,72)"><rect x="-42" y="-10" width="84" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">AZ-500 · SC-100</text></g>
+                            <g class="diagram-node cert" data-niche="cloud" data-tooltip="AWS Security Specialty e GCP Professional Cloud Security Engineer. Segurança em cloud." transform="translate(378,95)"><rect x="-42" y="-10" width="84" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">AWS · GCP Sec</text></g>
+                            <g class="diagram-node cert" data-niche="forense" data-tooltip="GCFA: análise forense avançada. GCFE: exame forense e evidências digitais." transform="translate(478,72)"><rect x="-34" y="-10" width="68" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">GCFA · GCFE</text></g>
+                            <g class="diagram-node cert" data-niche="forense" data-tooltip="CHFI: investigação forense digital. GREM: análise de malware e reverse engineering." transform="translate(520,158)"><rect x="-36" y="-10" width="72" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">CHFI · GREM</text></g>
+                            <g class="diagram-node cert" data-niche="rede" data-tooltip="CCNA Security e CCNP Security: base e avançado de redes e segurança Cisco." transform="translate(618,138)"><rect x="-36" y="-10" width="72" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">CCNA · CCNP</text></g>
+                            <g class="diagram-node cert" data-niche="rede" data-tooltip="NSE/FCSS Fortinet: FortiGate, SD-WAN. PCNSE: firewall Palo Alto." transform="translate(605,208)"><rect x="-36" y="-10" width="72" height="20" rx="4"/><text x="0" y="5" text-anchor="middle">NSE · FCSS · PCNSE</text></g>
+                        </g>
+                    </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="diagram-legend">
+                    <span><span class="dot-area"></span> Área de conhecimento</span>
+                    <span><span class="dot-cert"></span> Certificações</span>
+                    <span>• Zoom: + − ⟲ • Arraste para mover • Passe o mouse para ver descrição • Clique para filtrar</span>
+                </div>
+            </div>
+
+            <div class="cert-diagram-section foundation-diagram-section">
+                <h3>Certificações Foundation</h3>
+                <p class="foundation-intro">Provas para profissionais em início de carreira com base para atuação em cibersegurança.</p>
+                <div class="cert-diagram-wrap diagram-wrap foundation-diagram-wrap">
+                    <svg viewBox="-20 -20 540 240" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="foundation-diagram-svg">
+                        <defs>
+                            <linearGradient id="foundationLinkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="rgba(0,255,136,0.15)"/>
+                                <stop offset="100%" stop-color="rgba(0,255,136,0.4)"/>
+                            </linearGradient>
+                            <filter id="foundation-glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="1" result="blur"/>
+                                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                            <symbol id="icon-shield-f" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2L4 5v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V5l-8-3z"/></symbol>
+                            <symbol id="icon-target-f" viewBox="0 0 24 24"><circle fill="currentColor" cx="12" cy="12" r="10" opacity="0.3"/><circle fill="currentColor" cx="12" cy="12" r="6" opacity="0.5"/><circle fill="currentColor" cx="12" cy="12" r="2"/></symbol>
+                        </defs>
+                        <!-- Links centro → certificações -->
+                        <g class="diagram-links">
+                            <path class="diagram-link" d="M260,110 L120,60"/>
+                            <path class="diagram-link flow-reverse" d="M260,110 L260,200"/>
+                            <path class="diagram-link" d="M260,110 L400,60"/>
+                        </g>
+                        <!-- Nó central Foundation -->
+                        <a href="#fundamentos-list" class="foundation-node-link">
+                            <g class="diagram-node area center" transform="translate(260,110)">
+                                <polygon points="0,-18 -46,-9 -46,9 0,18 46,9 46,-9"/>
+                                <use href="#icon-shield-f" class="node-icon" x="-44" y="-6" width="12" height="12"/>
+                                <text x="0" y="5" text-anchor="middle">Foundation</text>
+                            </g>
+                        </a>
+                        <!-- Security+ -->
+                        <a href="https://www.comptia.org/certifications/security" target="_blank" rel="noopener noreferrer">
+                            <g class="diagram-node cert foundation-cert" transform="translate(120,60)">
+                                <rect x="-52" y="-10" width="104" height="20" rx="4"/>
+                                <text x="0" y="5" text-anchor="middle">Security+</text>
+                            </g>
+                        </a>
+                        <!-- ISFS -->
+                        <a href="https://www.exin.com/data-protection-security/information-security-foundation-based-on-iso-iec-27001/" target="_blank" rel="noopener noreferrer">
+                            <g class="diagram-node cert foundation-cert" transform="translate(260,200)">
+                                <rect x="-48" y="-10" width="96" height="20" rx="4"/>
+                                <text x="0" y="5" text-anchor="middle">ISFS</text>
+                            </g>
+                        </a>
+                        <!-- Ethical Hacking Foundation -->
+                        <a href="https://www.exin.com/data-protection-security/exin-ethical-hacking/exin-ethical-hacking-foundation/" target="_blank" rel="noopener noreferrer">
+                            <g class="diagram-node cert foundation-cert" transform="translate(400,60)">
+                                <rect x="-72" y="-10" width="144" height="20" rx="4"/>
+                                <text x="0" y="5" text-anchor="middle">Ethical Hacking Foundation</text>
+                            </g>
+                        </a>
+                    </svg>
+                </div>
+                <div class="foundation-details">
+                    <div class="foundation-card">
+                        <strong>Security+</strong> – 90 questões, 90 min, nota 750/900. Monitoramento, leis, governança e resposta a incidentes.
+                    </div>
+                    <div class="foundation-card">
+                        <strong>ISFS</strong> – 40 questões, 60 min, 26 acertos. Base ISO 27001: ameaças, riscos, medidas físicas e técnicas.
+                    </div>
+                    <div class="foundation-card">
+                        <strong>EHF</strong> – 40 questões, 60 min, 26 acertos. Ethical hacking, sniffing, wireless e pentest em aplicações web.
+                    </div>
+                </div>
+            </div>
+
+            <div class="trilhas-section">
+                <h3>Trilhas Recomendadas por Área</h3>
+                <p>Sequência sugerida de certificações para cada carreira em segurança da informação. Comece pelos fundamentos e avance conforme a área de atuação desejada.</p>
+                <div class="trilhas-grid">
+                    <div class="trilha-card">
+                        <h4>Fundamentos (iniciante)</h4>
+                        <div class="trilha-steps">
+                            <span class="trilha-step">A+</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">Net+</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">Sec+</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">ISFS</span>
+                        </div>
+                    </div>
+                    <div class="trilha-card">
+                        <h4>Red Team / Pentest</h4>
+                        <div class="trilha-steps">
+                            <span class="trilha-step">Sec+</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">eJPT</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">PNPT</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">OSCP</span>
+                        </div>
+                    </div>
+                    <div class="trilha-card">
+                        <h4>Blue Team / SOC</h4>
+                        <div class="trilha-steps">
+                            <span class="trilha-step">Sec+</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">CySA+</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">BTL1</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">GCIH</span>
+                        </div>
+                    </div>
+                    <div class="trilha-card">
+                        <h4>Governança / Gestão</h4>
+                        <div class="trilha-steps">
+                            <span class="trilha-step">Sec+</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">SSCP</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">CISM</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">CISSP</span>
+                        </div>
+                    </div>
+                    <div class="trilha-card">
+                        <h4>Auditoria</h4>
+                        <div class="trilha-steps">
+                            <span class="trilha-step">Sec+</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">CISA</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">ISO 27001</span>
+                        </div>
+                    </div>
+                    <div class="trilha-card">
+                        <h4>Proteção de Dados (LGPD/GDPR)</h4>
+                        <div class="trilha-steps">
+                            <span class="trilha-step">Sec+</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">DPO</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">CDPSE</span>
+                        </div>
+                    </div>
+                    <div class="trilha-card">
+                        <h4>Cloud Security</h4>
+                        <div class="trilha-steps">
+                            <span class="trilha-step">Sec+</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">SC-900</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">AZ-500</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">CCSP</span>
+                        </div>
+                    </div>
+                    <div class="trilha-card">
+                        <h4>Forense Digital</h4>
+                        <div class="trilha-steps">
+                            <span class="trilha-step">Sec+</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">GCFE</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">GCFA</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">CHFI</span>
+                        </div>
+                    </div>
+                    <div class="trilha-card">
+                        <h4>Rede & Infraestrutura</h4>
+                        <div class="trilha-steps">
+                            <span class="trilha-step">Net+</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">CCNA Sec</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">CCNP Sec</span><span class="trilha-arrow">→</span>
+                            <span class="trilha-step">NSE/PCNSE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="niche-tabs" id="niche-tabs">
                 <button class="niche-tab active" data-niche="todos" data-tooltip="Exibir todas as certificações">Todos</button>
                 <button class="niche-tab" data-niche="fundamentos" data-tooltip="Certificações introdutórias para iniciar na carreira">Fundamentos</button>
@@ -262,33 +964,71 @@
                 <button class="niche-tab" data-niche="forense" data-tooltip="Investigação digital e análise forense">Forense</button>
                 <button class="niche-tab" data-niche="rede" data-tooltip="Firewalls, redes e infraestrutura de segurança">Rede & Infra</button>
             </div>
+            <div class="org-tabs" id="org-tabs">
+                <span class="org-tabs-label">Por fornecedor:</span>
+                <button class="org-tab" data-niche="todos" data-tooltip="Exibir todas as certificações">Todos</button>
+                <button class="org-tab" data-niche="microsoft" data-tooltip="Certificações Microsoft (Azure, Security)">Microsoft</button>
+                <button class="org-tab" data-niche="aws" data-tooltip="Certificações AWS">AWS</button>
+                <button class="org-tab" data-niche="gcp" data-tooltip="Certificações Google Cloud">GCP</button>
+                <button class="org-tab" data-niche="exin" data-tooltip="Certificações EXIN">EXIN</button>
+                <button class="org-tab" data-niche="eccouncil" data-tooltip="Certificações EC-Council">EC-Council</button>
+                <button class="org-tab" data-niche="comptia" data-tooltip="Certificações CompTIA">CompTIA</button>
+                <button class="org-tab" data-niche="giac" data-tooltip="Certificações GIAC / SANS">GIAC</button>
+                <button class="org-tab" data-niche="isc2" data-tooltip="Certificações (ISC)²">(ISC)²</button>
+                <button class="org-tab" data-niche="isaca" data-tooltip="Certificações ISACA">ISACA</button>
+            </div>
 
             <div class="empty-state" id="empty-state">
                 Nenhuma certificação encontrada neste nicho.
             </div>
 
             <!-- FUNDAMENTOS / INICIANTE -->
-            <div class="cert-category" data-category="fundamentos">
+            <div class="cert-category" id="fundamentos-list" data-category="fundamentos">
                 <h3>Iniciante</h3>
                 <ul class="cert-menu">
-                    <li class="cert-item" data-niches="fundamentos">
-                        <a href="https://www.comptia.org/certifications/security" target="_blank" rel="noopener noreferrer" data-tooltip="Fundamentos de segurança: redes, criptografia, identidade e compliance. Ideal para começar na área.">
+                    <li class="cert-item" data-niches="fundamentos comptia">
+                        <a href="https://www.comptia.org/certifications/a/core-1-and-2-v15" target="_blank" rel="noopener noreferrer" data-tooltip="Ponto de partida para carreira em TI. Hardware, software, redes, troubleshooting e segurança. Base para suporte e help desk.">
+                            <span class="cert-badge">CompTIA</span> A+
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="fundamentos comptia">
+                        <a href="https://www.comptia.org/certifications/network" target="_blank" rel="noopener noreferrer" data-tooltip="Conceitos de redes, troubleshooting e infraestrutura. Base para entender conectividade e segurança de rede.">
+                            <span class="cert-badge">CompTIA</span> Network+
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="fundamentos comptia">
+                        <a href="https://www.comptia.org/certifications/security" target="_blank" rel="noopener noreferrer" data-tooltip="Fundamentos de segurança: redes, criptografia, identidade e compliance. Ideal para começar na área. 381 USD · 90 questões · 90 min.">
                             <span class="cert-badge">CompTIA</span> Security+
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="fundamentos">
+                    <li class="cert-item" data-niches="fundamentos auditoria exin">
+                        <a href="https://www.exin.com/data-protection-security/information-security-foundation-based-on-iso-iec-27001/" target="_blank" rel="noopener noreferrer" data-tooltip="Base ISO 27001: ameaças e riscos, gerenciamento de incidentes, medidas físicas e técnicas. 240 USD · 40 questões · 60 min.">
+                            <span class="cert-badge">EXIN</span> ISFS – Information Security Foundation
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="fundamentos red-team exin">
+                        <a href="https://www.exin.com/data-protection-security/exin-ethical-hacking/exin-ethical-hacking-foundation/" target="_blank" rel="noopener noreferrer" data-tooltip="Ethical hacking, sniffing, ataques wireless e pentest em aplicações web e redes internas. 240 USD · 40 questões · 60 min.">
+                            <span class="cert-badge">EXIN</span> Ethical Hacking Foundation
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="fundamentos isc2">
                         <a href="https://www.isc2.org/certifications/sscp" target="_blank" rel="noopener noreferrer" data-tooltip="Proteção de ativos de informação: acesso, criptografia, análise de vulnerabilidades e resposta a incidentes.">
                             <span class="cert-badge">(ISC)²</span> SSCP
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="fundamentos blue-team">
+                    <li class="cert-item" data-niches="fundamentos blue-team comptia">
                         <a href="https://www.comptia.org/certifications/cybersecurity-analyst" target="_blank" rel="noopener noreferrer" data-tooltip="Análise de vulnerabilidades, detecção de ameaças, SIEM e resposta a incidentes. Foco em operações defensivas.">
                             <span class="cert-badge">CompTIA</span> CySA+
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="fundamentos">
-                        <a href="https://www.comptia.org/certifications/network" target="_blank" rel="noopener noreferrer" data-tooltip="Conceitos de redes, troubleshooting e infraestrutura. Base para entender conectividade e segurança de rede.">
-                            <span class="cert-badge">CompTIA</span> Network+
+                    <li class="cert-item" data-niches="fundamentos governanca comptia">
+                        <a href="https://www.comptia.org/en-us/certifications/secai" target="_blank" rel="noopener noreferrer" data-tooltip="Segurança com IA: proteger sistemas de IA, usar IA em operações de segurança e governança. Lançamento fev/2026.">
+                            <span class="cert-badge">CompTIA</span> SecAI+ – Security AI
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="fundamentos comptia">
+                        <a href="https://www.comptia.org/en/certifications/#cyber" target="_blank" rel="noopener noreferrer" data-tooltip="Security+, CySA+, PenTest+, CASP+ e outras certificações de cibersegurança da CompTIA.">
+                            <span class="cert-badge">CompTIA</span> Ver todas – Cyber
                         </a>
                     </li>
                 </ul>
@@ -298,9 +1038,19 @@
             <div class="cert-category" data-category="red-team">
                 <h3>Red Team / Ofensivo</h3>
                 <ul class="cert-menu">
-                    <li class="cert-item" data-niches="red-team">
-                        <a href="https://www.eccouncil.org/programs/certified-ethical-hacker-ceh/" target="_blank" rel="noopener noreferrer" data-tooltip="Hacking ético: exploração, scanning, sniffers, malware e técnicas de penetração. Foco em metodologias ofensivas.">
-                            <span class="cert-badge">EC-Council</span> CEH – Certified Ethical Hacker
+                    <li class="cert-item" data-niches="red-team comptia">
+                        <a href="https://www.comptia.org/certifications/pentest" target="_blank" rel="noopener noreferrer" data-tooltip="Pentest completo: cloud, apps web, APIs e IoT. Valida habilidades hands-on em todo o processo de testes de penetração.">
+                            <span class="cert-badge">CompTIA</span> PenTest+
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="red-team eccouncil">
+                        <a href="https://www.eccouncil.org/programs/certified-ethical-hacker-ceh/" target="_blank" rel="noopener noreferrer" data-tooltip="CEH: testes de intrusão e hacking ético. Valorizada para times de defesa. Padrão internacional em ethical hacking.">
+                            <span class="cert-badge">EC-Council</span> CEH – Certified Ethical Hacker (C|EH)
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="red-team eccouncil">
+                        <a href="https://www.eccouncil.org/programs/certified-ethical-hacker-ceh-master/" target="_blank" rel="noopener noreferrer" data-tooltip="Nível avançado: CEH + exame prático de 6h. Valida habilidades hands-on em 550+ técnicas de ataque. ANAB e DoD 8140.">
+                            <span class="cert-badge">EC-Council</span> CEH Master – C|EH (Master)
                         </a>
                     </li>
                     <li class="cert-item" data-niches="red-team">
@@ -333,7 +1083,7 @@
                             <span class="cert-badge">eLearnSecurity</span> eWPT
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="red-team">
+                    <li class="cert-item" data-niches="red-team giac">
                         <a href="https://www.giac.org/certifications/penetration-tester-gpen" target="_blank" rel="noopener noreferrer" data-tooltip="Metodologias de penetração, técnicas de exploração e uso de ferramentas de pentest.">
                             <span class="cert-badge">GIAC</span> GPEN
                         </a>
@@ -350,17 +1100,22 @@
             <div class="cert-category" data-category="blue-team">
                 <h3>Blue Team / Defensivo</h3>
                 <ul class="cert-menu">
-                    <li class="cert-item" data-niches="blue-team">
+                    <li class="cert-item" data-niches="blue-team governanca comptia">
+                        <a href="https://www.comptia.org/certifications/casp" target="_blank" rel="noopener noreferrer" data-tooltip="Nível avançado: arquitetura de segurança, engenharia, operações e governança. Para profissionais experientes.">
+                            <span class="cert-badge">CompTIA</span> CASP+ – Advanced Security Practitioner
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="blue-team giac">
                         <a href="https://www.giac.org/certifications/security-essentials-gsec" target="_blank" rel="noopener noreferrer" data-tooltip="Essenciais de segurança: defesa em profundidade, hardening, criptografia e resposta a incidentes.">
                             <span class="cert-badge">GIAC</span> GSEC
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="blue-team">
+                    <li class="cert-item" data-niches="blue-team giac">
                         <a href="https://www.giac.org/certifications/incident-handler-gcih" target="_blank" rel="noopener noreferrer" data-tooltip="Resposta a incidentes: detecção, análise de malware e técnicas de recuperação. Foco em incident handling.">
                             <span class="cert-badge">GIAC</span> GCIH
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="blue-team">
+                    <li class="cert-item" data-niches="blue-team giac">
                         <a href="https://www.giac.org/certifications/security-operations-certified-gsoc" target="_blank" rel="noopener noreferrer" data-tooltip="Operações de SOC: design de centro de operações, SIEM, automação e resposta a ameaças.">
                             <span class="cert-badge">GIAC</span> GSOC
                         </a>
@@ -370,7 +1125,12 @@
                             <span class="cert-badge">BlueTeam Labs</span> BTL1
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="blue-team">
+                    <li class="cert-item" data-niches="blue-team eccouncil">
+                        <a href="https://www.eccouncil.org/programs/certified-network-defender-cnd/" target="_blank" rel="noopener noreferrer" data-tooltip="Defesa de redes: proteção, detecção e resposta. Hardening, IDS/IPS, análise de tráfego e resposta a incidentes.">
+                            <span class="cert-badge">EC-Council</span> CND – Certified Network Defender
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="blue-team giac">
                         <a href="https://www.giac.org/certifications/continuous-monitoring-certification-gmon" target="_blank" rel="noopener noreferrer" data-tooltip="Monitoramento contínuo: detecção de intrusões, análise de tráfego e resposta em tempo real.">
                             <span class="cert-badge">GIAC</span> GMON
                         </a>
@@ -382,27 +1142,32 @@
             <div class="cert-category" data-category="governanca">
                 <h3>Governança e Gestão</h3>
                 <ul class="cert-menu">
-                    <li class="cert-item" data-niches="governanca">
-                        <a href="https://www.isc2.org/certifications/cissp" target="_blank" rel="noopener noreferrer" data-tooltip="Referência em gestão de segurança. Abrange 8 domínios: governança, risco, arquitetura, operações e mais.">
-                            <span class="cert-badge">(ISC)²</span> CISSP
+                    <li class="cert-item" data-niches="governanca isc2">
+                        <a href="https://www.isc2.org/certifications/cissp" target="_blank" rel="noopener noreferrer" data-tooltip="Padrão ouro para gestão de segurança. Altamente valorizada para cargos de liderança e sênior. 8 domínios: governança, risco, arquitetura e operações.">
+                            <span class="cert-badge">(ISC)²</span> CISSP – Certified Information Systems Security Professional
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="governanca">
+                    <li class="cert-item" data-niches="governanca isaca">
                         <a href="https://www.isaca.org/credentialing/cism" target="_blank" rel="noopener noreferrer" data-tooltip="Gestão de segurança da informação: governança, gestão de riscos, programa de segurança e resposta.">
                             <span class="cert-badge">ISACA</span> CISM
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="governanca">
+                    <li class="cert-item" data-niches="governanca isaca">
                         <a href="https://www.isaca.org/credentialing/cgeit" target="_blank" rel="noopener noreferrer" data-tooltip="Governança de TI: alinhamento estratégico, entrega de valor e gestão de recursos de TI.">
                             <span class="cert-badge">ISACA</span> CGEIT
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="governanca">
+                    <li class="cert-item" data-niches="governanca isaca">
                         <a href="https://www.isaca.org/credentialing/crisc" target="_blank" rel="noopener noreferrer" data-tooltip="Gestão de riscos de TI: identificação, avaliação e resposta a riscos. Foco em governança e compliance.">
                             <span class="cert-badge">ISACA</span> CRISC
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="governanca">
+                    <li class="cert-item" data-niches="governanca eccouncil">
+                        <a href="https://www.eccouncil.org/programs/certified-chief-information-security-officer-cciso/" target="_blank" rel="noopener noreferrer" data-tooltip="Certificação executiva para CISOs: governança, gestão de riscos, compliance, orçamento e liderança em segurança.">
+                            <span class="cert-badge">EC-Council</span> CCISO – Certified CISO
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="governanca isc2">
                         <a href="https://www.isc2.org/certifications/cc" target="_blank" rel="noopener noreferrer" data-tooltip="Nível introdutório da (ISC)². Fundamentos de segurança para quem está iniciando na carreira.">
                             <span class="cert-badge">(ISC)²</span> Certified in Cybersecurity (CC)
                         </a>
@@ -414,12 +1179,12 @@
             <div class="cert-category" data-category="auditoria">
                 <h3>Auditoria e Compliance</h3>
                 <ul class="cert-menu">
-                    <li class="cert-item" data-niches="auditoria">
-                        <a href="https://www.isaca.org/credentialing/cisa" target="_blank" rel="noopener noreferrer" data-tooltip="Auditoria de sistemas e controles de TI. Avaliação de conformidade, governança e processo de auditoria.">
-                            <span class="cert-badge">ISACA</span> CISA
+                    <li class="cert-item" data-niches="auditoria isaca">
+                        <a href="https://www.isaca.org/credentialing/cisa" target="_blank" rel="noopener noreferrer" data-tooltip="Certified Information Systems Auditor. Focada em auditoria, controle e segurança de sistemas. Essencial para governança de TI.">
+                            <span class="cert-badge">ISACA</span> CISA – Certified Information Systems Auditor
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="auditoria dados">
+                    <li class="cert-item" data-niches="auditoria dados isaca">
                         <a href="https://www.isaca.org/credentialing/cdpse" target="_blank" rel="noopener noreferrer" data-tooltip="Proteção e privacidade de dados. Alinhado a GDPR e LGPD. Foco em design, implementação e governança.">
                             <span class="cert-badge">ISACA</span> CDPSE
                         </a>
@@ -441,7 +1206,12 @@
             <div class="cert-category" data-category="dados">
                 <h3>Proteção de Dados / LGPD</h3>
                 <ul class="cert-menu">
-                    <li class="cert-item" data-niches="dados">
+                    <li class="cert-item" data-niches="dados exin auditoria">
+                        <a href="https://www.exin.com/data-protection-security/" target="_blank" rel="noopener noreferrer" data-tooltip="Gestão de segurança da informação com base em ISO 27001. Para líderes e gestores de segurança.">
+                            <span class="cert-badge">EXIN</span> Information Security Management Professional
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="dados exin">
                         <a href="https://www.exin.com/certifications/data-protection-officer/" target="_blank" rel="noopener noreferrer" data-tooltip="Função de DPO: LGPD, GDPR, governança de privacidade e papel do encarregado de dados.">
                             <span class="cert-badge">EXIN</span> DPO – Data Protection Officer
                         </a>
@@ -468,29 +1238,69 @@
             <div class="cert-category" data-category="cloud">
                 <h3>Cloud Security</h3>
                 <ul class="cert-menu">
+                    <li class="cert-item" data-niches="cloud comptia">
+                        <a href="https://www.comptia.org/certifications/cloud" target="_blank" rel="noopener noreferrer" data-tooltip="Design, segurança e otimização de ambientes multi-cloud. Arquitetura, deploy, DevOps e troubleshooting.">
+                            <span class="cert-badge">CompTIA</span> Cloud+
+                        </a>
+                    </li>
                     <li class="cert-item" data-niches="cloud">
                         <a href="https://cloudsecurityalliance.org/education/ccsk/" target="_blank" rel="noopener noreferrer" data-tooltip="Cloud Security Alliance. Segurança em nuvem: IaaS, PaaS, SaaS, governança e responsabilidades compartilhadas.">
                             <span class="cert-badge">CSA</span> CCSK
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="cloud">
+                    <li class="cert-item" data-niches="cloud isc2">
                         <a href="https://www.isc2.org/certifications/ccsp" target="_blank" rel="noopener noreferrer" data-tooltip="Segurança de arquiteturas cloud: design, operações, governança e compliance em ambientes cloud.">
                             <span class="cert-badge">(ISC)²</span> CCSP
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="cloud">
+                    <li class="cert-item" data-niches="cloud giac">
                         <a href="https://www.giac.org/certifications/cloud-security-essentials-gcld" target="_blank" rel="noopener noreferrer" data-tooltip="Essenciais de cloud: multi-cloud, hardening, auditoria de recursos e resposta a incidentes.">
                             <span class="cert-badge">GIAC</span> GCLD
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="cloud">
-                        <a href="https://aws.amazon.com/pt/certification/certified-security-specialty/" target="_blank" rel="noopener noreferrer" data-tooltip="Segurança em AWS: IAM, detecção de ameaças, criptografia, compliance e resposta a incidentes.">
+                    <li class="cert-item" data-niches="cloud aws">
+                        <a href="https://aws.amazon.com/pt/certification/certified-security-specialty/" target="_blank" rel="noopener noreferrer" data-tooltip="AWS Certified Security Specialty. IAM, detecção de ameaças, criptografia. Essencial para ambientes cloud.">
                             <span class="cert-badge">AWS</span> Security Specialty
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="cloud">
-                        <a href="https://learn.microsoft.com/pt-br/credentials/certifications/azure-security-engineer/" target="_blank" rel="noopener noreferrer" data-tooltip="Segurança no Azure: identidade, plataforma, operações de segurança e proteção de dados.">
+                    <li class="cert-item" data-niches="cloud microsoft">
+                        <a href="https://learn.microsoft.com/pt-br/credentials/certifications/azure-security-engineer/" target="_blank" rel="noopener noreferrer" data-tooltip="Microsoft Certified: Azure Security Engineer Associate. Identidade, plataforma e operações. Essencial para segurança em Azure.">
                             <span class="cert-badge">Microsoft</span> Azure Security Engineer (AZ-500)
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="cloud microsoft">
+                        <a href="https://learn.microsoft.com/pt-br/credentials/certifications/security-operations-analyst/" target="_blank" rel="noopener noreferrer" data-tooltip="Microsoft Certified: Security Operations Analyst Associate. Defender, Sentinel, detecção e resposta a ameaças.">
+                            <span class="cert-badge">Microsoft</span> Security Operations Analyst (SC-200)
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="cloud microsoft fundamentos">
+                        <a href="https://learn.microsoft.com/pt-br/credentials/certifications/security-compliance-and-identity-fundamentals/" target="_blank" rel="noopener noreferrer" data-tooltip="Fundamentos de segurança, compliance e identidade Microsoft. Base para AZ-500 e SC-200.">
+                            <span class="cert-badge">Microsoft</span> SC-900 – Security, Compliance, Identity
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="cloud microsoft governanca">
+                        <a href="https://learn.microsoft.com/pt-br/credentials/certifications/cybersecurity-architect/" target="_blank" rel="noopener noreferrer" data-tooltip="Expert: arquitetura de segurança Zero Trust. Identidade, dispositivos, dados, rede, governança e operações. Requer AZ-500 ou SC-200.">
+                            <span class="cert-badge">Microsoft</span> SC-100 – Cybersecurity Architect
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="cloud aws">
+                        <a href="https://aws.amazon.com/pt/certification/certified-solutions-architect-associate/" target="_blank" rel="noopener noreferrer" data-tooltip="Arquitetura de soluções AWS. Base para entender serviços e segurança na AWS.">
+                            <span class="cert-badge">AWS</span> Solutions Architect Associate
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="cloud aws fundamentos">
+                        <a href="https://aws.amazon.com/pt/certification/certified-cloud-practitioner/" target="_blank" rel="noopener noreferrer" data-tooltip="Fundamentos da AWS: serviços, terminologia e conceitos de cloud. Ponto de partida para carreira em cloud.">
+                            <span class="cert-badge">AWS</span> Cloud Practitioner
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="cloud gcp">
+                        <a href="https://cloud.google.com/certification/cloud-security-engineer" target="_blank" rel="noopener noreferrer" data-tooltip="Professional Cloud Security Engineer. Segurança em Google Cloud: IAM, rede, criptografia, compliance e resposta a incidentes.">
+                            <span class="cert-badge">GCP</span> Professional Cloud Security Engineer
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="cloud gcp blue-team">
+                        <a href="https://cloud.google.com/learn/certification/security-operations-engineer" target="_blank" rel="noopener noreferrer" data-tooltip="Segurança operacional em GCP: detecção, monitoramento, threat hunting e resposta a incidentes. Chronicle, Security Command Center.">
+                            <span class="cert-badge">GCP</span> Professional Security Operations Engineer
                         </a>
                     </li>
                 </ul>
@@ -500,12 +1310,17 @@
             <div class="cert-category" data-category="forense">
                 <h3>Forense Digital</h3>
                 <ul class="cert-menu">
-                    <li class="cert-item" data-niches="forense">
+                    <li class="cert-item" data-niches="forense eccouncil">
+                        <a href="https://www.eccouncil.org/programs/computer-hacking-forensic-investigator-chfi/" target="_blank" rel="noopener noreferrer" data-tooltip="Investigação forense digital: coleta de evidências, análise de ataques, malware, mídia e rede. EC-Council.">
+                            <span class="cert-badge">EC-Council</span> CHFI – Computer Hacking Forensic Investigator
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="forense giac">
                         <a href="https://www.giac.org/certifications/certified-forensic-analyst-gcfa" target="_blank" rel="noopener noreferrer" data-tooltip="Análise forense avançada: memória, timeline, anti-forense, threat hunting e resposta a APT.">
                             <span class="cert-badge">GIAC</span> GCFA
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="forense">
+                    <li class="cert-item" data-niches="forense giac">
                         <a href="https://www.giac.org/certifications/forensic-examiner-gcfe" target="_blank" rel="noopener noreferrer" data-tooltip="Exame forense: Windows artifacts, sistemas de arquivos, evidências digitais e coleta.">
                             <span class="cert-badge">GIAC</span> GCFE
                         </a>
@@ -515,7 +1330,7 @@
                             <span class="cert-badge">OpenText</span> EnCE
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="forense">
+                    <li class="cert-item" data-niches="forense giac">
                         <a href="https://www.giac.org/certifications/advanced-incident-responder-gcfa" target="_blank" rel="noopener noreferrer" data-tooltip="Resposta avançada a incidentes e análise forense de intrusões.">
                             <span class="cert-badge">GIAC</span> GASF
                         </a>
@@ -527,19 +1342,24 @@
             <div class="cert-category" data-category="rede">
                 <h3>Rede e Infraestrutura</h3>
                 <ul class="cert-menu">
+                    <li class="cert-item" data-niches="rede fundamentos comptia">
+                        <a href="https://www.comptia.org/certifications/linux" target="_blank" rel="noopener noreferrer" data-tooltip="Administração, segurança e troubleshooting em Linux. Cloud, containers, automação e orquestração.">
+                            <span class="cert-badge">CompTIA</span> Linux+
+                        </a>
+                    </li>
                     <li class="cert-item" data-niches="rede">
-                        <a href="https://learningnetwork.cisco.com/s/certifications/security/ccna-security" target="_blank" rel="noopener noreferrer" data-tooltip="Segurança de redes Cisco: ASA, VPN, controle de acesso e proteção de perímetro.">
+                        <a href="https://learningnetwork.cisco.com/s/certifications/security/ccna-security" target="_blank" rel="noopener noreferrer" data-tooltip="Base de redes e segurança Cisco. ASA, VPN, controle de acesso. Relevância em segurança de infraestrutura corporativa.">
                             <span class="cert-badge">Cisco</span> CCNA Security
                         </a>
                     </li>
                     <li class="cert-item" data-niches="rede">
-                        <a href="https://learningnetwork.cisco.com/s/certifications/security/ccnp-security" target="_blank" rel="noopener noreferrer" data-tooltip="Segurança Cisco avançada: firewalls, VPN, IDS/IPS e arquitetura de rede segura.">
+                        <a href="https://learningnetwork.cisco.com/s/certifications/security/ccnp-security" target="_blank" rel="noopener noreferrer" data-tooltip="Segurança Cisco avançada: firewalls, VPN, IDS/IPS. Fundamental para profissionais de rede e infraestrutura.">
                             <span class="cert-badge">Cisco</span> CCNP Security
                         </a>
                     </li>
                     <li class="cert-item" data-niches="rede">
-                        <a href="https://www.fortinet.com/training-certification" target="_blank" rel="noopener noreferrer" data-tooltip="FortiGate, SD-WAN, sandbox e ecossistema de segurança Fortinet. Níveis 1 a 8.">
-                            <span class="cert-badge">Fortinet</span> NSE (Network Security Expert)
+                        <a href="https://www.fortinet.com/training-certification" target="_blank" rel="noopener noreferrer" data-tooltip="Soluções Fortinet: FortiGate, SD-WAN, SASE. NSE 4–7 e FCSS (Fortinet Certified Solution Specialist) com alta demanda em infra corporativa.">
+                            <span class="cert-badge">Fortinet</span> NSE 4–7 / FCSS (Network Security Expert)
                         </a>
                     </li>
                     <li class="cert-item" data-niches="rede">
@@ -554,17 +1374,22 @@
             <div class="cert-category" data-category="especializadas">
                 <h3>Especializadas</h3>
                 <ul class="cert-menu">
-                    <li class="cert-item" data-niches="governanca">
+                    <li class="cert-item" data-niches="governanca giac">
                         <a href="https://www.sans.org/cyber-security-courses/" target="_blank" rel="noopener noreferrer" data-tooltip="Certificação de elite SANS. Requer múltiplas GIAC + prova hands-on. Máxima credencial técnica.">
                             <span class="cert-badge">SANS</span> GIAC / GSE
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="red-team">
+                    <li class="cert-item" data-niches="red-team giac">
                         <a href="https://www.giac.org/certifications/red-team-professional-grtp" target="_blank" rel="noopener noreferrer" data-tooltip="Operações Red Team completas: emulação de adversários, C2, AD, propagação e exfiltração.">
                             <span class="cert-badge">GIAC</span> GRTP – Red Team Professional
                         </a>
                     </li>
-                    <li class="cert-item" data-niches="forense">
+                    <li class="cert-item" data-niches="governanca auditoria isc2">
+                        <a href="https://www.isc2.org/certifications/csslp" target="_blank" rel="noopener noreferrer" data-tooltip="Secure Software Lifecycle Professional. Segurança em todo o ciclo de desenvolvimento: requisitos, arquitetura, implementação, testes e supply chain.">
+                            <span class="cert-badge">(ISC)²</span> CSSLP – Secure Software Lifecycle
+                        </a>
+                    </li>
+                    <li class="cert-item" data-niches="forense giac">
                         <a href="https://www.giac.org/certifications/malware-analyst-grem" target="_blank" rel="noopener noreferrer" data-tooltip="Análise de malware: reverse engineering, análise estática e dinâmica de software malicioso.">
                             <span class="cert-badge">GIAC</span> GREM – Malware Analyst
                         </a>
@@ -578,24 +1403,38 @@
         </footer>
     </main>
 
+    <div id="diagram-tooltip"></div>
     <script>
         (function() {
-            const tabs = document.querySelectorAll('.niche-tab');
+            const nicheTabs = document.querySelectorAll('.niche-tab');
+            const orgTabs = document.querySelectorAll('.org-tab');
             const certItems = document.querySelectorAll('.cert-item');
             const certCategories = document.querySelectorAll('.cert-category[data-category]');
             const emptyState = document.getElementById('empty-state');
+            const diagramNodes = document.querySelectorAll('.diagram-node[data-niche]');
 
-            function updateFilter(niche) {
-                tabs.forEach(t => {
-                    t.classList.toggle('active', t.dataset.niche === niche);
+            let selectedNiche = 'todos';
+            let selectedOrg = 'todos';
+
+            const orgValues = ['microsoft', 'aws', 'gcp', 'exin', 'eccouncil', 'comptia', 'giac', 'isc2', 'isaca'];
+
+            function updateFilter() {
+                nicheTabs.forEach(t => {
+                    t.classList.toggle('active', t.dataset.niche === selectedNiche);
+                });
+                orgTabs.forEach(t => {
+                    t.classList.toggle('active', t.dataset.niche === selectedOrg);
                 });
 
-                const isAll = niche === 'todos';
+                const isNicheAll = selectedNiche === 'todos';
+                const isOrgAll = selectedOrg === 'todos';
                 let visibleCount = 0;
 
                 certItems.forEach(item => {
                     const niches = (item.dataset.niches || '').split(' ').map(n => n.trim()).filter(Boolean);
-                    const match = isAll || niches.includes(niche);
+                    const matchNiche = isNicheAll || niches.includes(selectedNiche);
+                    const matchOrg = isOrgAll || (orgValues.includes(selectedOrg) && niches.includes(selectedOrg));
+                    const match = matchNiche && matchOrg;
                     item.classList.toggle('visible', match);
                     if (match) visibleCount++;
                 });
@@ -607,13 +1446,186 @@
                 });
 
                 emptyState.classList.toggle('hidden', visibleCount > 0);
+
+                // Atualizar destaque no diagrama (apenas para nichos de área, não org)
+                diagramNodes.forEach(n => {
+                    const isAreaNiche = !orgValues.includes(n.dataset.niche);
+                    n.classList.toggle('highlight', isAreaNiche && n.dataset.niche === selectedNiche);
+                });
             }
 
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => updateFilter(tab.dataset.niche));
+            nicheTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    selectedNiche = tab.dataset.niche;
+                    updateFilter();
+                });
             });
 
-            updateFilter('todos');
+            orgTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    selectedOrg = tab.dataset.niche;
+                    updateFilter();
+                });
+            });
+
+            // Clique no diagrama filtra a lista (apenas nichos de área)
+            diagramNodes.forEach(node => {
+                node.addEventListener('click', () => {
+                    if (!orgValues.includes(node.dataset.niche)) {
+                        selectedNiche = node.dataset.niche;
+                        updateFilter();
+                    }
+                });
+            });
+
+            // Hover no diagrama: destacar nós relacionados + tooltip com descrição
+            var diagramTooltip = document.getElementById('diagram-tooltip');
+            var tooltipHideTimer = null;
+            diagramNodes.forEach(node => {
+                node.addEventListener('mouseenter', function(e) {
+                    const niche = this.dataset.niche;
+                    diagramNodes.forEach(n => n.classList.toggle('dim', niche !== 'todos' && n.dataset.niche !== niche && n.dataset.niche !== 'todos'));
+                    if (diagramTooltip && this.dataset.tooltip) {
+                        clearTimeout(tooltipHideTimer);
+                        diagramTooltip.textContent = this.dataset.tooltip;
+                        diagramTooltip.classList.add('visible');
+                        var x = e.clientX + 12, y = e.clientY + 12;
+                        if (x + 290 > window.innerWidth) x = e.clientX - 290;
+                        if (y + 120 > window.innerHeight) y = e.clientY - 100;
+                        diagramTooltip.style.left = x + 'px';
+                        diagramTooltip.style.top = y + 'px';
+                    }
+                });
+                node.addEventListener('mousemove', function(e) {
+                    if (diagramTooltip && this.dataset.tooltip) {
+                        var x = e.clientX + 12, y = e.clientY + 12;
+                        if (x + 290 > window.innerWidth) x = e.clientX - 290;
+                        if (y + 120 > window.innerHeight) y = e.clientY - 100;
+                        diagramTooltip.style.left = x + 'px';
+                        diagramTooltip.style.top = y + 'px';
+                    }
+                });
+                node.addEventListener('mouseleave', function() {
+                    diagramNodes.forEach(n => n.classList.remove('dim'));
+                    if (diagramTooltip) {
+                        tooltipHideTimer = setTimeout(function() {
+                            diagramTooltip.classList.remove('visible');
+                        }, 100);
+                    }
+                });
+            });
+            if (diagramTooltip) {
+                diagramTooltip.addEventListener('mouseenter', function() { clearTimeout(tooltipHideTimer); });
+                diagramTooltip.addEventListener('mouseleave', function() { diagramTooltip.classList.remove('visible'); });
+            }
+
+            updateFilter();
+
+            // Zoom e pan do diagrama
+            (function() {
+                var container = document.querySelector('.diagram-zoom-container');
+                var inner = document.getElementById('diagram-zoom-inner');
+                var btnIn = document.getElementById('diagram-zoom-in');
+                var btnOut = document.getElementById('diagram-zoom-out');
+                var btnReset = document.getElementById('diagram-zoom-reset');
+                var scale = 1;
+                var minScale = 0.6;
+                var maxScale = 1.8;
+                var step = 0.2;
+                var panX = 0, panY = 0;
+
+                function applyTransform() {
+                    if (inner) {
+                        inner.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + scale + ')';
+                    }
+                    if (btnOut) btnOut.disabled = scale <= minScale;
+                    if (btnIn) btnIn.disabled = scale >= maxScale;
+                }
+
+                if (btnIn) btnIn.addEventListener('click', function() {
+                    if (scale < maxScale) { scale = Math.min(maxScale, scale + step); applyTransform(); }
+                });
+                if (btnOut) btnOut.addEventListener('click', function() {
+                    if (scale > minScale) { scale = Math.max(minScale, scale - step); applyTransform(); }
+                });
+                if (btnReset) btnReset.addEventListener('click', function() {
+                    scale = 1; panX = 0; panY = 0; applyTransform();
+                });
+                applyTransform();
+
+                // Arrastar para mover (pan por translate)
+                if (container && inner) {
+                    var isPanning = false, startX, startY, startPanX, startPanY;
+                    container.addEventListener('mousedown', function(e) {
+                        if (e.target.closest('.diagram-node') || e.target.closest('.diagram-zoom-controls')) return;
+                        isPanning = true;
+                        container.classList.add('panning');
+                        startX = e.clientX;
+                        startY = e.clientY;
+                        startPanX = panX;
+                        startPanY = panY;
+                    });
+                    document.addEventListener('mousemove', function(e) {
+                        if (!isPanning) return;
+                        panX = startPanX + (e.clientX - startX);
+                        panY = startPanY + (e.clientY - startY);
+                        applyTransform();
+                    });
+                    document.addEventListener('mouseup', function() {
+                        isPanning = false;
+                        container.classList.remove('panning');
+                    });
+                    container.addEventListener('touchstart', function(e) {
+                        if (e.target.closest('.diagram-node') || e.target.closest('.diagram-zoom-controls')) return;
+                        if (e.touches.length === 1) {
+                            isPanning = true;
+                            startX = e.touches[0].clientX;
+                            startY = e.touches[0].clientY;
+                            startPanX = panX;
+                            startPanY = panY;
+                        }
+                    }, { passive: true });
+                    container.addEventListener('touchmove', function(e) {
+                        if (!isPanning || e.touches.length !== 1) return;
+                        e.preventDefault();
+                        panX = startPanX + (e.touches[0].clientX - startX);
+                        panY = startPanY + (e.touches[0].clientY - startY);
+                        applyTransform();
+                        startX = e.touches[0].clientX;
+                        startY = e.touches[0].clientY;
+                        startPanX = panX;
+                        startPanY = panY;
+                    }, { passive: false });
+                    container.addEventListener('touchend', function() { isPanning = false; });
+                }
+            })();
+
+            // Botão tela cheia
+            (function() {
+                var btn = document.getElementById('diagram-fullscreen');
+                var el = document.getElementById('diagram-fullscreen-container');
+                if (!btn || !el) return;
+                function updateIcon() {
+                    var isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+                    btn.textContent = isFs ? '⊟' : '⛶';
+                    btn.classList.toggle('is-fullscreen', isFs);
+                    btn.setAttribute('aria-label', isFs ? 'Sair da tela cheia' : 'Tela cheia');
+                    btn.setAttribute('title', isFs ? 'Sair da tela cheia (Esc)' : 'Tela cheia');
+                }
+                btn.addEventListener('click', function() {
+                    var isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+                    if (isFs) {
+                        (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen).call(document);
+                    } else {
+                        var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+                        if (req) req.call(el);
+                    }
+                });
+                document.addEventListener('fullscreenchange', updateIcon);
+                document.addEventListener('webkitfullscreenchange', updateIcon);
+                document.addEventListener('mozfullscreenchange', updateIcon);
+                document.addEventListener('MSFullscreenChange', updateIcon);
+            })();
         })();
     </script>
     <div id="cookie-consent" class="cookie-consent">
