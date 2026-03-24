@@ -191,6 +191,46 @@
         .cert-menu a:hover { border-color: var(--accent); color: var(--accent); }
         .cert-badge { font-size: 0.6rem; padding: 0.18rem 0.4rem; border-radius: 4px; background: var(--accent-dim); color: var(--accent); font-weight: 600; }
         .empresa-logo { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; object-fit: contain; background: var(--bg-dark); }
+        #empresas .cert-menu--compact li,
+        #portais .cert-menu--compact li { margin-bottom: 0.3rem; }
+        #empresas .cert-menu--compact a,
+        #portais .cert-menu--compact a {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.82rem;
+        }
+        #empresas .cert-menu--compact .empresa-logo,
+        #portais .cert-menu--compact .empresa-logo { width: 20px; height: 20px; min-width: 20px; }
+        #empresas .cert-menu--compact .cert-badge,
+        #portais .cert-menu--compact .cert-badge { font-size: 0.54rem; padding: 0.12rem 0.32rem; }
+        .list-pager {
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+            gap: 0.45rem; margin-top: 0.65rem; padding-top: 0.65rem;
+            border-top: 1px solid rgba(30, 41, 59, 0.75);
+        }
+        .list-pager-btn {
+            min-width: 2.25rem; height: 2rem; padding: 0 0.5rem;
+            font-size: 1.05rem; line-height: 1; font-family: inherit; font-weight: 600;
+            color: var(--accent); background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 8px; cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .list-pager-btn:hover:not(:disabled) { background: rgba(0, 255, 136, 0.08); border-color: var(--accent); }
+        .list-pager-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+        .list-pager-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .list-pager-nums { display: flex; justify-content: center; gap: 0.35rem; flex-wrap: wrap; }
+        .list-pager-num {
+            min-width: 2rem; height: 2rem; padding: 0 0.35rem;
+            font-size: 0.78rem; font-weight: 600; font-family: inherit;
+            color: var(--text-muted); background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 6px; cursor: pointer;
+            transition: color 0.2s, border-color 0.2s, background 0.2s;
+        }
+        .list-pager-num.is-active {
+            color: var(--accent); background: rgba(0, 255, 136, 0.12);
+            border-color: rgba(0, 255, 136, 0.35);
+        }
+        .list-pager-num:not(.is-active):hover { color: var(--text); border-color: var(--text-muted); }
+        .list-pager-num:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
         .perfil-card {
             display: flex; align-items: flex-start; gap: 1rem; flex-wrap: wrap;
             padding: 1rem 1.25rem; background: var(--bg-card); border: 1px solid var(--border);
@@ -339,7 +379,7 @@
                 <div class="discovery-grid">
             <div class="cert-category" id="empresas">
                 <h3>Empresas com Vagas em TI</h3>
-                <ul class="cert-menu">
+                <ul class="cert-menu cert-menu--compact" id="empresas-menu">
                     <li>
                         <a href="https://careers.google.com/jobs/" target="_blank" rel="noopener noreferrer" data-tooltip="Google Careers. Vagas em engenharia, cloud, segurança e infra no Brasil e remoto.">
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=google.com&sz=48" alt=""> <span class="cert-badge">Google</span> Carreiras
@@ -501,11 +541,16 @@
                         </a>
                     </li>
                 </ul>
+                <nav class="list-pager" id="empresas-pager" aria-label="Páginas da lista de empresas">
+                    <button type="button" class="list-pager-btn" id="empresas-prev" aria-label="Página anterior">‹</button>
+                    <div class="list-pager-nums" id="empresas-page-nums" role="group"></div>
+                    <button type="button" class="list-pager-btn" id="empresas-next" aria-label="Próxima página">›</button>
+                </nav>
             </div>
 
             <div class="cert-category" id="portais">
                 <h3>Portais de Vagas – TI e Segurança</h3>
-                <ul class="cert-menu">
+                <ul class="cert-menu cert-menu--compact" id="portais-menu">
                     <li>
                         <a href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener noreferrer" data-tooltip="Maior rede profissional. Filtre por 'cybersecurity', 'DevSecOps', 'segurança da informação'. Cadastre alertas de vagas.">
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=linkedin.com&sz=48" alt=""> <span class="cert-badge">LinkedIn</span> Vagas de Emprego
@@ -562,6 +607,11 @@
                         </a>
                     </li>
                 </ul>
+                <nav class="list-pager" id="portais-pager" aria-label="Páginas da lista de portais">
+                    <button type="button" class="list-pager-btn" id="portais-prev" aria-label="Página anterior">‹</button>
+                    <div class="list-pager-nums" id="portais-page-nums" role="group"></div>
+                    <button type="button" class="list-pager-btn" id="portais-next" aria-label="Próxima página">›</button>
+                </nav>
             </div>
 
             <div class="discovery-split">
@@ -1236,6 +1286,80 @@
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             }
+        })();
+    </script>
+    <script>
+        (function() {
+            function initCertMenuPager(cfg) {
+                var ul = document.getElementById(cfg.menuId);
+                var numsEl = document.getElementById(cfg.numsId);
+                var prevBtn = document.getElementById(cfg.prevId);
+                var nextBtn = document.getElementById(cfg.nextId);
+                if (!ul || !numsEl || !prevBtn || !nextBtn) return;
+                var items = ul.querySelectorAll('li');
+                var pageSize = cfg.pageSize || 8;
+                var current = 0;
+                var totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+                var numBtns = [];
+                var pager = document.getElementById(cfg.pagerId);
+                if (totalPages <= 1 && pager) pager.style.display = 'none';
+
+                function render() {
+                    var start = current * pageSize;
+                    for (var i = 0; i < items.length; i++) {
+                        items[i].hidden = i < start || i >= start + pageSize;
+                    }
+                    prevBtn.disabled = current <= 0;
+                    nextBtn.disabled = current >= totalPages - 1;
+                    for (var p = 0; p < numBtns.length; p++) {
+                        var on = p === current;
+                        numBtns[p].classList.toggle('is-active', on);
+                        numBtns[p].setAttribute('aria-current', on ? 'true' : 'false');
+                    }
+                }
+
+                for (var p = 0; p < totalPages; p++) {
+                    (function(page) {
+                        var b = document.createElement('button');
+                        b.type = 'button';
+                        b.className = 'list-pager-num' + (page === 0 ? ' is-active' : '');
+                        b.textContent = String(page + 1);
+                        b.setAttribute('aria-label', 'Ir para página ' + (page + 1));
+                        b.setAttribute('aria-current', page === 0 ? 'true' : 'false');
+                        b.addEventListener('click', function() {
+                            current = page;
+                            render();
+                        });
+                        numsEl.appendChild(b);
+                        numBtns.push(b);
+                    })(p);
+                }
+
+                prevBtn.addEventListener('click', function() {
+                    if (current > 0) { current--; render(); }
+                });
+                nextBtn.addEventListener('click', function() {
+                    if (current < totalPages - 1) { current++; render(); }
+                });
+                render();
+            }
+
+            initCertMenuPager({
+                menuId: 'empresas-menu',
+                pagerId: 'empresas-pager',
+                prevId: 'empresas-prev',
+                nextId: 'empresas-next',
+                numsId: 'empresas-page-nums',
+                pageSize: 8
+            });
+            initCertMenuPager({
+                menuId: 'portais-menu',
+                pagerId: 'portais-pager',
+                prevId: 'portais-prev',
+                nextId: 'portais-next',
+                numsId: 'portais-page-nums',
+                pageSize: 8
+            });
         })();
     </script>
 </body>
