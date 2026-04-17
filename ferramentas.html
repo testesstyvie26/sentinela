@@ -19,6 +19,7 @@
             --border: #1e293b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; }
         body {
             font-family: 'Space Grotesk', sans-serif;
             background: var(--bg-dark);
@@ -353,6 +354,9 @@
             }
             .community-project-text { width: 100%; }
             .community-links { justify-content: center; }
+            .page-header .logo { font-size: clamp(1.5rem, 6vw, 2rem); }
+            .cert-guide h2 { font-size: clamp(1.1rem, 3.8vw, 1.35rem); }
+            main { padding-left: 1rem; padding-right: 1rem; }
         }
         .tool-card {
             display: flex;

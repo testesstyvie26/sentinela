@@ -20,7 +20,7 @@
             --border: #1e293b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
         body { font-family: 'Space Grotesk', sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; overflow-x: hidden; }
         .grid-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -182,8 +182,14 @@
             .discovery-split { grid-template-columns: 1fr; }
             .nav-anchors { grid-template-columns: repeat(2, 1fr); top: calc(2.85rem + env(safe-area-inset-top, 0px)); }
             .tendencia-grid { grid-template-columns: 1fr !important; }
-            main { padding-left: 1rem; padding-right: 1rem; }
+            main {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                padding-top: max(4.25rem, calc(env(safe-area-inset-top, 0px) + 3.25rem));
+            }
             .layout-panel { padding: 1.15rem 1rem 1.5rem; }
+            .page-header .logo { font-size: clamp(1.5rem, 6vw, 2rem); }
+            .cert-guide h2 { font-size: clamp(1.1rem, 3.8vw, 1.35rem); }
         }
         .cert-menu { list-style: none; }
         .cert-menu li { margin-bottom: 0.5rem; }

@@ -19,6 +19,7 @@
             --border: #1e293b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; }
         body {
             font-family: 'Space Grotesk', sans-serif;
             background: var(--bg-dark);
@@ -84,6 +85,9 @@
             }
             .nav-inner::-webkit-scrollbar { height: 4px; }
             .nav-inner::-webkit-scrollbar-thumb { background: rgba(0, 255, 136, 0.25); border-radius: 4px; }
+            main { padding-top: max(4.25rem, calc(env(safe-area-inset-top, 0px) + 3.25rem)); }
+            .page-header .logo { font-size: clamp(1.5rem, 6vw, 2rem); }
+            .cert-guide h2 { font-size: clamp(1.15rem, 4vw, 1.35rem); }
         }
         .nav a {
             color: var(--text-muted);
@@ -652,9 +656,6 @@
             flex-shrink: 0;
         }
 
-        @media (max-width: 900px) {
-            main { padding-top: max(4.25rem, calc(env(safe-area-inset-top, 0px) + 3.25rem)); }
-        }
         @media (max-width: 768px) {
             .trilhas-section { margin-top: 2rem; }
             .trilhas-grid { grid-template-columns: 1fr; gap: 0.875rem; }
