@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Sentinela | Comunidade de Cibersegurança</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -864,6 +865,16 @@
                 return d.innerHTML;
             }
 
+            /** Apenas URLs absolutas https — evita javascript:, //host e dados vindos de posts.json. */
+            function safePostHref(u) {
+                try {
+                    const url = new URL(u);
+                    return url.protocol === 'https:' ? url.href : '';
+                } catch (_) {
+                    return '';
+                }
+            }
+
             function fmtTime(iso) {
                 if (!iso) return '';
                 const d = new Date(iso);
@@ -882,12 +893,16 @@
                     return;
                 }
                 const sorted = [...data.posts].sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
-                c.innerHTML = sorted.map(p => `
-                    <a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer" class="post-card">
+                const html = sorted.map(p => {
+                    const href = safePostHref(p.url);
+                    if (!href) return '';
+                    return `
+                    <a href="${esc(href)}" target="_blank" rel="noopener noreferrer" class="post-card">
                         <p>${esc(p.text)}</p>
                         <span class="post-meta">${esc(p.meta)}</span>
-                    </a>
-                `).join('');
+                    </a>`;
+                }).filter(Boolean).join('');
+                c.innerHTML = html || '<div class="posts-loading">Nenhuma publicação.</div>';
                 i.textContent = 'Atualizado ' + fmtTime(data.lastUpdated) + ' · próxima verificação em 2 min';
             }
 

@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Mercado De Trabalho | Sentinela</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
     <style>
         :root {
             --bg-dark: #0a0e17;
@@ -1149,7 +1150,9 @@
                     if (!list.length) return;
                     html += '<div class="gupy-tier ' + t.className + '"><h4>' + t.label + ' (' + list.length + ')</h4>';
                     list.forEach(function(j) {
-                        html += '<div class="gupy-vaga"><a href="' + j.url.replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(j.title) + '</a>';
+                        var href = safeGupyJobHref(j.url);
+                        var hrefAttr = href ? href.replace(/"/g, '&quot;') : '#';
+                        html += '<div class="gupy-vaga"><a href="' + hrefAttr + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(j.title) + '</a>';
                         html += '<div class="emp">' + escapeHtml(j.company) + '</div></div>';
                     });
                     html += '</div>';
@@ -1161,6 +1164,18 @@
                 var d = document.createElement('div');
                 d.textContent = s;
                 return d.innerHTML;
+            }
+
+            function safeGupyJobHref(u) {
+                try {
+                    var url = new URL(u);
+                    if (url.protocol !== 'https:') return '';
+                    var h = url.hostname.toLowerCase();
+                    if (!h.endsWith('.gupy.io')) return '';
+                    return url.href;
+                } catch (e) {
+                    return '';
+                }
             }
 
             function parseTextToJobs(text) {

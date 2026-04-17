@@ -1,0 +1,5 @@
+# Política de divulgação responsável — Sentinela (sentinelacibernetica.com.br)
+Contact: https://github.com/testesstyvie26/sentinela/security/advisories/new
+Expires: 2027-03-29T23:59:59.000Z
+Preferred-Languages: pt, en
+Canonical: https://sentinelacibernetica.com.br/.well-known/security.txt
