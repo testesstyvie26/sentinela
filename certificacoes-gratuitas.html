@@ -44,10 +44,103 @@
         .glow-orb-2 { bottom: -200px; left: -200px; opacity: 0.5; }
         main {
             position: relative; z-index: 1;
-            max-width: 720px;
+            max-width: min(1120px, 100%);
             margin: 0 auto;
             padding: 5rem 1.5rem 4rem;
             min-height: 100vh;
+        }
+        .page-with-sidebar {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) min(300px, 100%);
+            gap: 2rem 1.75rem;
+            align-items: start;
+        }
+        .page-main-column {
+            min-width: 0;
+        }
+        .featured-aside {
+            position: sticky;
+            top: calc(4.75rem + env(safe-area-inset-top, 0px));
+            z-index: 5;
+        }
+        .featured-aside-card {
+            border-radius: 14px;
+            border: 1px solid rgba(0, 255, 136, 0.45);
+            background: linear-gradient(165deg, rgba(0, 255, 136, 0.1) 0%, rgba(17, 24, 39, 0.95) 45%, var(--bg-card) 100%);
+            padding: 1.15rem 1.2rem 1.35rem;
+            box-shadow:
+                0 0 0 1px rgba(0, 255, 136, 0.06),
+                0 12px 40px rgba(0, 0, 0, 0.35);
+        }
+        .featured-aside-kicker {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--accent);
+            margin-bottom: 0.45rem;
+        }
+        .featured-aside-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            line-height: 1.25;
+        }
+        .featured-aside-lead {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+            margin-bottom: 0.9rem;
+        }
+        .featured-aside-list {
+            list-style: none;
+            margin: 0 0 1rem;
+            padding: 0;
+        }
+        .featured-aside-list li {
+            position: relative;
+            padding-left: 1rem;
+            margin-bottom: 0.45rem;
+            font-size: 0.8rem;
+            color: var(--text);
+            line-height: 1.4;
+        }
+        .featured-aside-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.45em;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+        }
+        .featured-aside-cta {
+            display: block;
+            text-align: center;
+            padding: 0.65rem 1rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            border-radius: 8px;
+            background: var(--accent);
+            color: var(--bg-dark);
+            text-decoration: none;
+            transition: filter 0.2s, transform 0.15s;
+        }
+        .featured-aside-cta:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+        @media (max-width: 900px) {
+            .page-with-sidebar {
+                grid-template-columns: 1fr;
+            }
+            .featured-aside {
+                position: static;
+                order: -1;
+            }
         }
         .nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -139,6 +232,41 @@
             color: var(--accent);
             font-weight: 600;
         }
+        .cert-menu li.cert-featured {
+            margin-bottom: 0.85rem;
+        }
+        .cert-menu li.cert-featured a {
+            position: relative;
+            padding: 1rem 1.1rem;
+            border: 1px solid rgba(0, 255, 136, 0.5);
+            background: linear-gradient(145deg, rgba(0, 255, 136, 0.12) 0%, rgba(17, 24, 39, 0.98) 42%, var(--bg-card) 100%);
+            box-shadow:
+                0 0 0 1px rgba(0, 255, 136, 0.08),
+                0 10px 40px rgba(0, 0, 0, 0.4),
+                0 0 28px rgba(0, 255, 136, 0.06);
+        }
+        .cert-menu li.cert-featured a:hover {
+            border-color: var(--accent);
+            color: var(--text);
+            box-shadow:
+                0 0 0 1px rgba(0, 255, 136, 0.2),
+                0 12px 44px rgba(0, 255, 136, 0.08);
+        }
+        .cert-menu li.cert-featured a .cert-featured-pill {
+            font-size: 0.58rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.28rem 0.55rem;
+            border-radius: 5px;
+            background: var(--accent);
+            color: var(--bg-dark);
+            flex-shrink: 0;
+        }
+        .cert-menu li.cert-featured a .cert-badge {
+            background: rgba(0, 255, 136, 0.18);
+            color: var(--accent);
+        }
         [data-tooltip] { position: relative; }
         [data-tooltip]::after {
             content: attr(data-tooltip);
@@ -214,6 +342,8 @@
             <p class="tagline">// treinamentos e certificações grátis em cibersegurança</p>
         </header>
 
+        <div class="page-with-sidebar">
+        <div class="page-main-column">
         <section class="cert-guide">
             <h2>Treinamentos, Certificações Grátis <span class="free-badge">100% FREE</span></h2>
             <p class="subtitle">Treinamentos com certificado e provas grátis para iniciar ou aprofundar na carreira</p>
@@ -232,6 +362,12 @@
             <div class="cert-category" id="empresas">
                 <h3>Empresas e Plataformas</h3>
                 <ul class="cert-menu">
+                    <li class="cert-featured">
+                        <a href="https://hackersdobem.org.br" target="_blank" rel="noopener noreferrer" data-tooltip="Programa nacional de formação em cibersegurança (MCTI). Trilhas gratuitas em português para estudantes e interessados em defender organizações no ambiente digital.">
+                            <span class="cert-featured-pill">Destaque</span>
+                            <span class="cert-badge">GOV Brasil</span> Hackers do Bem
+                        </a>
+                    </li>
                     <li>
                         <a href="https://grow.google/intl/pt/google-career-certificates/cybersecurity/" target="_blank" rel="noopener noreferrer" data-tooltip="Programa completo da Google: 9 cursos, ~6 meses. Python, Linux, SQL, SIEM, análise de riscos. Sem experiência prévia.">
                             <span class="cert-badge">Google</span> Certificado Profissional em Cibersegurança
@@ -515,6 +651,23 @@
                 </ul>
             </div>
         </section>
+        </div>
+
+        <aside class="featured-aside" aria-labelledby="featured-aside-title">
+            <div class="featured-aside-card">
+                <p class="featured-aside-kicker">Curso em destaque</p>
+                <h2 id="featured-aside-title" class="featured-aside-title">Hackers do Bem</h2>
+                <p class="featured-aside-lead">Programa nacional de formação em cibersegurança do Ministério da Ciência, Tecnologia e Inovação (MCTI), com apoio de instituições de ensino e parceiros.</p>
+                <ul class="featured-aside-list">
+                    <li>100% gratuito e online</li>
+                    <li>Conteúdo em português</li>
+                    <li>Trilhas e níveis para quem está começando ou quer aprofundar</li>
+                    <li>Foco em defender pessoas e organizações no ambiente digital</li>
+                </ul>
+                <a href="https://hackersdobem.org.br" class="featured-aside-cta" target="_blank" rel="noopener noreferrer">Acessar hackersdobem.org.br →</a>
+            </div>
+        </aside>
+        </div>
 
         <footer class="footer">
             <p><a href="index.html" style="color: var(--accent); text-decoration: none;">← Voltar ao início</a> · <a href="certificacoes.html" style="color: var(--accent); text-decoration: none;">Ver certificações pagas</a></p>
