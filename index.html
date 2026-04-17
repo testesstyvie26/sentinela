@@ -25,6 +25,7 @@
             padding: 0;
             box-sizing: border-box;
         }
+        html { -webkit-text-size-adjust: 100%; }
 
         body {
             font-family: 'Space Grotesk', sans-serif;
@@ -546,11 +547,13 @@
 
         @media (max-width: 480px) {
             main {
-                padding: 2rem 1rem;
+                padding: max(4.25rem, calc(env(safe-area-inset-top, 0px) + 3.25rem)) 1rem max(4rem, calc(env(safe-area-inset-bottom, 0px) + 3rem));
             }
             .logo {
-                font-size: 2rem;
+                font-size: clamp(1.75rem, 8vw, 2rem);
             }
+            .hero h1 { font-size: clamp(1.35rem, 5.5vw, 1.75rem); }
+            .posts-section h2 { font-size: clamp(1rem, 4vw, 1.25rem); }
         }
 
         .cookie-consent {

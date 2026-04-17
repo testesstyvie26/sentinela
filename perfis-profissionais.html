@@ -19,7 +19,7 @@
             --border: #1e293b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
         body { font-family: 'Space Grotesk', sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; overflow-x: hidden; }
         .grid-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -156,10 +156,18 @@
         @media (max-width: 900px) {
             main { padding-top: max(4.25rem, calc(env(safe-area-inset-top, 0px) + 3.25rem)); }
             .nav-anchors { justify-content: flex-start; }
+            .page-header .logo { font-size: clamp(1.5rem, 6vw, 2rem); }
+            .cert-guide h2 { font-size: clamp(1.1rem, 3.8vw, 1.35rem); }
+        }
+        @media (max-width: 600px) {
+            .cargos-tabela { font-size: 0.82rem; }
+            .cargos-tabela th, .cargos-tabela td { padding: 0.45rem 0.6rem; }
+            .btn-vulcan-cta { padding: 1rem 1.1rem; font-size: 0.92rem; }
         }
         @media (max-width: 480px) {
             .nav-anchors a { font-size: 0.72rem; padding: 0.4rem 0.55rem; }
             .perfil-card-emp { padding: 1rem 1.1rem; }
+            .perfil-card-emp .cargo { font-size: 1rem; }
         }
         .footer { margin-top: 3rem; text-align: center; font-size: 0.875rem; color: var(--text-muted); }
         .cookie-consent { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem 1.5rem; padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px)); background: rgba(17, 24, 39, 0.98); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; z-index: 999; flex-wrap: wrap; }
