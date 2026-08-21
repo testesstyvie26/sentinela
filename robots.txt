@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /gupy-temp.html
+Disallow: /scripts/
+Disallow: /cdn-cgi/
+
+Sitemap: https://sentinelacibernetica.com.br/sitemap.xml

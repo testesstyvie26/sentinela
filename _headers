@@ -1,0 +1,46 @@
+#
+# GitHub Pages ignora este arquivo. Use os valores nas Transform Rules da Cloudflare
+# ou faça deploy de cloudflare-worker.js. NÃO defina Access-Control-Allow-Origin.
+#
+
+/*
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formspree.io https://api.web3forms.com; script-src 'self'; style-src 'self'; img-src 'self' https://www.google.com https://t0.gstatic.com https://t1.gstatic.com https://t2.gstatic.com https://t3.gstatic.com; font-src 'self'; connect-src 'self' https://formspree.io https://api.web3forms.com; frame-src 'none'; media-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  Cross-Origin-Embedder-Policy: credentialless
+  X-Permitted-Cross-Domain-Policies: none
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cache-Control: no-store, no-cache, must-revalidate, private
+
+/*.html
+  Content-Type: text/html; charset=utf-8
+  Cache-Control: no-store, no-cache, must-revalidate, private
+
+/robots.txt
+  Content-Type: text/plain; charset=utf-8
+  X-Content-Type-Options: nosniff
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Cross-Origin-Resource-Policy: same-origin
+  Cache-Control: no-store, no-cache, must-revalidate, private
+
+/sitemap.xml
+  Content-Type: application/xml; charset=utf-8
+  X-Content-Type-Options: nosniff
+  Cache-Control: no-store, no-cache, must-revalidate, private
+
+/css/*
+  Content-Type: text/css; charset=utf-8
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/js/*
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/fonts/*
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/vendor/*
+  Cache-Control: public, max-age=86400, must-revalidate

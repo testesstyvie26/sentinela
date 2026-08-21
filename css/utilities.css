@@ -1,0 +1,38 @@
+.link-accent { color: var(--accent); text-decoration: none; }
+.mb-0 { margin-bottom: 0; }
+.mb-05 { margin-bottom: 0.5rem; }
+.mb-075 { margin-bottom: 0.75rem; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-15 { margin-bottom: 1.5rem; }
+.mt-05 { margin-top: 0.5rem; }
+.mt-075 { margin-top: 0.75rem; }
+.mt-1 { margin-top: 1rem; }
+.mt-15 { margin-top: 1.5rem; }
+.fs-80 { font-size: 0.8rem; }
+.fs-85 { font-size: 0.85rem; }
+.color-muted { color: var(--text-muted); }
+.overflow-x { overflow-x: auto; }
+.fw-600 { font-weight: 600; }
+.color-indigo { color: #818cf8; }
+.color-pink { color: #ec4899; }
+.subtitle-hint { font-size: 0.8rem; margin-top: -1.5rem; margin-bottom: 1.5rem; }
+.boletim-hint { display: block; margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted); }
+.form-success-msg { color: var(--accent); margin-top: 1rem; }
+.hp-trap {
+    position: absolute !important;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+.usage-fill[data-w="65"] { width: 65%; }
+.usage-fill[data-w="75"] { width: 75%; }
+.usage-fill[data-w="80"] { width: 80%; }
+.usage-fill[data-w="82"] { width: 82%; }
+.usage-fill[data-w="85"] { width: 85%; }
+.usage-fill[data-w="88"] { width: 88%; }
+.usage-fill[data-w="90"] { width: 90%; }
+.usage-fill[data-w="92"] { width: 92%; }
+.usage-fill[data-w="95"] { width: 95%; }
+.usage-fill[data-w="97"] { width: 97%; }
+.usage-fill[data-w="98"] { width: 98%; }

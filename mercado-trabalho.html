@@ -6,340 +6,10 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Mercado De Trabalho | Sentinela</title>
     <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
-    <style>
-        :root {
-            --bg-dark: #0a0e17;
-            --bg-card: #111827;
-            --accent: #00ff88;
-            --accent-dim: #00ff8833;
-            --text: #e2e8f0;
-            --text-muted: #94a3b8;
-            --border: #1e293b;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-        body { font-family: 'Space Grotesk', sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; overflow-x: hidden; }
-        .grid-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px; pointer-events: none; z-index: 0;
-        }
-        .glow-orb { position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%); pointer-events: none; z-index: 0; }
-        .glow-orb-1 { top: -200px; right: -200px; }
-        .glow-orb-2 { bottom: -200px; left: -200px; opacity: 0.5; }
-        .nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            padding: 0.65rem 1rem;
-            padding-top: max(0.65rem, env(safe-area-inset-top, 0px));
-            padding-left: max(1rem, env(safe-area-inset-left, 0px));
-            padding-right: max(1rem, env(safe-area-inset-right, 0px));
-            background: rgba(10, 14, 23, 0.92);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-        }
-        .nav-inner {
-            max-width: 1100px; margin: 0 auto;
-            display: flex; flex-wrap: nowrap; align-items: center;
-            justify-content: center;
-            gap: 0.5rem 1.1rem;
-            overflow-x: visible;
-        }
-        @media (max-width: 900px) {
-            .nav-inner {
-                justify-content: flex-start;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: thin;
-                scrollbar-color: rgba(0, 255, 136, 0.25) transparent;
-                padding-bottom: 2px;
-            }
-            .nav-inner::-webkit-scrollbar { height: 4px; }
-            .nav-inner::-webkit-scrollbar-thumb { background: rgba(0, 255, 136, 0.25); border-radius: 4px; }
-        }
-        .nav a {
-            color: var(--text-muted); text-decoration: none; font-size: 0.88rem; font-weight: 500;
-            transition: color 0.2s, background 0.2s;
-            white-space: nowrap; flex-shrink: 0;
-            padding: 0.4rem 0.55rem; border-radius: 6px;
-        }
-        .nav a:hover { color: var(--accent); background: rgba(0, 255, 136, 0.06); }
-        .nav a[aria-current="page"] { color: var(--accent); background: rgba(0, 255, 136, 0.1); }
-        .nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-        main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 4.75rem clamp(1rem, 3vw, 1.25rem) max(4rem, calc(env(safe-area-inset-bottom, 0px) + 3rem)); min-height: 100vh; }
-        .page-hero {
-            margin-bottom: 2rem; padding-bottom: 1.75rem;
-            border-bottom: 1px solid rgba(30, 41, 59, 0.85);
-        }
-        .page-header { text-align: center; margin-bottom: 1.25rem; }
-        .page-header .logo { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; letter-spacing: -0.02em; }
-        .page-header .tagline { font-size: 0.9rem; color: var(--text-muted); }
-        .intro { font-size: 0.95rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 0; text-align: center; max-width: 620px; margin-left: auto; margin-right: auto; }
-        .toc-wrap { margin-top: 1.5rem; }
-        .toc-label {
-            display: block; font-size: 0.65rem; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 0.14em; color: var(--text-muted); margin-bottom: 0.65rem; text-align: center;
-        }
-        .nav-anchors {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
-            gap: 0.45rem;
-            margin: 0; padding: 0.85rem 1rem;
-            background: linear-gradient(145deg, rgba(17, 24, 39, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            position: sticky;
-            top: calc(3.25rem + env(safe-area-inset-top, 0px));
-            z-index: 50;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-        }
-        .nav-anchors a {
-            padding: 0.5rem 0.65rem; font-size: 0.78rem; font-weight: 600;
-            color: var(--text-muted); text-decoration: none; border-radius: 8px;
-            transition: color 0.2s, background 0.2s, box-shadow 0.2s;
-            text-align: center; line-height: 1.25;
-            border: 1px solid transparent;
-        }
-        .nav-anchors a:hover { color: var(--accent); background: var(--accent-dim); border-color: rgba(0, 255, 136, 0.12); }
-        .nav-anchors a.active {
-            color: var(--accent); background: rgba(0, 255, 136, 0.12);
-            border-color: rgba(0, 255, 136, 0.25);
-            box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.08);
-        }
-        .nav-anchors a.nav-anchor-external { font-size: 0.74rem; opacity: 0.95; }
-        .nav-anchors a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-        .cert-guide h2 { font-size: 1.35rem; font-weight: 600; margin-bottom: 0.5rem; margin-top: 0.15rem; }
-        .cert-guide .subtitle { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; }
-        .layout-kicker {
-            font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em;
-            color: var(--accent); margin-bottom: 0.35rem;
-        }
-        .layout-panel {
-            border-radius: 16px; border: 1px solid var(--border);
-            background: linear-gradient(165deg, rgba(17, 24, 39, 0.65) 0%, rgba(10, 14, 23, 0.5) 100%);
-            padding: 1.35rem 1.25rem 1.75rem; margin-bottom: 2rem;
-        }
-        .layout-panel-head { margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(30, 41, 59, 0.8); }
-        .layout-panel-head h3.panel-title { font-size: 1.05rem; font-weight: 600; color: var(--text); margin: 0 0 0.35rem; text-transform: none; letter-spacing: 0; padding: 0; }
-        .layout-panel-head h3.panel-title::before { display: none; }
-        .layout-panel-head .panel-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0; }
-        .discovery-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem 1.75rem;
-            align-items: start;
-        }
-        .discovery-split {
-            grid-column: 1 / -1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            align-items: start;
-        }
-        .discovery-grid .cert-category-full.gupy-vagas-section {
-            grid-column: 1 / -1;
-            margin-top: 0.25rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(30, 41, 59, 0.65);
-        }
-        .insights-stack { margin-top: 0; }
-        .insights-stack .cert-category-full { border-top: none; margin-top: 0; padding-top: 0; }
-        .insights-stack .cert-category-full + .cert-category-full {
-            margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(30, 41, 59, 0.65);
-        }
-        .insights-stack .layout-panel-head + .cert-category-full { margin-top: 0.25rem; }
-        .cert-category {
-            margin-bottom: 1.75rem;
-            scroll-margin-top: calc(8.5rem + env(safe-area-inset-top, 0px));
-        }
-        .cert-category h3 {
-            font-size: 0.8rem; font-weight: 600; color: var(--accent); text-transform: uppercase;
-            letter-spacing: 0.05em; margin-bottom: 0.75rem;
-            position: relative; padding-left: 0.75rem;
-        }
-        .cert-category h3::before {
-            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-            width: 3px; height: 0.9em; background: var(--accent); border-radius: 2px;
-        }
-        .cert-category-full { grid-column: 1 / -1; }
-        .back-to-top {
-            position: fixed; bottom: 5.25rem; right: 1rem; z-index: 97;
-            width: 44px; height: 44px; padding: 0; border: 1px solid var(--border);
-            border-radius: 10px; background: rgba(17, 24, 39, 0.95); color: var(--accent);
-            font-size: 1.15rem; line-height: 1; cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
-            opacity: 0; visibility: hidden; transform: translateY(8px);
-            transition: opacity 0.25s, visibility 0.25s, transform 0.25s, border-color 0.2s, background 0.2s;
-        }
-        .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
-        .back-to-top:hover { border-color: var(--accent); background: rgba(0, 255, 136, 0.08); }
-        .back-to-top:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-        @media (max-width: 900px) {
-            .discovery-grid { grid-template-columns: 1fr; }
-            .discovery-split { grid-template-columns: 1fr; }
-            .nav-anchors { grid-template-columns: repeat(2, 1fr); top: calc(2.85rem + env(safe-area-inset-top, 0px)); }
-            .tendencia-grid { grid-template-columns: 1fr !important; }
-            main {
-                padding-left: 1rem;
-                padding-right: 1rem;
-                padding-top: max(4.25rem, calc(env(safe-area-inset-top, 0px) + 3.25rem));
-            }
-            .layout-panel { padding: 1.15rem 1rem 1.5rem; }
-            .page-header .logo { font-size: clamp(1.5rem, 6vw, 2rem); }
-            .cert-guide h2 { font-size: clamp(1.1rem, 3.8vw, 1.35rem); }
-        }
-        .cert-menu { list-style: none; }
-        .cert-menu li { margin-bottom: 0.5rem; }
-        .cert-menu a {
-            display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
-            padding: 0.7rem 1rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-        .cert-menu a:hover { border-color: var(--accent); color: var(--accent); }
-        .cert-badge { font-size: 0.6rem; padding: 0.18rem 0.4rem; border-radius: 4px; background: var(--accent-dim); color: var(--accent); font-weight: 600; }
-        .empresa-logo { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; object-fit: contain; background: var(--bg-dark); }
-        #empresas .cert-menu--compact li,
-        #portais .cert-menu--compact li { margin-bottom: 0.3rem; }
-        #empresas .cert-menu--compact a,
-        #portais .cert-menu--compact a {
-            padding: 0.4rem 0.6rem;
-            font-size: 0.82rem;
-        }
-        #empresas .cert-menu--compact .empresa-logo,
-        #portais .cert-menu--compact .empresa-logo { width: 20px; height: 20px; min-width: 20px; }
-        #empresas .cert-menu--compact .cert-badge,
-        #portais .cert-menu--compact .cert-badge { font-size: 0.54rem; padding: 0.12rem 0.32rem; }
-        .list-pager {
-            display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-            gap: 0.45rem; margin-top: 0.65rem; padding-top: 0.65rem;
-            border-top: 1px solid rgba(30, 41, 59, 0.75);
-        }
-        .list-pager-btn {
-            min-width: 2.25rem; height: 2rem; padding: 0 0.5rem;
-            font-size: 1.05rem; line-height: 1; font-family: inherit; font-weight: 600;
-            color: var(--accent); background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 8px; cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
-        }
-        .list-pager-btn:hover:not(:disabled) { background: rgba(0, 255, 136, 0.08); border-color: var(--accent); }
-        .list-pager-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-        .list-pager-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-        .list-pager-nums { display: flex; justify-content: center; gap: 0.35rem; flex-wrap: wrap; }
-        .list-pager-num {
-            min-width: 2rem; height: 2rem; padding: 0 0.35rem;
-            font-size: 0.78rem; font-weight: 600; font-family: inherit;
-            color: var(--text-muted); background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 6px; cursor: pointer;
-            transition: color 0.2s, border-color 0.2s, background 0.2s;
-        }
-        .list-pager-num.is-active {
-            color: var(--accent); background: rgba(0, 255, 136, 0.12);
-            border-color: rgba(0, 255, 136, 0.35);
-        }
-        .list-pager-num:not(.is-active):hover { color: var(--text); border-color: var(--text-muted); }
-        .list-pager-num:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-        .perfil-card {
-            display: flex; align-items: flex-start; gap: 1rem; flex-wrap: wrap;
-            padding: 1rem 1.25rem; background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 10px; margin-bottom: 0.75rem; transition: all 0.2s;
-        }
-        .perfil-card:hover { border-color: var(--accent); }
-        .perfil-card a { flex: 1; min-width: 0; text-decoration: none; color: inherit; }
-        .perfil-card a:hover { color: var(--accent); }
-        .perfil-card .cargo { font-weight: 600; margin-bottom: 0.35rem; }
-        .perfil-card .meta { font-size: 0.8rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.35rem; }
-        .perfil-card .salario { color: var(--accent); font-weight: 500; }
-        .perfil-card .junior-tag { font-size: 0.7rem; padding: 0.15rem 0.5rem; background: rgba(0,255,136,0.15); color: var(--accent); border-radius: 4px; }
-        .perfis-tabela { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        .perfis-tabela th, .perfis-tabela td { padding: 0.7rem 1rem; text-align: left; border: 1px solid var(--border); }
-        .perfis-tabela th { background: var(--bg-card); color: var(--accent); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.04em; }
-        .perfis-tabela tr:hover { background: rgba(0,255,136,0.04); }
-        .perfis-tabela .col-perfil { font-weight: 500; }
-        .perfis-tabela .col-perfil a { color: inherit; text-decoration: none; }
-        .perfis-tabela .col-perfil a:hover { color: var(--accent); }
-        .perfis-tabela .nivel { color: var(--accent); font-weight: 600; text-align: center; }
-        .perfis-tabela .nivel-vazio { color: var(--text-muted); opacity: 0.5; text-align: center; }
-        .perfis-tabela th:nth-child(n+2), .perfis-tabela td:nth-child(n+2) { text-align: center; width: 4rem; }
-        .perfil-card .horizon-tag { font-size: 0.65rem; padding: 0.12rem 0.4rem; border-radius: 4px; font-weight: 600; }
-        .perfil-card .horizon-5 { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
-        .perfil-card .horizon-10 { background: rgba(236, 72, 153, 0.2); color: #ec4899; }
-        .tendencia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
-        .chart-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; overflow: visible; }
-        .chart-card h3 { font-size: 0.9rem; font-weight: 600; color: var(--accent); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .chart-salarios { height: 480px; position: relative; overflow: visible; min-width: 0; padding-left: 10px; }
-        .chart-tendencia { height: 300px; position: relative; min-width: 0; }
-        [data-tooltip] { position: relative; }
-        [data-tooltip]::after {
-            content: attr(data-tooltip);
-            position: absolute; bottom: 100%; left: 50%;
-            transform: translateX(-50%) translateY(-6px);
-            padding: 0.5rem 0.75rem; font-size: 0.8rem; line-height: 1.35;
-            color: var(--text); background: var(--bg-card); border: 1px solid var(--accent);
-            border-radius: 6px; white-space: normal; max-width: 280px; width: max-content;
-            opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
-            z-index: 1000; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-        }
-        [data-tooltip]:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-8px); }
-        .btn-vulcan-cta {
-            display: block; width: 100%; max-width: 560px; margin: 2rem auto; padding: 1.25rem 1.5rem;
-            background: linear-gradient(135deg, rgba(0,255,136,0.2) 0%, rgba(0,255,136,0.05) 100%);
-            border: 2px solid var(--accent); border-radius: 12px; color: var(--text);
-            font-family: inherit; font-size: 1rem; font-weight: 600; line-height: 1.4; text-align: center;
-            text-decoration: none; transition: all 0.3s ease; position: relative; overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,255,136,0.2); animation: btn-pulse 3s ease-in-out infinite;
-        }
-        .btn-vulcan-cta::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0,255,136,0.15), transparent);
-            animation: btn-shine 2.5s infinite;
-        }
-        .btn-vulcan-cta:hover {
-            background: linear-gradient(135deg, rgba(0,255,136,0.3) 0%, rgba(0,255,136,0.1) 100%);
-            transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,255,136,0.35);
-        }
-        .btn-vulcan-cta .btn-vulcan-text { display: block; margin-bottom: 0.35rem; }
-        .btn-vulcan-cta .btn-vulcan-link { font-size: 0.9rem; color: var(--accent); }
-        @keyframes btn-shine { 0% { left: -100%; } 50%, 100% { left: 100%; } }
-        @keyframes btn-pulse { 0%, 100% { box-shadow: 0 0 20px rgba(0,255,136,0.2); } 50% { box-shadow: 0 0 30px rgba(0,255,136,0.4); } }
-        .gupy-vagas-section { margin-bottom: 2rem; }
-        .gupy-vagas-section h3 { font-size: 1rem; margin-bottom: 0.5rem; }
-        .gupy-meta { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
-        .gupy-disclaimer { font-size: 0.78rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 1rem; max-width: 720px; }
-        .gupy-disclaimer a { color: var(--accent); }
-        .gupy-status { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
-        .gupy-status.error { color: #f87171; }
-        .gupy-tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; align-items: start; }
-        .gupy-tier { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 0.9rem; }
-        .gupy-tier h4 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid rgba(0,255,136,0.15); }
-        .gupy-tier.tier-junior h4 { color: #6ee7b7; }
-        .gupy-tier.tier-pleno h4 { color: #34d399; }
-        .gupy-tier.tier-senior h4 { color: #00ff88; }
-        .gupy-tier.tier-especialista h4 { color: #22d3ee; }
-        .gupy-tier.tier-lideranca h4 { color: #a78bfa; }
-        .gupy-tier.tier-outros h4 { color: var(--text-muted); }
-        .gupy-vaga { font-size: 0.8rem; line-height: 1.35; margin-bottom: 0.65rem; padding-bottom: 0.65rem; border-bottom: 1px solid rgba(30,41,59,0.8); }
-        .gupy-vaga:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .gupy-vaga a { color: var(--text); text-decoration: none; font-weight: 600; }
-        .gupy-vaga a:hover { color: var(--accent); }
-        .gupy-vaga .emp { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; margin-top: 0.2rem; }
-        .footer { margin-top: 3rem; text-align: center; font-size: 0.875rem; color: var(--text-muted); }
-        .cookie-consent { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem 1.5rem; padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px)); background: rgba(17, 24, 39, 0.98); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; z-index: 999; flex-wrap: wrap; }
-        .cookie-consent.hidden { display: none; }
-        .cookie-consent p { font-size: 0.9rem; color: var(--text-muted); margin: 0; flex: 1; min-width: 200px; }
-        .cookie-consent p a { color: var(--accent); text-decoration: none; }
-        .cookie-consent .btn-aceitar { padding: 0.5rem 1.25rem; background: var(--accent); color: var(--bg-dark); border: none; border-radius: 6px; font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
-        .cookie-consent .btn-aceitar:hover { background: #00e676; }
-    </style>
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/utilities.css">
+    <link rel="stylesheet" href="css/mercado-trabalho.css">
+    <script src="vendor/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" defer></script>
 </head>
 <body>
     <nav class="nav" aria-label="Navegação principal do site">
@@ -711,14 +381,14 @@
 
             <div class="cert-category cert-category-full" id="salarios">
                 <h3>Média Salarial por Cargo – Brasil</h3>
-                <p class="subtitle" style="margin-bottom: 1rem;">Salário médio mensal (R$) por perfil e nível: Junior, Pleno, Senior, Especialista, Executivo. Valores ilustrativos alinhados a faixas de mercado 2025/2026 (atualização ~4,5% sobre base anterior). Confira o <a href="https://www.roberthalf.com/br/pt/insights/guia-salarial/tecnologia" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">Guia Salarial Robert Half — Tecnologia 2026</a> para percentis por cidade e cargo. Fontes: Robert Half, IT Forum.</p>
+                <p class="subtitle mb-1">Salário médio mensal (R$) por perfil e nível: Junior, Pleno, Senior, Especialista, Executivo. Valores ilustrativos alinhados a faixas de mercado 2025/2026 (atualização ~4,5% sobre base anterior). Confira o <a href="https://www.roberthalf.com/br/pt/insights/guia-salarial/tecnologia" target="_blank" rel="noopener noreferrer" class="link-accent">Guia Salarial Robert Half — Tecnologia 2026</a> para percentis por cidade e cargo. Fontes: Robert Half, IT Forum.</p>
                 <div class="chart-card">
                     <div class="chart-salarios">
                         <canvas id="chart-salarios"></canvas>
                     </div>
                 </div>
-                <p class="subtitle" style="margin-top: 1rem; margin-bottom: 0.5rem; font-size: 0.85rem;">Referências e notícias sobre salários e mercado de trabalho em TI</p>
-                <ul class="cert-menu" style="margin-top: 0;">
+                <p class="subtitle mt-1 mb-05 fs-85">Referências e notícias sobre salários e mercado de trabalho em TI</p>
+                <ul class="cert-menu mb-0">
                     <li>
                         <a href="https://www.roberthalf.com/br/pt/insights/guia-salarial/tecnologia" target="_blank" rel="noopener noreferrer" data-tooltip="Guia Salarial Robert Half 2026 — tecnologia, calculadora por cidade e tendências de contratação.">
                             <img class="empresa-logo" src="https://www.google.com/s2/favicons?domain=roberthalf.com&sz=48" alt=""> <span class="cert-badge">Robert Half</span> Guia Salarial TI 2026
@@ -754,8 +424,8 @@
 
             <div class="cert-category cert-category-full" id="perfis">
                 <h3>Perfis em Alta Demanda</h3>
-                <p class="subtitle" style="margin-bottom: 1rem;">Demanda por nível de experiência. Consulte o gráfico acima para faixas salariais.</p>
-                <div style="overflow-x: auto;">
+                <p class="subtitle mb-1">Demanda por nível de experiência. Consulte o gráfico acima para faixas salariais.</p>
+                <div class="overflow-x">
                     <table class="perfis-tabela">
                         <thead>
                             <tr>
@@ -854,10 +524,10 @@
                         </tbody>
                     </table>
                 </div>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem;">● demanda alta &nbsp;|&nbsp; – demanda baixa/ausente</p>
-                <div class="chart-card" style="margin-top: 1.5rem;">
-                    <h3 style="margin-bottom: 0.5rem;">Tendência de Demanda por Cargo</h3>
-                    <p class="subtitle" style="font-size: 0.85rem; margin-bottom: 1rem;">Índice de tendência (base 100) – série ilustrativa 2023–2028 (projeção). Não substitui pesquisa salarial oficial.</p>
+                <p class="fs-80 color-muted mt-075">● demanda alta &nbsp;|&nbsp; – demanda baixa/ausente</p>
+                <div class="chart-card mt-15">
+                    <h3 class="mb-05">Tendência de Demanda por Cargo</h3>
+                    <p class="subtitle fs-85 mb-1">Índice de tendência (base 100) – série ilustrativa 2023–2028 (projeção). Não substitui pesquisa salarial oficial.</p>
                     <div class="chart-tendencia">
                         <canvas id="chart-tendencia"></canvas>
                     </div>
@@ -866,10 +536,10 @@
 
             <div class="cert-category cert-category-full" id="perfis-tendencia">
                 <h3>Perfis Tendência</h3>
-                <p class="subtitle" style="margin-bottom: 1rem;">Cargos em ascensão para os próximos 5 e 10 anos (perspectiva 2026) em TI, cibersegurança e áreas emergentes.</p>
+                <p class="subtitle mb-1">Cargos em ascensão para os próximos 5 e 10 anos (perspectiva 2026) em TI, cibersegurança e áreas emergentes.</p>
                 <div class="tendencia-grid">
                     <div>
-                        <h4 style="font-size: 0.85rem; color: #818cf8; margin-bottom: 0.75rem; font-weight: 600;">→ Próximos 5 anos</h4>
+                        <h4 class="fs-85 color-indigo mb-075 fw-600">→ Próximos 5 anos</h4>
                         <div class="perfil-card">
                             <img class="empresa-logo" src="favicon.png" alt="">
                             <a href="certificacoes.html">
@@ -907,7 +577,7 @@
                         </div>
                     </div>
                     <div>
-                        <h4 style="font-size: 0.85rem; color: #ec4899; margin-bottom: 0.75rem; font-weight: 600;">→ Próximos 10 anos</h4>
+                        <h4 class="fs-85 color-pink mb-075 fw-600">→ Próximos 10 anos</h4>
                         <div class="perfil-card">
                             <img class="empresa-logo" src="favicon.png" alt="">
                             <a href="certificacoes.html">
@@ -948,450 +618,21 @@
         </section>
 
         <footer class="footer">
-            <p><a href="index.html" style="color: var(--accent); text-decoration: none;">← Voltar ao início</a></p>
+            <p><a href="index.html" class="link-accent">← Voltar ao início</a></p>
         </footer>
 
         <button type="button" class="back-to-top" id="btn-topo" aria-label="Voltar ao topo da página">↑</button>
     </main>
 
-    <script>
-        (function() {
-            Chart.defaults.color = '#94a3b8';
-            Chart.defaults.borderColor = '#1e293b';
-            Chart.defaults.font.family = "'Space Grotesk', sans-serif";
-            var ctx = document.getElementById('chart-salarios');
-            if (!ctx) return;
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Analista de Vuln.', 'Analista SOC', 'Pentester', 'Eng. Seg. Cloud', 'DevSecOps', 'Analista Seg. Info', 'Arquiteto Seg.', 'DFIR / Forense', 'DPO', 'Threat Intel', 'AppSec', 'Coord./Gerente'],
-                    datasets: [
-                        { label: 'Junior', data: [8500, 8500, 14000, 10600, 16300, 8500, null, 9400, null, 9400, 10500, null], backgroundColor: 'rgba(0, 255, 136, 0.6)', borderColor: '#00ff88', borderWidth: 1, borderRadius: 4 },
-                        { label: 'Pleno', data: [11700, 11700, 16100, 15500, 21100, 11700, 18800, 13600, 12500, 13600, 15700, null], backgroundColor: 'rgba(34, 211, 238, 0.6)', borderColor: '#22d3ee', borderWidth: 1, borderRadius: 4 },
-                        { label: 'Senior', data: [15400, 15400, 19100, 20000, 27400, 15400, 27200, 18800, 18800, 17800, 21900, 21900], backgroundColor: 'rgba(167, 139, 250, 0.6)', borderColor: '#a78bfa', borderWidth: 1, borderRadius: 4 },
-                        { label: 'Especialista', data: [21700, 21700, 24000, 25900, 33400, 21700, 33400, 25100, 25100, 23000, 29300, 30300], backgroundColor: 'rgba(251, 191, 36, 0.6)', borderColor: '#fbbf24', borderWidth: 1, borderRadius: 4 },
-                        { label: 'Executivo', data: [30200, 30200, 32400, 38900, 43900, 30200, 47000, 36600, 33400, 31400, 39700, 38700], backgroundColor: 'rgba(244, 114, 182, 0.6)', borderColor: '#f472b6', borderWidth: 1, borderRadius: 4 }
-                    ]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: { left: 140, right: 20 }
-                    },
-                    scales: {
-                        y: {
-                            grid: { display: false },
-                            ticks: {
-                                autoSkip: false,
-                                maxRotation: 0,
-                                padding: 6,
-                                font: { size: 12 }
-                            }
-                        },
-                        x: {
-                            min: 0,
-                            max: 50000,
-                            grid: { color: '#1e293b' },
-                            ticks: {
-                                callback: function(v) { return 'R$ ' + (v/1000) + 'k'; },
-                                maxTicksLimit: 10
-                            }
-                        },
-                    },
-                    plugins: {
-                        legend: { position: 'top', labels: { usePointStyle: true, padding: 12, boxWidth: 12 } },
-                        tooltip: {
-                            callbacks: {
-                                title: function(items) {
-                                    var full = ['Analista de Vulnerabilidades', 'Analista SOC', 'Pentester', 'Eng. Segurança Cloud', 'DevSecOps', 'Analista de Segurança da Informação', 'Arquiteto de Segurança', 'Analista DFIR / Forense', 'DPO', 'Analista de Threat Intelligence', 'Engenheiro de Segurança de Aplicações', 'Coordenador / Gerente de Segurança'];
-                                    return full[items[0].dataIndex] || items[0].label;
-                                },
-                                label: function(ctx) { if (ctx.raw == null) return null; return ctx.dataset.label + ': R$ ' + ctx.raw.toLocaleString('pt-BR') + '/mês'; }
-                            }
-                        }
-                    }
-                }
-            });
-        })();
-        (function() {
-            var ctx = document.getElementById('chart-tendencia');
-            if (!ctx) return;
-            var years = ['2023', '2024', '2025', '2026', '2027', '2028'];
-            var colors = ['#00ff88', '#22d3ee', '#a78bfa', '#fbbf24', '#f472b6'];
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: years,
-                    datasets: [
-                        { label: 'DevSecOps', data: [82, 92, 98, 105, 112, 119], borderColor: '#00ff88', backgroundColor: 'rgba(0,255,136,0.1)', tension: 0.3, fill: true },
-                        { label: 'Eng. Seg. Cloud', data: [75, 88, 96, 104, 110, 117], borderColor: '#22d3ee', backgroundColor: 'rgba(34,211,238,0.08)', tension: 0.3, fill: true },
-                        { label: 'Analista SOC', data: [85, 90, 95, 100, 105, 112], borderColor: '#a78bfa', backgroundColor: 'rgba(167,139,250,0.08)', tension: 0.3, fill: true },
-                        { label: 'Pentester', data: [78, 86, 93, 98, 103, 109], borderColor: '#fbbf24', backgroundColor: 'rgba(251,191,36,0.08)', tension: 0.3, fill: true },
-                        { label: 'Analista de Vuln.', data: [80, 88, 96, 102, 108, 115], borderColor: '#f472b6', backgroundColor: 'rgba(244,114,182,0.08)', tension: 0.3, fill: true },
-                        { label: 'Analista Seg. da Info', data: [82, 88, 94, 100, 106, 113], borderColor: '#34d399', backgroundColor: 'rgba(52,211,153,0.08)', tension: 0.3, fill: true },
-                        { label: 'Arquiteto Seg.', data: [74, 82, 90, 98, 106, 114], borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.08)', tension: 0.3, fill: true },
-                        { label: 'DFIR / AppSec', data: [80, 88, 95, 102, 109, 116], borderColor: '#06b6d4', backgroundColor: 'rgba(6,182,212,0.08)', tension: 0.3, fill: true }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
-                    plugins: {
-                        legend: { position: 'top', labels: { usePointStyle: true, padding: 16 } }
-                    },
-                    scales: {
-                        x: {
-                            grid: { color: '#1e293b' },
-                            ticks: { font: { size: 11 } }
-                        },
-                        y: {
-                            min: 60,
-                            max: 120,
-                            grid: { color: '#1e293b' },
-                            ticks: {
-                                callback: function(v) { return v; },
-                                font: { size: 11 }
-                            }
-                        }
-                    }
-                }
-            });
-        })();
-    </script>
-    <script>
-        (function() {
-            var GUPY_SEARCH_BASE = 'https://portal.gupy.io/job-search/term=seguran%C3%A7a%20da%20informa%C3%A7%C3%A3o';
-            var statusEl = document.getElementById('gupy-si-status');
-            var tiersEl = document.getElementById('gupy-si-tiers');
-            var countEl = document.getElementById('gupy-si-count');
-            if (!statusEl || !tiersEl) return;
-
-            function stripOneImage(s) {
-                if (!s.startsWith('![')) return s;
-                var m = s.match(/^!\[[^\]]*\]\([^)]*\)/);
-                if (!m) return s;
-                return s.slice(m[0].length).trim();
-            }
-
-            function stripLeadingNoise(s) {
-                s = s.replace(/^\*\s+/, '').trim();
-                var prev;
-                do {
-                    prev = s;
-                    if (s.startsWith('[![')) s = s.slice(1).trim();
-                    s = stripOneImage(s);
-                } while (s !== prev);
-                return s;
-            }
-
-            function companyFromJobUrl(url) {
-                try {
-                    var h = new URL(url).hostname.split('.')[0];
-                    if (!h || h === 'www') return null;
-                    return h.charAt(0).toUpperCase() + h.slice(1);
-                } catch (e) { return null; }
-            }
-
-            function parseJobLine(line) {
-                var urlMatch = line.match(/\]\((https:\/\/[a-z0-9.-]+\.gupy\.io\/job\/[^)]+)\)\s*$/);
-                if (!urlMatch) return null;
-                var url = urlMatch[1];
-                var closeIdx = line.lastIndexOf('](' + url + ')');
-                if (closeIdx < 0) return null;
-                var before = line.slice(0, closeIdx);
-                var inner = stripLeadingNoise(before);
-                var parts = inner.split(' ### ');
-                if (parts.length < 2) return null;
-                var company = parts[0].replace(/\s+/g, ' ').trim();
-                if (/^quem\s+somos$/i.test(company)) {
-                    var sub = companyFromJobUrl(url);
-                    if (sub) company = sub;
-                }
-                var rest = parts.slice(1).join(' ### ');
-                var title = rest.split(' Published on:')[0].split(' * * *')[0].replace(/\s+/g, ' ').trim();
-                return { company: company || '—', title: title || 'Vaga', url: url };
-            }
-
-            function classifySeniority(title) {
-                var t = (title || '').toLowerCase();
-                t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                if (/\b(gerente|coordenador|coordenadora|diretor|diretora|superintendente|vice-?presidente|\bvp\b|head\b|chief\b|ciso\b|lideranca|lider\b|lead\b)\b/.test(t)) return 'lideranca';
-                if (/\b(especialista|arquiteto|arquiteta)\b/.test(t)) return 'especialista';
-                if (/\b(senior|pleno\/senior|sr\.|\bsr\b|\biii\b|nivel\s+iii)\b/.test(t)) return 'senior';
-                if (/\b(pleno|nivel\s+ii|\bii\b|mid\b)\b/.test(t)) return 'pleno';
-                if (/\b(junior|estagio|estagiario|trainee|aprendiz|jnr\b|nivel\s+i\b|\bi\b)\b/.test(t)) return 'junior';
-                return 'outros';
-            }
-
-            var tierOrder = [
-                { id: 'lideranca', label: 'Liderança', className: 'tier-lideranca' },
-                { id: 'especialista', label: 'Especialista / Arquiteto', className: 'tier-especialista' },
-                { id: 'senior', label: 'Sênior / Sr.', className: 'tier-senior' },
-                { id: 'pleno', label: 'Pleno', className: 'tier-pleno' },
-                { id: 'junior', label: 'Júnior / Estágio', className: 'tier-junior' },
-                { id: 'outros', label: 'Não classificado', className: 'tier-outros' }
-            ];
-
-            function render(jobs) {
-                var byTier = {};
-                tierOrder.forEach(function(t) { byTier[t.id] = []; });
-                jobs.forEach(function(j) {
-                    var k = classifySeniority(j.title);
-                    if (!byTier[k]) k = 'outros';
-                    byTier[k].push(j);
-                });
-                if (countEl) countEl.textContent = jobs.length ? '· ' + jobs.length + ' vagas' : '';
-                var html = '';
-                tierOrder.forEach(function(t) {
-                    var list = byTier[t.id];
-                    if (!list.length) return;
-                    html += '<div class="gupy-tier ' + t.className + '"><h4>' + t.label + ' (' + list.length + ')</h4>';
-                    list.forEach(function(j) {
-                        var href = safeGupyJobHref(j.url);
-                        var hrefAttr = href ? href.replace(/"/g, '&quot;') : '#';
-                        html += '<div class="gupy-vaga"><a href="' + hrefAttr + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(j.title) + '</a>';
-                        html += '<div class="emp">' + escapeHtml(j.company) + '</div></div>';
-                    });
-                    html += '</div>';
-                });
-                tiersEl.innerHTML = html || '<p class="gupy-status">Nenhuma vaga encontrada no formato esperado.</p>';
-            }
-
-            function escapeHtml(s) {
-                var d = document.createElement('div');
-                d.textContent = s;
-                return d.innerHTML;
-            }
-
-            function safeGupyJobHref(u) {
-                try {
-                    var url = new URL(u);
-                    if (url.protocol !== 'https:') return '';
-                    var h = url.hostname.toLowerCase();
-                    if (!h.endsWith('.gupy.io')) return '';
-                    return url.href;
-                } catch (e) {
-                    return '';
-                }
-            }
-
-            function parseTextToJobs(text) {
-                var lines = text.split(/\r?\n/);
-                var out = [];
-                var seen = {};
-                lines.forEach(function(line) {
-                    var j = parseJobLine(line);
-                    if (j && !seen[j.url]) { seen[j.url] = true; out.push(j); }
-                });
-                return out;
-            }
-
-            function jinaUrlForPage(page) {
-                return 'https://r.jina.ai/' + encodeURIComponent(GUPY_SEARCH_BASE + '?page=' + page);
-            }
-
-            function fetchText(url) {
-                return fetch(url, { method: 'GET', mode: 'cors', credentials: 'omit' }).then(function(res) {
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    return res.text();
-                });
-            }
-
-            function fetchViaCodetabs(url) {
-                return fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url), {
-                    method: 'GET',
-                    mode: 'cors',
-                    credentials: 'omit'
-                }).then(function(res) {
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    return res.text();
-                });
-            }
-
-            function fetchJinaMarkdown(url) {
-                return fetchText(url).catch(function() {
-                    return fetchViaCodetabs(url);
-                });
-            }
-
-            function delay(ms) {
-                return new Promise(function(resolve) { setTimeout(resolve, ms); });
-            }
-
-            statusEl.textContent = 'Carregando vagas no Portal Gupy…';
-            (async function() {
-                var seen = {};
-                var jobs = [];
-                var page = 1;
-                var maxPages = 250;
-                try {
-                    while (page <= maxPages) {
-                        statusEl.textContent = 'Carregando vagas (página ' + page + ')…';
-                        var text = await fetchJinaMarkdown(jinaUrlForPage(page));
-                        var pageJobs = parseTextToJobs(text);
-                        if (pageJobs.length === 0) break;
-                        pageJobs.forEach(function(j) {
-                            if (!seen[j.url]) { seen[j.url] = true; jobs.push(j); }
-                        });
-                        page += 1;
-                        await delay(350);
-                    }
-                    statusEl.textContent = '';
-                    statusEl.classList.remove('error');
-                    if (!jobs.length) {
-                        statusEl.textContent = 'Não foi possível extrair a lista (formato do portal alterado ou bloqueio de rede). Use o link do Portal Gupy acima.';
-                        statusEl.classList.add('error');
-                    }
-                    render(jobs);
-                } catch (_err) {
-                    statusEl.innerHTML = 'Não foi possível carregar as vagas (rede ou bloqueio). ' +
-                        'Se estiver abrindo o HTML pelo disco (<code>file://</code>), sirva a pasta com um servidor local (ex.: <code>npx serve</code>) ou use a página publicada. ' +
-                        'Sempre é possível abrir a <a href="https://portal.gupy.io/job-search/term=seguran%C3%A7a%20da%20informa%C3%A7%C3%A3o" target="_blank" rel="noopener noreferrer">busca no Portal Gupy</a>.';
-                    statusEl.classList.add('error');
-                    if (countEl) countEl.textContent = '';
-                    tiersEl.innerHTML = '';
-                }
-            })();
-        })();
-    </script>
+    
+    
     <div id="cookie-consent" class="cookie-consent">
         <p>Utilizamos cookies para melhorar sua experiência. Ao continuar, você concorda com o uso de cookies. <a href="index.html#cookies">Saiba mais</a></p>
         <button type="button" class="btn-aceitar" id="btn-aceitar-cookies">Aceitar</button>
     </div>
-    <script>
-        (function() {
-            var banner = document.getElementById('cookie-consent');
-            var btn = document.getElementById('btn-aceitar-cookies');
-            if (localStorage.getItem('sentinela-cookies-aceitos') === '1') { if (banner) banner.classList.add('hidden'); }
-            if (btn) btn.addEventListener('click', function() { localStorage.setItem('sentinela-cookies-aceitos', '1'); if (banner) banner.classList.add('hidden'); });
-        })();
-    </script>
-    <script>
-        (function() {
-            var navAnchors = document.querySelector('.nav-anchors');
-            var btnTop = document.getElementById('btn-topo');
-            if (!navAnchors) return;
-            var links = navAnchors.querySelectorAll('a[href^="#"]');
-            var sections = [];
-            for (var i = 0; i < links.length; i++) {
-                var href = links[i].getAttribute('href');
-                if (!href || href.charAt(0) !== '#') continue;
-                var el = document.getElementById(href.slice(1));
-                if (el) sections.push({ id: href.slice(1), el: el });
-            }
-            var threshold = 130;
-            function onScroll() {
-                var y = window.scrollY || document.documentElement.scrollTop;
-                if (btnTop) {
-                    if (y > 400) btnTop.classList.add('visible');
-                    else btnTop.classList.remove('visible');
-                }
-                var active = null;
-                for (var j = sections.length - 1; j >= 0; j--) {
-                    if (sections[j].el.getBoundingClientRect().top <= threshold) {
-                        active = sections[j].id;
-                        break;
-                    }
-                }
-                if (!active && sections.length) active = sections[0].id;
-                for (var k = 0; k < links.length; k++) {
-                    var a = links[k];
-                    var h = a.getAttribute('href');
-                    if (!h || h.indexOf('#') !== 0) continue;
-                    if (h === '#' + active) {
-                        a.classList.add('active');
-                        a.setAttribute('aria-current', 'location');
-                    } else {
-                        a.classList.remove('active');
-                        a.removeAttribute('aria-current');
-                    }
-                }
-            }
-            window.addEventListener('scroll', onScroll, { passive: true });
-            onScroll();
-            if (btnTop) {
-                btnTop.addEventListener('click', function() {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
-            }
-        })();
-    </script>
-    <script>
-        (function() {
-            function initCertMenuPager(cfg) {
-                var ul = document.getElementById(cfg.menuId);
-                var numsEl = document.getElementById(cfg.numsId);
-                var prevBtn = document.getElementById(cfg.prevId);
-                var nextBtn = document.getElementById(cfg.nextId);
-                if (!ul || !numsEl || !prevBtn || !nextBtn) return;
-                var items = ul.querySelectorAll('li');
-                var pageSize = cfg.pageSize || 8;
-                var current = 0;
-                var totalPages = Math.max(1, Math.ceil(items.length / pageSize));
-                var numBtns = [];
-                var pager = document.getElementById(cfg.pagerId);
-                if (totalPages <= 1 && pager) pager.style.display = 'none';
-
-                function render() {
-                    var start = current * pageSize;
-                    for (var i = 0; i < items.length; i++) {
-                        items[i].hidden = i < start || i >= start + pageSize;
-                    }
-                    prevBtn.disabled = current <= 0;
-                    nextBtn.disabled = current >= totalPages - 1;
-                    for (var p = 0; p < numBtns.length; p++) {
-                        var on = p === current;
-                        numBtns[p].classList.toggle('is-active', on);
-                        numBtns[p].setAttribute('aria-current', on ? 'true' : 'false');
-                    }
-                }
-
-                for (var p = 0; p < totalPages; p++) {
-                    (function(page) {
-                        var b = document.createElement('button');
-                        b.type = 'button';
-                        b.className = 'list-pager-num' + (page === 0 ? ' is-active' : '');
-                        b.textContent = String(page + 1);
-                        b.setAttribute('aria-label', 'Ir para página ' + (page + 1));
-                        b.setAttribute('aria-current', page === 0 ? 'true' : 'false');
-                        b.addEventListener('click', function() {
-                            current = page;
-                            render();
-                        });
-                        numsEl.appendChild(b);
-                        numBtns.push(b);
-                    })(p);
-                }
-
-                prevBtn.addEventListener('click', function() {
-                    if (current > 0) { current--; render(); }
-                });
-                nextBtn.addEventListener('click', function() {
-                    if (current < totalPages - 1) { current++; render(); }
-                });
-                render();
-            }
-
-            initCertMenuPager({
-                menuId: 'empresas-menu',
-                pagerId: 'empresas-pager',
-                prevId: 'empresas-prev',
-                nextId: 'empresas-next',
-                numsId: 'empresas-page-nums',
-                pageSize: 8
-            });
-            initCertMenuPager({
-                menuId: 'portais-menu',
-                pagerId: 'portais-pager',
-                prevId: 'portais-prev',
-                nextId: 'portais-next',
-                numsId: 'portais-page-nums',
-                pageSize: 8
-            });
-        })();
-    </script>
+    
+    
+    
+    <script src="js/mercado-trabalho.js" defer></script>
 </body>
 </html>
