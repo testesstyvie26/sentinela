@@ -3,5 +3,6 @@ Allow: /
 Disallow: /gupy-temp.html
 Disallow: /scripts/
 Disallow: /cdn-cgi/
+Disallow: /cloudflare-worker.js
 
 Sitemap: https://sentinelacibernetica.com.br/sitemap.xml

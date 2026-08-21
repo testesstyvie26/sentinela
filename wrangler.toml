@@ -1,0 +1,7 @@
+name = "sentinela-security-headers"
+main = "cloudflare-worker.js"
+compatibility_date = "2026-08-21"
+
+[[routes]]
+pattern = "sentinelacibernetica.com.br/*"
+zone_name = "sentinelacibernetica.com.br"

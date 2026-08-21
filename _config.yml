@@ -1,0 +1,9 @@
+# GitHub Pages (Jekyll): não publicar dumps de scraping nem configs de borda.
+exclude:
+  - scripts
+  - cloudflare-worker.js
+  - wrangler.toml
+  - package.json
+  - node_modules
+include:
+  - .well-known
