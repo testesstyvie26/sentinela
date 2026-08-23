@@ -110,6 +110,11 @@ export default {
     if (url.pathname.endsWith(".html") || url.pathname === "/") {
       headers.set("Content-Type", "text/html; charset=utf-8");
     }
+    if (url.pathname.endsWith("/robots.txt")) {
+      headers.set("Content-Type", "text/plain; charset=utf-8");
+    }
+    headers.delete("etag");
+    headers.delete("last-modified");
 
     if (isAsset(url.pathname)) {
       headers.set("Cache-Control", "public, max-age=86400, must-revalidate");
